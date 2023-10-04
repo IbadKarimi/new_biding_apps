@@ -108,7 +108,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                           margin: EdgeInsets.only(top: 20.h),
                           height: 45.h,
                           width: 300.w,
-                          child: ElevatedButton(onPressed: () async {
+                          child: ElevatedButton(onPressed:
+                              () async {
                             Get.offAll(()=>Category());
                             if (_formKey.currentState!.validate()) {
 
