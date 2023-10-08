@@ -22,34 +22,51 @@ class AddVehicleView extends StatefulWidget{
 class _AddVehicleViewState extends State<AddVehicleView> {
   @override
 
-  TextEditingController title=TextEditingController();
-  TextEditingController description=TextEditingController();
-  TextEditingController price=TextEditingController();
-  var pickedProfilePhoto;
+  //-------------------------------------------
+  final vehicleType = [
 
-  Future getImage()async{
-    final _picker = ImagePicker();
-    pickedProfilePhoto = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
+    "Car",
+    'Motor Cycle',
+    'Buses',
+    'Heavy Truck',
+    'Other',
 
-    if (pickedProfilePhoto != null) {
-      setState(() {
-     _getImageFile= pickedProfilePhoto.files.first;
+  ];
+  String _selectedValueVehicleType = "Car";
 
-      });
-    }}
+  //-------------------------------------------
+  final condition = [
+
+    "New",
+    'Old',
+    'Other',
+
+  ];
+  String _selectedValueCondition = "New";
+
+  //----------------------------------------------
+
+  final auctionType = [
+
+    "Biding",
+    'Fixed Auction',
+
+  ];
+  String _selectedValueAuctionType = "Biding";
+//----------------------------------------------------//
+
+
+  TextEditingController vehicleName=TextEditingController();
+  TextEditingController modelNo=TextEditingController();
+  TextEditingController registrationYear=TextEditingController();
+  TextEditingController registrationArea=TextEditingController();
+  TextEditingController enginePower=TextEditingController();
+  TextEditingController fuelType=TextEditingController();
+
 
 
   Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: CustomAppBar(),
-     bottomNavigationBar: CustomBottomNavigationBar(),
-     drawer: CustomDrawer(),
-     body: SingleChildScrollView(
-       scrollDirection: Axis.vertical,
-       child: Column(
+   return  Column(
          mainAxisAlignment: MainAxisAlignment.start,
          crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -62,38 +79,130 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
 
                  children: [
-           Padding(
-           padding: EdgeInsets.only(top: 10.h, left: 0, bottom: 10.h),
-       child:  Center(
-         child: Text(
-           "Welcome Back ! Add Vehicle Info",
-           style: TextStyle(
-             color: Colors.black,
-             fontSize: 16.sp,
-             fontWeight: FontWeight.w700,
-           ),
-         ),
-       )),
+
+                   //------------------------------Vehicle Type---------------//
                    Padding(
-                     padding: const EdgeInsets.only(top:20),
-                     child: Center(
-                       child: DottedBorder(
-                         color: Colors.black,
-                         dashPattern: [8, 4],
-                         strokeWidth: 0.5,
-                         child:Container(
-                           width:300.w,height: 150.h,
-                           child: picked!=null?Image.memory(picked.files.first.bytes,width: 200.w,height: 200.h,): IconButton(icon:Icon(Icons.add_photo_alternate_outlined,size: 50,),onPressed: () async {getImage();},),),
-
-                       ),
-                     ),
-                   ),
-
-
-                   Padding(
-                       padding: EdgeInsets.only(top: 30.h, left: 30.w, bottom: 5.h),
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
                        child:  Text(
-                         "Enter vehicle title.",
+                         "Vehicle Type",
+                         style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 14.sp,
+                           fontWeight: FontWeight.w600,
+                         ),
+                       )),
+                   Container(
+                       width: 300.w,
+                       height: 38.h,
+                       margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                       decoration: BoxDecoration(
+                           border: Border.all(color: Colors.black38, width: 1),
+                           borderRadius: BorderRadius.circular(5.r),
+                           boxShadow: <BoxShadow>[]),
+                       child: DropdownButtonHideUnderline(
+                           child: DropdownButtonFormField(
+                             value: _selectedValueVehicleType,
+                             items: vehicleType.map((e) {
+                               return DropdownMenuItem(child: Text(e), value: e);
+                             }).toList(),
+                             onChanged: (newValue) {
+                               setState(() {
+                                 _selectedValueVehicleType = newValue as String;
+
+                               });
+                             },
+                             isExpanded: true,
+                           ))),
+
+
+                   //--------------------------Condition Drop Down---------------//
+                   Padding(
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
+                       child:  Text(
+                         "Condition",
+                         style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 14.sp,
+                           fontWeight: FontWeight.w600,
+                         ),
+                       )),
+                   Container(
+                       width: 300.w,
+                       height: 38.h,
+                       margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                       decoration: BoxDecoration(
+                           border: Border.all(color: Colors.black38, width: 1),
+                           borderRadius: BorderRadius.circular(5.r),
+                           boxShadow: <BoxShadow>[]),
+                       child: DropdownButtonHideUnderline(
+                           child: DropdownButtonFormField(
+                             value: _selectedValueCondition,
+                             items: condition.map((e) {
+                               return DropdownMenuItem(child: Text(e), value: e);
+                             }).toList(),
+                             onChanged: (newValue) {
+                               setState(() {
+                                 _selectedValueCondition = newValue as String;
+
+                               });
+                             },
+                             isExpanded: true,
+                           ))),
+
+                   //--------------------Auction type=------------------/
+
+
+                   Padding(
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
+                       child:  Text(
+                         "Auction Type",
+                         style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 14.sp,
+                           fontWeight: FontWeight.w600,
+                         ),
+                       )),
+                   Container(
+                       width: 300.w,
+                       height: 38.h,
+                       margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                       decoration: BoxDecoration(
+                           border: Border.all(color: Colors.black38, width: 1),
+                           borderRadius: BorderRadius.circular(5.r),
+                           boxShadow: <BoxShadow>[]),
+                       child: DropdownButtonHideUnderline(
+                           child: DropdownButtonFormField(
+                             value: _selectedValueAuctionType,
+                             items: auctionType.map((e) {
+                               return DropdownMenuItem(child: Text(e), value: e);
+                             }).toList(),
+                             onChanged: (newValue) {
+                               setState(() {
+                                 _selectedValueAuctionType = newValue as String;
+
+                               });
+                             },
+                             isExpanded: true,
+                           ))),
+
+
+
+
+                   //-----------------------------------------------------//
+
+
+
+                   //------------------------------Fields-------------------------//
+
+
+
+
+
+
+                   Padding(
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 5.h),
+                       child:  Text(
+                         "Vehicle Name.",
                          style: TextStyle(
                            color: Colors.black,
                            fontSize: 14.sp,
@@ -102,23 +211,23 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                        )),
                    Container(
                      width: 300.w,
-                     height: 45.h,
+                     height: 35.h,
 
                      margin: EdgeInsets.only(top:0.h,left:30.w),
                      child: TextFormField(
-                       controller: title,
+                       controller: vehicleName,
                        style: TextStyle(color: Colors.black),
                        decoration: InputDecoration(
 
-                         label: Text("Title") ,prefixIcon:Icon(Icons.title_outlined),
+                         label: Text("Vehicle Name") ,prefixIcon:Icon(Icons.title_outlined),
                          border: OutlineInputBorder(),
 
                        ),),
                    ),
                    Padding(
-                       padding: EdgeInsets.only(top: 10.h, left: 30.w, bottom: 5.h),
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, ),
                        child:  Text(
-                         "Enter vehicle description.",
+                         "Model No.",
                          style: TextStyle(
                            color: Colors.black,
                            fontSize: 14.sp,
@@ -127,23 +236,23 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                        )),
                    Container(
                      width: 300.w,
-                     height: 45.h,
+                     height: 35.h,
 
-                     margin: EdgeInsets.only(top:0.h,left:30.w),
+                     margin: EdgeInsets.only(top:5.h,left:30.w),
                      child: TextFormField(
-                       controller: title,
+                       controller: modelNo,
                        style: TextStyle(color: Colors.black),
                        decoration: InputDecoration(
 
-                         label: Text("Description") ,prefixIcon:Icon(Icons.description),
+                         label: Text("Model No") ,prefixIcon:Icon(Icons.description),
                          border: OutlineInputBorder(),
 
                        ),),
                    ),
                    Padding(
-                       padding: EdgeInsets.only(top: 10.h, left: 30.w, bottom: 5.h),
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, ),
                        child:  Text(
-                         "Enter vehicle price.",
+                         "Registration Area",
                          style: TextStyle(
                            color: Colors.black,
                            fontSize: 14.sp,
@@ -152,41 +261,74 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                        )),
                    Container(
                      width: 300.w,
-                     height: 45.h,
+                     height: 35.h,
 
-                     margin: EdgeInsets.only(top:0.h,left:30.w),
+                     margin: EdgeInsets.only(top:5.h,left:30.w),
                      child: TextFormField(
-                       controller: title,
+                       controller: registrationArea,
                        style: TextStyle(color: Colors.black),
                        decoration: InputDecoration(
 
-                         label: Text("Title") ,prefixIcon:Icon(Icons.price_change),
+                         label: Text("Registration Area") ,prefixIcon:Icon(Icons.area_chart_outlined),
                          border: OutlineInputBorder(),
 
                        ),),
                    ),
-                   SizedBox( height:10.h),
 
+                   Padding(
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, ),
+                       child:  Text(
+                         "Registration Year",
+                         style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 14.sp,
+                           fontWeight: FontWeight.w600,
+                         ),
+                       )),
                    Container(
-                     margin: EdgeInsets.only(top:10.h,bottom: 30.h,left: 50.w),
-                     width: 250.w,
-                     height: 45.h,
-                     child:ElevatedButton(onPressed: (){
+                     width: 300.w,
+                     height: 35.h,
+
+                     margin: EdgeInsets.only(top:5.h,left:30.w),
+                     child: TextFormField(
+                       controller: registrationArea,
+                       style: TextStyle(color: Colors.black),
+                       decoration: InputDecoration(
+
+                         label: Text("Registration Year") ,prefixIcon:Icon(Icons.calendar_month),
+                         border: OutlineInputBorder(),
+
+                       ),),
+                   ),
+
+                   Padding(
+                       padding: EdgeInsets.only(top: 5.h, left: 30.w, ),
+                       child:  Text(
+                         "Engine Power",
+                         style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 14.sp,
+                           fontWeight: FontWeight.w600,
+                         ),
+                       )),
+                   Container(
+                     width: 300.w,
+                     height: 35.h,
+
+                     margin: EdgeInsets.only(top:5.h,left:30.w),
+                     child: TextFormField(
+                       controller: registrationArea,
+                       style: TextStyle(color: Colors.black),
+                       decoration: InputDecoration(
+
+                         label: Text("Engine Power") ,prefixIcon:Icon(Icons.power),
+                         border: OutlineInputBorder(),
+
+                       ),),
+                   ),
 
 
 
-                     }, child:  Text("Add"),
-                         style: ElevatedButton.styleFrom(
-                           backgroundColor: Colors.black,
-                           shape:
-                           RoundedRectangleBorder(
-                             side: BorderSide(color: Colors.black, width: 1.w),
-                             borderRadius:
-                             BorderRadius
-                                 .circular(
-                                 5.0.r),
-                           ),
-                         )),),
 
 
 
@@ -195,8 +337,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
                    ],
 
-       ),
-     ),
-   );
+       );
+
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../authentication_repository/login.dart';
+import '../categories/categories.dart';
 
 
 
@@ -54,8 +55,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
         ),
         ListTile(
-          leading: Icon(Icons.home),
-          title: const Text('Home',style: TextStyle(color: Colors.black),),
+          leading: Icon(Icons.account_box_outlined),
+          title: const Text('About Us',style: TextStyle(color: Colors.black),),
           onTap: () {
             Get.to(()=>HomePageView());
             // Update the state of the app.
@@ -63,42 +64,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.car_rental),
-          title: const Text('Vehicle',style: TextStyle(color: Colors.black),),
+          leading: Icon(Icons.help),
+          title: const Text('Help',style: TextStyle(color: Colors.black),),
           onTap: () {
             // Update the state of the app.
             // ...
 
           },
         ),
-        ListTile(
-          leading: Icon(Icons.real_estate_agent),
-          title: const Text('Real State',style: TextStyle(color: Colors.black),),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.agriculture),
-          title: const Text('Aggriculture',style: TextStyle(color: Colors.black),),
 
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          leading: GestureDetector(onTap:(){
-            Get.offAll(()=>LoginFormWidget());
-          },
-            child:Icon(Icons.table_restaurant_sharp),),
-          title: const Text('Furniture',style: TextStyle(color: Colors.black),),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
+
+
+
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
@@ -128,6 +105,27 @@ class _CustomDrawerState extends State<CustomDrawer> {
           onTap: () {
             // Update the state of the app.
             // ...
+          },
+        ),
+        ListTile(
+          leading: GestureDetector(onTap:(){
+            Get.to(()=>AccountantView());
+          },
+            child:Icon(Icons.category),),
+          title: const Text('Categories',style: TextStyle(color: Colors.black),),
+          onTap: () {
+            Get.to(()=>Category());
+          },
+        ),
+
+        ListTile(
+          leading: GestureDetector(onTap:(){
+            Get.to(()=>AccountantView());
+          },
+            child:Icon(Icons.feedback),),
+          title: const Text('Feed Back',style: TextStyle(color: Colors.black),),
+          onTap: () {
+            Get.to(()=>Category());
           },
         ),
       ],

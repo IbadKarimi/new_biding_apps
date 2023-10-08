@@ -80,6 +80,8 @@ class _LoginFormWidget  extends State<LoginFormWidget > {
                       width: 300.w,
                       height: 45.h,
                       child: TextFormField(
+                        style: TextStyle(color: Colors.black),
+
                         controller: password,
                         decoration: InputDecoration(label: Text("Password") ,prefixIcon:Icon(Icons.fingerprint),
                           border: OutlineInputBorder(),

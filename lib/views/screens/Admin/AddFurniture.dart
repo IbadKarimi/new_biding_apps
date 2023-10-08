@@ -22,35 +22,65 @@ class AddFurnitureView extends StatefulWidget{
 
 class _AddFurnitureViewState extends State<AddFurnitureView> {
   @override
+  //-------------------------------------------
+  final makingMaterial = [
 
-  TextEditingController title=TextEditingController();
-  TextEditingController description=TextEditingController();
-  TextEditingController price=TextEditingController();
-  var pickedProfilePhoto;
+    "Wood",
+    'Steel',
+    'Other',
 
-  Future getImage()async{
-    final _picker = ImagePicker();
-    pickedProfilePhoto = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
+  ];
+  String _selectedValuemMakingMaterial = "Wood";
 
-    if (pickedProfilePhoto != null) {
-      setState(() {
-        _getImageFile= pickedProfilePhoto.files.first;
+  //-------------------------------------------
 
-      });
-    }}
+  final condition = [
+
+    "New",
+    'Old',
+    'Other',
+
+  ];
+  String _selectedValueCondition = "New";
+
+  //----------------------------------------------
+
+  final selectTypes = [
+
+    "Chairs",
+    'Sofas',
+    'Desk',
+    'Cupboards',
+    'Tables',
+    'Cabinets',
+    'Beds',
+    'Other',
+
+  ];
+  String _selectedValueSelectTypes = "Chairs";
+
+  //-------------------------------------------
+
+
+  final auctionType = [
+
+    "Biding",
+    'Fixed Auction',
+
+  ];
+  String _selectedValueAuctionType = "Biding";
+
+
+
+
+
+
+
+
 
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: CustomBottomNavigationBar(),
-      drawer: CustomDrawer(),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
+    return  Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -63,38 +93,14 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
 
 
                   children: [
-                    Padding(
-                        padding: EdgeInsets.only(top: 10.h, left: 0, bottom: 10.h),
-                        child:  Center(
-                          child: Text(
-                            "Welcome Back ! Add Furniture Info",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top:20),
-                      child: Center(
-                        child: DottedBorder(
-                          color: Colors.black,
-                          dashPattern: [8, 4],
-                          strokeWidth: 0.5,
-                          child:Container(
-                            width:300.w,height: 150.h,
-                            child: picked!=null?Image.memory(picked.files.first.bytes,width: 200.w,height: 200.h,): IconButton(icon:Icon(Icons.add_photo_alternate_outlined,size: 50,),onPressed: () async {getImage();},),),
-
-                        ),
-                      ),
-                    ),
 
 
+
+//----------------------------------------------Ist drop down
                     Padding(
-                        padding: EdgeInsets.only(top: 30.h, left: 30.w, bottom: 5.h),
+                        padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
                         child:  Text(
-                          "Enter vehicle title.",
+                          "Making Material",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp,
@@ -102,24 +108,34 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                           ),
                         )),
                     Container(
-                      width: 300.w,
-                      height: 45.h,
+                        width: 300.w,
+                        height: 38.h,
+                        margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38, width: 1),
+                            borderRadius: BorderRadius.circular(5.r),
+                            boxShadow: <BoxShadow>[]),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField(
+                              value: _selectedValuemMakingMaterial,
+                              items: makingMaterial.map((e) {
+                                return DropdownMenuItem(child: Text(e), value: e);
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValuemMakingMaterial = newValue as String;
 
-                      margin: EdgeInsets.only(top:0.h,left:30.w),
-                      child: TextFormField(
-                        controller: title,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                                });
+                              },
+                              isExpanded: true,
+                            ))),
 
-                          label: Text("Title") ,prefixIcon:Icon(Icons.title_outlined),
-                          border: OutlineInputBorder(),
 
-                        ),),
-                    ),
+                    //--------------------------Condition Drop Down---------------//
                     Padding(
-                        padding: EdgeInsets.only(top: 10.h, left: 30.w, bottom: 5.h),
+                        padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
                         child:  Text(
-                          "Enter vehicle description.",
+                          "Condition",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp,
@@ -127,24 +143,35 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                           ),
                         )),
                     Container(
-                      width: 300.w,
-                      height: 45.h,
+                        width: 300.w,
+                        height: 38.h,
+                        margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38, width: 1),
+                            borderRadius: BorderRadius.circular(5.r),
+                            boxShadow: <BoxShadow>[]),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField(
+                              value: _selectedValueCondition,
+                              items: condition.map((e) {
+                                return DropdownMenuItem(child: Text(e), value: e);
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValueCondition = newValue as String;
 
-                      margin: EdgeInsets.only(top:0.h,left:30.w),
-                      child: TextFormField(
-                        controller: title,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                                });
+                              },
+                              isExpanded: true,
+                            ))),
 
-                          label: Text("Description") ,prefixIcon:Icon(Icons.description),
-                          border: OutlineInputBorder(),
 
-                        ),),
-                    ),
+
+                    //------------------------------Select Types
                     Padding(
-                        padding: EdgeInsets.only(top: 10.h, left: 30.w, bottom: 5.h),
+                        padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
                         child:  Text(
-                          "Enter vehicle price.",
+                          "Select Type",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp,
@@ -152,42 +179,77 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                           ),
                         )),
                     Container(
-                      width: 300.w,
-                      height: 45.h,
+                        width: 300.w,
+                        height: 38.h,
+                        margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38, width: 1),
+                            borderRadius: BorderRadius.circular(5.r),
+                            boxShadow: <BoxShadow>[]),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField(
+                              value: _selectedValueSelectTypes,
+                              items: selectTypes.map((e) {
+                                return DropdownMenuItem(child: Text(e), value: e);
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValueSelectTypes = newValue as String;
 
-                      margin: EdgeInsets.only(top:0.h,left:30.w),
-                      child: TextFormField(
-                        controller: title,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                                });
+                              },
+                              isExpanded: true,
+                            ))),
 
-                          label: Text("Title") ,prefixIcon:Icon(Icons.price_change),
-                          border: OutlineInputBorder(),
+                    //--------------------Auction type=------------------/
 
-                        ),),
-                    ),
-                    SizedBox( height:10.h),
 
+                    Padding(
+                        padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 0.h),
+                        child:  Text(
+                          "Auction Type",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
                     Container(
-                      margin: EdgeInsets.only(top:10.h,bottom: 30.h,left: 50.w),
-                      width: 250.w,
-                      height: 45.h,
-                      child:ElevatedButton(onPressed: (){
+                        width: 300.w,
+                        height: 38.h,
+                        margin:  EdgeInsets.only(top: 5.h,left:30.w),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38, width: 1),
+                            borderRadius: BorderRadius.circular(5.r),
+                            boxShadow: <BoxShadow>[]),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField(
+                              value: _selectedValueAuctionType,
+                              items: auctionType.map((e) {
+                                return DropdownMenuItem(child: Text(e), value: e);
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedValueAuctionType = newValue as String;
+
+                                });
+                              },
+                              isExpanded: true,
+                            ))),
 
 
 
-                      }, child:  Text("Add"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape:
-                            RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.black, width: 1.w),
-                              borderRadius:
-                              BorderRadius
-                                  .circular(
-                                  5.0.r),
-                            ),
-                          )),),
+
+                    //--------------------------Auction Type---------------------------//
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,8 +258,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
 
           ],
 
-        ),
-      ),
+
     );
   }
 }

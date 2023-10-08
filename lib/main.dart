@@ -5,6 +5,7 @@ import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
 import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/RealState/RealStateView.dart';
+import 'package:biding_app/views/screens/SelectingCategories/SelectingCategories.dart';
 import 'package:biding_app/views/screens/Vehicle/VehiclesView.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:biding_app/views/screens/splash_screen/splash_screen.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: WelcomeScreen(),
+      child: SelectCateogoryView(),
     );
   }
 }

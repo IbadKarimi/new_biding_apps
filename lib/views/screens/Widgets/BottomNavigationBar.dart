@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 
 import '../FeedBack/Feedback.dart';
 import '../Home/HomePageView.dart';
+import '../SelectingCategories/SelectingCategories.dart';
 import '../categories/categories.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -40,13 +41,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             Get.to(()=>FeedBackView());
           }
           if(index==2){
-            Get.to(()=>HomePageView());
+            Get.to(()=>SelectCateogoryView());
           }
           if(index==3){
-            Get.to(()=>Category());
+            Get.to(()=>HomePageView());
           }
           if(index==4){
-            Get.to(()=>Category());
+           //notification
           }
 
 
@@ -63,10 +64,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
           BottomNavigationBarItem(
             icon: Icon(Icons.feedback,color: Colors.black,),
-            label: 'Feed Back',
+            label: 'Notification',
           ),
 
 
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline,color: Colors.black,size: 30,),
+            label: 'Add Product',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home,color: Colors.black,),
             label: 'Home',
@@ -81,7 +86,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
           BottomNavigationBarItem(
             icon: Icon(Icons.category,color: Colors.black,),
-            label: 'Categories',
+            label: 'Chat',
           ),
 
 

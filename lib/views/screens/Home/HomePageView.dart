@@ -22,7 +22,26 @@ class HomePageView extends StatefulWidget{
 class _HomePageViewState extends State<HomePageView> {
   @override
 
+  String _searchQuery = '';
+  List<String> _filteredData = [];
+  List<String> dataList = [
+    'Pakistan',
+    'Australia',
+    'Rusia',
+    // ... add more items
+  ];
+
   TextEditingController offer=TextEditingController();
+  TextEditingController search=TextEditingController();
+
+  void _filterData() {
+    setState(() {
+      _filteredData = dataList
+          .where((item) => item.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
+    });
+  }
+
   Widget build(BuildContext context) {
    return Scaffold(
      appBar: CustomAppBar(),
@@ -34,6 +53,30 @@ class _HomePageViewState extends State<HomePageView> {
          mainAxisAlignment: MainAxisAlignment.start,
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
+
+
+           Row(
+             children: [
+
+               Center(
+                 child: Container(
+                    margin: EdgeInsets.only(top:20.w),
+                     width: 300.w,
+                     height: 45.h,
+                     child: TextFormField(
+                       style: TextStyle(color: Colors.black),
+
+                       controller: search,
+                       decoration: InputDecoration(label: Text("Search") ,prefixIcon:Icon(Icons.search),
+                         border: OutlineInputBorder(),
+
+                       ),)),
+               ),
+
+
+
+             ],
+           ),
 
          Padding(
            padding:EdgeInsets.only(left:20.w,top:10.h),
