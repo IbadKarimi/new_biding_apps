@@ -46,20 +46,8 @@ class _AggricultureViewState extends State<AggricultureView> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.h, left: 120.w, bottom: 0.h),
-                  child:  Text(
-                    "Add Products",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(top: 10.h, left: 0.w, bottom: 0.h),
-                    child: IconButton(onPressed: (){    Get.to(()=>AddAgricultureView());}, icon: Icon(Icons.add_circle_outline,color: Colors.blue,size: 30,)))
+
+
               ],),
               //------------------------------------------ListView-------------------------//
               for(int i=0;i<10;i++)

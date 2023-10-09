@@ -1,5 +1,6 @@
 import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
 import 'package:biding_app/views/screens/Admin/ViewBids.dart';
+import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -125,7 +126,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child:Icon(Icons.feedback),),
           title: const Text('Feed Back',style: TextStyle(color: Colors.black),),
           onTap: () {
-            Get.to(()=>Category());
+            Get.to(()=>FeedBackView());
           },
         ),
       ],

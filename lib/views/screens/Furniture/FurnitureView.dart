@@ -47,20 +47,8 @@ class _FurnitureViewState extends State<FurnitureView > {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.h, left: 110.w, bottom: 0.h),
-                  child:  Text(
-                    "Add Products",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(top: 10.h, left: 0.w, bottom: 0.h),
-                    child: IconButton(onPressed: (){    Get.to(()=>AddFurnitureView());}, icon: Icon(Icons.add_circle_outline,color: Colors.blue,size: 30,)))
+
+
               ],),
               for(int i=0;i<10;i++)
                 Column(

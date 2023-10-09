@@ -5,6 +5,7 @@
 import 'package:biding_app/views/screens/Admin/AddFurniture.dart';
 import 'package:biding_app/views/screens/Admin/AddRealState.dart';
 import 'package:biding_app/views/screens/Admin/Other.dart';
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/Vehicle/VehiclesView.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -33,7 +34,7 @@ class SelectCateogoryView extends StatefulWidget{
 class _SelectCateogoryViewState extends State<SelectCateogoryView> {
   @override
 
-  final questionItems = [
+  List<String> categories = [
 
     "Vehicle",
     'Real State',
@@ -112,7 +113,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     ),
       Container(
           width: 300.w,
-          height: 38.h,
+
           margin:  EdgeInsets.only(top: 10.h,left:30.w),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black38, width: 1),
@@ -121,8 +122,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
           child: DropdownButtonHideUnderline(
               child: DropdownButtonFormField(
                 value: _selectedValue,
-                items: questionItems.map((e) {
-                  return DropdownMenuItem(child: Text(e), value: e);
+                items: categories.map((e) {
+                  return DropdownMenuItem<String>(
+                      child:
+                      Text(e,style: TextStyle(color: Colors.black),), value: e);
                 }).toList(),
                 onChanged: (newValue) {
                   setState(() {
@@ -315,6 +318,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
                 child: ElevatedButton(onPressed:
                     () async {
 
+                  Get.offAll(()=>HomePageView());
 
                 }, child: Text("Cancel", style: TextStyle(color: Colors
                     .white),),

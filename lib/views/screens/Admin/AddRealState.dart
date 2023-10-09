@@ -86,7 +86,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                   children: [
                     Container(
                         width: 300.w,
-                        height: 35.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -96,7 +96,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueType,
                               items: type.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -124,7 +124,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                       children: [
                         Container(
                             width: 150.w,
-                            height: 35.h,
+
                             margin:  EdgeInsets.only(top: 5.h,left:30.w),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black38, width: 1),
@@ -134,7 +134,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                                 child: DropdownButtonFormField(
                                   value: _selectedValueAreaType,
                                   items: areaType.map((e) {
-                                    return DropdownMenuItem(child: Text(e), value: e);
+                                    return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                                   }).toList(),
                                   onChanged: (newValue) {
                                     setState(() {
@@ -262,7 +262,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -272,7 +272,7 @@ class _AddRealStateViewState extends State<AddRealStateView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueAuctionType,
                               items: auctionType.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {

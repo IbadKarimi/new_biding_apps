@@ -56,6 +56,7 @@ class _HomePageViewState extends State<HomePageView> {
 
 
            Row(
+             mainAxisAlignment: MainAxisAlignment.center,
              children: [
 
                Center(
@@ -67,7 +68,8 @@ class _HomePageViewState extends State<HomePageView> {
                        style: TextStyle(color: Colors.black),
 
                        controller: search,
-                       decoration: InputDecoration(label: Text("Search") ,prefixIcon:Icon(Icons.search),
+                       decoration: InputDecoration(
+                         label: Text("Search") ,prefixIcon:Icon(Icons.search,color: Colors.blue,),
                          border: OutlineInputBorder(),
 
                        ),)),
@@ -449,7 +451,7 @@ class _HomePageViewState extends State<HomePageView> {
                  SliverGrid(
                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                  crossAxisCount: 2,
-                     childAspectRatio:(3/4),
+                     childAspectRatio:(3/4.02),
                    crossAxisSpacing: 10.w,
                    mainAxisSpacing: 10.h
 

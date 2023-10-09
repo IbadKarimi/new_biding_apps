@@ -109,7 +109,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -119,7 +119,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValuemMakingMaterial,
                               items: makingMaterial.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -144,7 +144,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -154,7 +154,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueCondition,
                               items: condition.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -180,7 +180,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -190,7 +190,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueSelectTypes,
                               items: selectTypes.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -216,7 +216,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -226,7 +226,7 @@ class _AddFurnitureViewState extends State<AddFurnitureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueAuctionType,
                               items: auctionType.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {

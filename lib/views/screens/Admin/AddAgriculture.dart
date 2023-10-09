@@ -99,7 +99,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -109,7 +109,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueAgricultureType,
                               items: agricultureType.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -134,7 +134,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -144,7 +144,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueWorkType,
                               items: workType.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
@@ -171,7 +171,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                       children: [
                         Container(
                             width: 150.w,
-                            height: 35.h,
+
                             margin:  EdgeInsets.only(top: 5.h,left:30.w),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black38, width: 1),
@@ -181,7 +181,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                                 child: DropdownButtonFormField(
                                   value: _selectedValueAreaType,
                                   items: areaType.map((e) {
-                                    return DropdownMenuItem(child: Text(e), value: e);
+                                    return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                                   }).toList(),
                                   onChanged: (newValue) {
                                     setState(() {
@@ -223,7 +223,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                         )),
                     Container(
                         width: 300.w,
-                        height: 38.h,
+
                         margin:  EdgeInsets.only(top: 5.h,left:30.w),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38, width: 1),
@@ -233,7 +233,7 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
                             child: DropdownButtonFormField(
                               value: _selectedValueAuctionType,
                               items: auctionType.map((e) {
-                                return DropdownMenuItem(child: Text(e), value: e);
+                                return DropdownMenuItem(child: Text(e,style: TextStyle(color: Colors.black),), value: e);
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {

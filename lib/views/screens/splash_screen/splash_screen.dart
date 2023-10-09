@@ -62,7 +62,7 @@ class WelcomeScreen extends StatelessWidget{
               children: <Widget>[
                 Padding(
                     padding:  EdgeInsets.only(
-                        top: 70.h, left: 20.w),
+                        top: 70.h, left: 0.w),
                     child: SizedBox(
                         width: 150.w,
                         height: 45.h,
@@ -99,7 +99,7 @@ class WelcomeScreen extends StatelessWidget{
 
                 Padding(
                     padding:  EdgeInsets.only(
-                        top: 70.h, left: 20.w),
+                        top: 70.h, left: 5.w),
                     child: Container(
                         width: 150.w,
                         height: 45.h,
