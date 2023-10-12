@@ -55,7 +55,7 @@ class _HomePageViewState extends State<HomePageView> {
          children: [
 
 
-           Row(
+           /*Row(
              mainAxisAlignment: MainAxisAlignment.center,
              children: [
 
@@ -78,7 +78,29 @@ class _HomePageViewState extends State<HomePageView> {
 
 
              ],
-           ),
+           ),*/
+
+
+         Row(
+           children: [
+             Container(
+              margin: EdgeInsets.only(left:20.w,top:20.h),
+               width: 150.w,height: 40,
+               child: Center(child: Text("Bidd")),
+               decoration: BoxDecoration(
+                   color: Colors.grey.shade300,
+                   borderRadius: BorderRadius.circular(10)),
+             ),
+             Container(
+               margin: EdgeInsets.only(left:20.w,top:20.h),
+               width: 150.w,height: 40,
+               child: Center(child: Text("Fixed Price",style: TextStyle(color: Colors.white),)),
+               decoration: BoxDecoration(
+                   color: Colors.black,
+                   borderRadius: BorderRadius.circular(10)),
+             ),
+           ],
+         ),
 
          Padding(
            padding:EdgeInsets.only(left:20.w,top:10.h),
@@ -429,6 +451,11 @@ class _HomePageViewState extends State<HomePageView> {
                  ),
                  child: Icon(Icons.real_estate_agent,size: 40,),)),
              ],),
+
+           Padding(
+             padding:EdgeInsets.only(left:20.w,top:10.h),
+             child: Text("Most Popular",style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black,fontSize: 14.sp),),
+           ),
 
 
            Padding(

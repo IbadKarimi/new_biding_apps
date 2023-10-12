@@ -23,7 +23,7 @@ import '../Widgets/Drawer.dart';
 
 
 
-PlatformFile? _getImageFile;
+PlatformFile _getImageFile;
 var picked;
 
 class SelectCateogoryView extends StatefulWidget{

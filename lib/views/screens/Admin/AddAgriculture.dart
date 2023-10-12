@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-PlatformFile? _getImageFile;
+PlatformFile _getImageFile;
 var picked;
 
 class AddAgricultureView extends StatefulWidget{

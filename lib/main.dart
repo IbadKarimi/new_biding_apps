@@ -1,29 +1,29 @@
-import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
-import 'package:biding_app/views/screens/Admin/AddVehicle.dart';
-import 'package:biding_app/views/screens/Admin/ViewBids.dart';
-import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
-import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
-import 'package:biding_app/views/screens/Home/HomePageView.dart';
-import 'package:biding_app/views/screens/RealState/RealStateView.dart';
-import 'package:biding_app/views/screens/SelectingCategories/SelectingCategories.dart';
-import 'package:biding_app/views/screens/Vehicle/VehiclesView.dart';
-import 'package:biding_app/views/screens/categories/categories.dart';
+
+import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
 import 'package:biding_app/views/screens/splash_screen/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
-void main() {
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
+
 }
 
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
 
   @override
+  // Define a function that inserts dogs into the database
+
   Widget build(BuildContext context) {
 
 
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: WelcomeScreen(),
+      child: SignUpFormWidget()
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controllers/signUp_controller.dart';
@@ -14,16 +16,32 @@ class SignUpFormWidget extends StatefulWidget{
 class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
   @override
-  //The instance to be injected
-
-  final email=TextEditingController();
-  final password=TextEditingController();
-  final fullName=TextEditingController();
-  final phoneNo=TextEditingController();
+  final UserController userController = UserController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
 
   final _formKey=GlobalKey<FormState>();
-  UserController userController=UserController();
+
+
+  void _handleSignup(BuildContext context) async {
+    String email = emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+
+    UserModel user = UserModel(email: email, password: password);
+    User firebaseUser = await userController.signUp(user);
+
+    if (firebaseUser != null) {
+   Get.offAll(()=>HomePageView());
+    } else {
+      // Signup failed, show error message to the user
+
+    }
+  }
+
 
 
   Widget build(BuildContext context) {
@@ -51,7 +69,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                       width: 300.w,
                       margin: EdgeInsets.only(top: 30.h),
                       child: TextFormField(
-                        controller:fullName,
+                        controller:fullNameController,
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             label: Text("Full Name"),
@@ -67,8 +86,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                       height: 45.h,
                       width: 300.w,
                       child: TextFormField(
-
-                          controller:email,
+                          style: TextStyle(color: Colors.black),
+                          controller:emailController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               label: Text("Email"),
@@ -79,7 +98,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                         height: 45.h,
                         width: 300.w,
                         child: TextFormField(
-                          controller: phoneNo,
+                          controller: phoneNoController,
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               label: Text("Phone No"),
@@ -95,7 +115,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                         width: 300.w,
                         child: TextFormField(
 
-                          controller:password,
+                          controller:_passwordController,
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               label: Text("Password"),
@@ -108,27 +129,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                           margin: EdgeInsets.only(top: 20.h),
                           height: 45.h,
                           width: 300.w,
-                          child: ElevatedButton(onPressed:
-                              () async {
-                            Get.offAll(()=>Category());
-                            if (_formKey.currentState!.validate()) {
-
-                              UserModel userModel=UserModel();
-
-                              userModel.email=email.text;
-                              userModel.email=password.text;
-
-                              bool isData=await userController.handleSignup(userModel);
-
-                              if(isData){
-
-
-                              }
-
-
-
-                            }
-                          }, child: Text("SignUp", style: TextStyle(color: Colors
+                          child: ElevatedButton(
+                            onPressed: () => _handleSignup(context),
+                               child: Text("SignUp", style: TextStyle(color: Colors
                               .white),),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
