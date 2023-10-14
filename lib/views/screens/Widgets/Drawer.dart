@@ -1,15 +1,25 @@
+import 'dart:io';
+
+import 'package:biding_app/controllers/signUp_controller.dart';
 import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
 import 'package:biding_app/views/screens/Admin/ViewBids.dart';
 import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../authentication_repository/login.dart';
 import '../categories/categories.dart';
 
 
-
+PlatformFile _getImageFile;
+var picked;
 
 class CustomDrawer extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -21,6 +31,27 @@ class CustomDrawer extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+  UserController controller=UserController();
+
+  Rx<File> image=File('').obs;
+  Future getImage()async{
+
+    final pickImage=await ImagePicker().pickImage(source: ImageSource.gallery);
+    final imageTemp=File(pickImage.path);
+    image.value=imageTemp;
+    print(imageTemp.path.toString());
+ if(image.value!=""){
+
+   controller.InsertImage(image);
+
+ }
+
+
+   }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer( child: ListView(
@@ -36,14 +67,60 @@ class _CustomDrawerState extends State<CustomDrawer> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              new CircleAvatar(
+            /*  CircleAvatar(
                 radius: 40.0,
                 backgroundColor: const Color(0xFF778899),
                 child: new Image.asset(
                   'lib/utils/images/construction-min.png',
-                ), //For Image Asset
+                ),*/ //For Image Asset
 
-              ), Padding(
+              Obx((){
+                return Stack(
+                  children: [
+                    Container(
+                      width:80.w,
+                      height: 80.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(width: 1,color: Colors.grey),
+
+                      ),
+                      child:image.value.path==""? Container(
+                        width:80.w,
+                        height: 80.h,
+
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(width: 1,color: Colors.grey),
+
+                        ),
+                      ):
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100), // Adjust the border radius as needed
+                        child: Image.file(
+                          File(image.value.path),
+                          width: 80, // Adjust the width as needed
+                          height: 80, // Adjust the height as needed
+                          fit: BoxFit.cover,
+                        ),
+                      ),)
+
+                    ,  Padding(
+                      padding: EdgeInsets.only(left:55.w,top:30.h),
+                      child: IconButton(onPressed: (){
+                        getImage();
+                      }, icon: Icon(Icons.add_circle)),
+                    )
+
+
+
+
+                  ]);
+              }),
+
+
+              Padding(
                 padding: const EdgeInsets.only(left:0,top:10),
                 child: Text("Ibad Karimi",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white),),
               ),

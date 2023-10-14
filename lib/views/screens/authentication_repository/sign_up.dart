@@ -29,13 +29,16 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   void _handleSignup(BuildContext context) async {
     String email = emailController.text.trim();
     String password = _passwordController.text.trim();
+    String fullName=fullNameController.text.trim();
+    String phoneNo=phoneNoController.text.trim();
 
 
-    UserModel user = UserModel(email: email, password: password);
-    User firebaseUser = await userController.signUp(user);
+    UserModel user = UserModel(email: email, password: password,fullName:fullName,phoneNo: phoneNo);
+    User firebaseUser = await userController.InsertSignUp(user);
+
 
     if (firebaseUser != null) {
-   Get.offAll(()=>HomePageView());
+      Get.offAll(()=>HomePageView());
     } else {
       // Signup failed, show error message to the user
 
@@ -131,8 +134,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                           width: 300.w,
                           child: ElevatedButton(
                             onPressed: () => _handleSignup(context),
-                               child: Text("SignUp", style: TextStyle(color: Colors
-                              .white),),
+                            child: Text("SignUp", style: TextStyle(color: Colors
+                                .white),),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 shape: RoundedRectangleBorder(

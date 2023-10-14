@@ -1,4 +1,5 @@
 
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
 import 'package:biding_app/views/screens/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
