@@ -56,11 +56,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
  if(image.value!=""){
 
    controller.InsertImage(image);
-
- }
-
-
-   }
+   }}
 
   void initState() {
     // var ownerAbout=getOwnerAbout(currentUserEmail.toString());

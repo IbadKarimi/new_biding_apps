@@ -47,11 +47,7 @@ class _AddOtherViewState extends State<AddOtherView > {
 
 
   TextEditingController categoryName=TextEditingController();
-  TextEditingController modelNo=TextEditingController();
-  TextEditingController registrationYear=TextEditingController();
-  TextEditingController registrationArea=TextEditingController();
-  TextEditingController enginePower=TextEditingController();
-  TextEditingController fuelType=TextEditingController();
+
 
 
 
