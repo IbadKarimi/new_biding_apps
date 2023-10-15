@@ -3,7 +3,7 @@ import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controllers/signUp_controller.dart';
+import '../../../controllers/user_controller.dart';
 import '../../../model/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +14,9 @@ class SignUpFormWidget extends StatefulWidget{
 }
 
 class _SignUpFormWidgetState extends State<SignUpFormWidget> {
+
+  bool _isLoading = false;
+
 
   @override
   final UserController userController = UserController();
@@ -27,23 +30,41 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
 
   void _handleSignup(BuildContext context) async {
+
+    setState(() {
+      _isLoading = true; // Set loading state to true when login starts
+    });
+
     String email = emailController.text.trim();
     String password = _passwordController.text.trim();
-    String fullName=fullNameController.text.trim();
-    String phoneNo=phoneNoController.text.trim();
+    String fullName = fullNameController.text.trim();
+    String phoneNo = phoneNoController.text.trim();
 
-
-    UserModel user = UserModel(email: email, password: password,fullName:fullName,phoneNo: phoneNo);
-    User firebaseUser = await userController.InsertSignUp(user);
-
-
-    if (firebaseUser != null) {
-      Get.offAll(()=>HomePageView());
-    } else {
-      // Signup failed, show error message to the user
-
+    try {
+      UserModel user = UserModel(email: email,
+          password: password,
+          fullName: fullName,
+          phoneNo: phoneNo);
+          User firebaseUser = await userController.InsertSignUp(user);
+          Get.offAll(()=>HomePageView());
+    }
+    catch (e) {
+      // Handle login error, e.g., show error message in SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('SignUp failed. $e'),
+      ));
+    }
+    finally {
+      setState(() {
+        _isLoading = false; // Set loading state to false after login attempt (success or failure)
+      });
     }
   }
+
+
+
+
+
 
 
 
@@ -131,7 +152,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                         child: Container(
                           margin: EdgeInsets.only(top: 20.h),
                           height: 45.h,
-                          width: 300.w,
+                          width: 250.w,
                           child: ElevatedButton(
                             onPressed: () => _handleSignup(context),
                             child: Text("SignUp", style: TextStyle(color: Colors
@@ -144,7 +165,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                         )),
 
 
-
+                    Center(
+                      child: _isLoading
+                          ? Padding(
+                            padding: const EdgeInsets.only(top:10),
+                            child: CircularProgressIndicator(),
+                          ) // Show CircularProgressIndicator when loading
+                          :Container(),)
 
 
                   ]

@@ -1,11 +1,15 @@
 import 'dart:io';
 
-import 'package:biding_app/controllers/signUp_controller.dart';
+import 'package:biding_app/controllers/user_controller.dart';
 import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
 import 'package:biding_app/views/screens/Admin/ViewBids.dart';
 import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -14,12 +18,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../model/UserModel.dart';
 import '../authentication_repository/login.dart';
 import '../categories/categories.dart';
 
 
 PlatformFile _getImageFile;
 var picked;
+String imagePath="";
+String fullName="";
+String phoneNo="";
 
 class CustomDrawer extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -31,7 +39,12 @@ class CustomDrawer extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+
+
   UserController controller=UserController();
+
+  List<UserModel> _getUserData=[];
+
 
   Rx<File> image=File('').obs;
   Future getImage()async{
@@ -49,11 +62,34 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
    }
 
+  void initState() {
+    // var ownerAbout=getOwnerAbout(currentUserEmail.toString());
+
+
+
+    controller.getUserData().then((value){
+      setState((){
+        _getUserData.addAll(value);
+
+        fullName=_getUserData[0].fullName.toString();
+        imagePath=_getUserData[0].imagePath.toString();
+        phoneNo=_getUserData[0].phoneNo.toString();
+
+
+        print("image path ================="+_getUserData[0].imagePath.toString());
+      });
+    });
+
+
+    super.initState();
+  }
+
 
 
 
   @override
   Widget build(BuildContext context) {
+    String email=FirebaseAuth.instance.currentUser.email.toString();
     return Drawer( child: ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
@@ -74,60 +110,76 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   'lib/utils/images/construction-min.png',
                 ),*/ //For Image Asset
 
-              Obx((){
-                return Stack(
-                  children: [
-                    Container(
-                      width:80.w,
-                      height: 80.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(width: 1,color: Colors.grey),
+               Row(
+                 children: [
+                   Stack(
+                      children: [
+                        Container(
+                          width:60.w,
+                          height: 60.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(width: 1,color: Colors.grey),
 
-                      ),
-                      child:image.value.path==""? Container(
-                        width:80.w,
-                        height: 80.h,
+                          ),
+                          child:imagePath=="null"? Container(
+                            width:60.w,
+                            height: 60.h,
 
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 1,color: Colors.grey),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(width: 1,color: Colors.grey),
 
-                        ),
-                      ):
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(100), // Adjust the border radius as needed
-                        child: Image.file(
-                          File(image.value.path),
-                          width: 80, // Adjust the width as needed
-                          height: 80, // Adjust the height as needed
-                          fit: BoxFit.cover,
-                        ),
-                      ),)
+                            ),
+                          ):
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100), // Adjust the border radius as needed
+                            child: Image.network(
 
-                    ,  Padding(
-                      padding: EdgeInsets.only(left:55.w,top:30.h),
-                      child: IconButton(onPressed: (){
-                        getImage();
-                      }, icon: Icon(Icons.add_circle)),
-                    )
+                                imagePath.toString(),
+                              fit: BoxFit.cover,
+                              height: 60.h,
+                              width:60.w,
 
 
+                            )
+                          ),)
+
+                        ,  Padding(
+                          padding: EdgeInsets.only(left:40.w,top:30.h),
+                          child: IconButton(onPressed: (){
+                            getImage();
+                          }, icon: Icon(Icons.add_circle)),
+                        )
 
 
-                  ]);
-              }),
 
 
-              Padding(
-                padding: const EdgeInsets.only(left:0,top:10),
-                child: Text("Ibad Karimi",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white),),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left:0,top:5),
-                child: Text("ibadkarimi.10@gmail.com",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.grey),),
-              )
+                      ]),
+
+                   Column(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       Padding(
+                         padding: const EdgeInsets.only(left:0,top:10),
+                         child: Container(child: Text(fullName,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white),)),
+                       ),
+
+                       Padding(
+                         padding: const EdgeInsets.only(left:0,top:2),
+                         child: Text( email,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.black),),
+                       )
+                     ],
+                   ),
+
+                 ],
+               ),
+
+
+
+
             ],
           ),
 
@@ -177,6 +229,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ListTile(
           leading: Icon(Icons.login_rounded),
           title: GestureDetector(onTap:(){
+            FirebaseAuth.instance.signOut();
             Get.offAll(()=>LoginFormWidget());
           },
               child: const Text('LogOut',style: TextStyle(color: Colors.black),)),

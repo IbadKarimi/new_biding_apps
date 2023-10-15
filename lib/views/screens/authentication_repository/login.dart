@@ -1,10 +1,17 @@
 
+import 'package:biding_app/controllers/user_controller.dart';
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../model/UserModel.dart';
 bool isVisible=false;
 
 class LoginFormWidget extends StatefulWidget{
@@ -12,14 +19,40 @@ class LoginFormWidget extends StatefulWidget{
   State<LoginFormWidget > createState() => _LoginFormWidget ();
 }
 
-class _LoginFormWidget  extends State<LoginFormWidget > {
+ class _LoginFormWidget  extends State<LoginFormWidget >{
   @override
   //The instance to be injected
-
+  bool _isLoading = false;
 
   final _formKey=GlobalKey<FormState>();
-  TextEditingController email=TextEditingController();
-  TextEditingController password=TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final UserController _authController = UserController(); // Create an instance of AuthController
+
+  void _signIn() async {
+
+    setState(() {
+      _isLoading = true; // Set loading state to true when login starts
+    });
+
+    try {
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
+      await _authController.signIn(email, password);
+      Get.offAll(()=>HomePageView());
+      // Handle successful login here, e.g., navigate to the next screen
+    } catch (e) {
+      // Handle login error, e.g., show error message in SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Login failed. $e'),
+      ));
+    }
+    finally {
+      setState(() {
+        _isLoading = false; // Set loading state to false after login attempt (success or failure)
+      });
+    }
+  }
 
 
 
@@ -65,7 +98,8 @@ class _LoginFormWidget  extends State<LoginFormWidget > {
                     width: 300.w,
                     height: 45.h,
                     child: TextFormField(
-                      controller: email,
+                      controller: emailController,
+                      style: TextStyle(color: Colors.black),
 
                       decoration: InputDecoration(
 
@@ -82,7 +116,7 @@ class _LoginFormWidget  extends State<LoginFormWidget > {
                       child: TextFormField(
                         style: TextStyle(color: Colors.black),
 
-                        controller: password,
+                        controller: passwordController,
                         decoration: InputDecoration(label: Text("Password") ,prefixIcon:Icon(Icons.fingerprint),
                           border: OutlineInputBorder(),
 
@@ -115,15 +149,13 @@ class _LoginFormWidget  extends State<LoginFormWidget > {
                           margin: EdgeInsets.only(top:60.h,bottom: 20.h),
                           width: 250.w,
                           height: 45.h,
-                          child:ElevatedButton(onPressed: (){
+                          child:ElevatedButton(onPressed:_signIn,
 
 
-                            if(_formKey.currentState.validate()){
-                             Get.offAll(()=>Category());
 
-                            }
 
-                          }, child:  Text("Login"),
+
+                           child:  Text("Login"),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 shape:
@@ -142,14 +174,17 @@ class _LoginFormWidget  extends State<LoginFormWidget > {
 
 
 
-       ] )
-
+       ] ),
+            Center(
+                child: _isLoading
+                    ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                    :Container(),)
                 ]
             ),
 
           ),
         ),
-      ),
+      )
     );
   }}
 

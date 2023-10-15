@@ -4,7 +4,7 @@ import 'package:biding_app/views/screens/Widgets/Drawer.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controllers/signUp_controller.dart';
+import '../../../controllers/user_controller.dart';
 import '../../../model/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
