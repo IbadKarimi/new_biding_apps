@@ -1,5 +1,6 @@
 
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
+import 'package:biding_app/views/screens/SelectingCategories/SelectingCategories.dart';
 import 'package:biding_app/views/screens/authentication_repository/login.dart';
 import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
 import 'package:biding_app/views/screens/splash_screen/splash_screen.dart';
@@ -47,7 +48,77 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: LoginFormWidget()
+      child: SelectCateogoryView()
+    );
+  }
+}
+
+
+
+
+class DateSelectionScreen extends StatefulWidget {
+  @override
+  _DateSelectionScreenState createState() => _DateSelectionScreenState();
+}
+
+class _DateSelectionScreenState extends State<DateSelectionScreen> {
+  DateTime selectedDate;
+
+  Future<void> _pickDate() async {
+    DateTime pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1), // Can customize the range of available dates
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+
+      });
+    }
+  }
+
+  String getRemainingTime() {
+    if (selectedDate == null) {
+      return 'No date selected';
+    }
+
+    DateTime now = DateTime.now();
+    Duration difference = selectedDate.isAfter(now) ? selectedDate.difference(now) : Duration.zero;
+
+    int days = difference.inDays;
+    int hours = difference.inHours % 24;
+    int minutes = difference.inMinutes % 60;
+    int seconds = difference.inSeconds % 60;
+
+    return 'Remaining Time: $days days, $hours hours, $minutes minutes, $seconds seconds';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select Date'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Select Date'+selectedDate.toString()),
+            ElevatedButton(
+              onPressed: _pickDate,
+              child: Text('Pick Date'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              getRemainingTime(),
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

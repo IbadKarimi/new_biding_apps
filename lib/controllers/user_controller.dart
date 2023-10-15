@@ -45,8 +45,9 @@ class UserController {
 
   Future InsertImage(Rx<File> image)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     final String docId = prefs.getString('docId');
+
+
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();  // with same name only one image is uploaded and time changes new images uploaded
     Reference refrence=FirebaseStorage.instance.ref().child("images/$fileName");

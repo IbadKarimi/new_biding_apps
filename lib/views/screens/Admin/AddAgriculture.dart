@@ -249,7 +249,9 @@ class _AddAgricultureViewState extends State<AddAgricultureView> {
 
 
 
-                  ],)),
+                  ],)
+
+            ),
 
 
           ],

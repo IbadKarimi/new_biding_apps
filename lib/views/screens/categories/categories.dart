@@ -1,6 +1,6 @@
 
 
-import 'package:biding_app/model/Vehicle.dart';
+import 'package:biding_app/model/VehicleModel.dart';
 import 'package:biding_app/views/screens/Admin/AddAgriculture.dart';
 import 'package:biding_app/views/screens/Aggriculture/AggricultureView.dart';
 import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
