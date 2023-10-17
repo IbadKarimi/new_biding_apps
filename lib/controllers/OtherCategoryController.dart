@@ -51,4 +51,23 @@ class OtherCategoryController{
       return Future.error("An error occurred while Insert Agriculture Data.");
     }
   }
+
+
+  Future<List<OtherCategoryModel>> getOtherCategory()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('otherCategory').get();
+
+    List<OtherCategoryModel> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(OtherCategoryModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<OtherCategoryModel> data=[];
+    data.addAll(users);
+
+
+    return data;
+
+  }
 }

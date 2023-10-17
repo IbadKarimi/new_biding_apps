@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/RealStateController.dart';
+import '../../../model/RealStateModel.dart';
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
 import '../authentication_repository/login.dart';
@@ -19,6 +21,28 @@ class RealStateView extends StatefulWidget{
 }
 
 class _RealStateViewState extends State<RealStateView> {
+
+  RealStateController realStateController=RealStateController();
+  List<RealStateModel> _realState=[];
+
+
+
+
+
+
+  void initState() {
+
+
+    realStateController.getrealState().then((value){
+      setState(() {
+        _realState.addAll(value);
+
+      });
+    });
+
+
+    super.initState();
+  }
   @override
   int index = 0;
 
@@ -48,16 +72,16 @@ class _RealStateViewState extends State<RealStateView> {
 
 
               ],),
-              for(int i=0;i<10;i++)
-                Column(  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              for(int i=0;i<_realState.length;i++)
+                Column(
+
                   children: [
 
                     Container(
-                      margin: EdgeInsets.only(left:10.w,top:20.h,right: 8.w),
+                      margin: EdgeInsets.only(left:0.w,top:20.h),
                       alignment: AlignmentDirectional.center,
                       width:320.w,
-                      height: 400.h,
+
                       decoration: BoxDecoration(
 
                           borderRadius: BorderRadius.circular(0.r),
@@ -68,10 +92,7 @@ class _RealStateViewState extends State<RealStateView> {
                         mainAxisAlignment:MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                              mainAxisAlignment:MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: []),
+
 
                           Container(
                             margin: EdgeInsets.only(left:0.w,top:0.h),
@@ -79,7 +100,7 @@ class _RealStateViewState extends State<RealStateView> {
                             width:320.w,
                             height: 180.h,
                             decoration: BoxDecoration(
-                                image: DecorationImage(image: AssetImage("lib/utils/images/BidPic.png",)),
+                                image: DecorationImage(image: NetworkImage(_realState[i].imagePath),fit: BoxFit.cover),
 
                                 border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                             ),
@@ -88,7 +109,7 @@ class _RealStateViewState extends State<RealStateView> {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                             child:  Text(
-                              "Toyota Corolla",
+                              _realState[i].selectType ,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16.sp,
@@ -99,7 +120,7 @@ class _RealStateViewState extends State<RealStateView> {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10.w),
                             child:  Text(
-                              "This is my favourite Car I am giving it low cost",
+                              _realState[i].description,
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14.sp,
@@ -118,22 +139,39 @@ class _RealStateViewState extends State<RealStateView> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
-                            child:  Text(
-                              "1000000 RS",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 0.h),
+                                child:  Text(
+                                  _realState[i].setBidPrice,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
-                            ),
+
+
+                            ],
                           ),
+                          Container(
+                            width: 240.w,
+
+                            margin: EdgeInsets.only(left:10.w),
+                            color: Colors.black,
+                            child: Text( _realState[i].setBidEndTime,style:TextStyle(color: Colors.white),),
+                          ),
+
+
+
+
                           Center(
                             child: Container(
-                              margin: EdgeInsets.only(top:10.h,left:0.w),
+                              margin: EdgeInsets.only(top:10.h,bottom:5.h),
                               width: 160.w,
-                              height: 45.h,
+                              height: 35.h,
                               child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -201,9 +239,9 @@ class _RealStateViewState extends State<RealStateView> {
                                                             children: [
 
                                                               Container(
-                                                                margin: EdgeInsets.only(left:10.w),
+                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
                                                                 width: 100.w,
-                                                                height: 40.h,
+                                                                height: 35.h,
                                                                 child: ElevatedButton(
                                                                   onPressed: () {
                                                                     Navigator.of(context).pop();
@@ -238,10 +276,11 @@ class _RealStateViewState extends State<RealStateView> {
                                                                       const Color(
                                                                           0xFF363B42)),),
                                                               ),
+
                                                               Container(
                                                                 width: 100.w,
-                                                                height: 40.h,
-                                                                margin: EdgeInsets.only(left:10.w),
+                                                                height: 35.h,
+                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
                                                                 child: ElevatedButton(
                                                                   onPressed: () {
                                                                     showDialog(context: context, builder:(BuildContext context){
@@ -291,7 +330,7 @@ class _RealStateViewState extends State<RealStateView> {
                                                                                           MaterialPageRoute(
                                                                                               builder:
                                                                                                   (context) =>
-                                                                                                      RealStateView()));
+                                                                                                  RealStateView()));
 
                                                                                     },
                                                                                     // ignore: sort_child_properties_last
@@ -387,7 +426,7 @@ class _RealStateViewState extends State<RealStateView> {
                                         Center(
                                             child:
                                             Text(
-                                              "Bid Now",
+                                              "Bidd Now",
                                               style: TextStyle(
                                                   color: Colors
                                                       .white,
@@ -402,7 +441,7 @@ class _RealStateViewState extends State<RealStateView> {
                                         borderRadius:
                                         BorderRadius
                                             .circular(
-                                            20.0.r),
+                                            30.0.r),
                                       ),
                                       backgroundColor:
                                       Colors.lightGreen)),),

@@ -23,9 +23,10 @@ class VehicleController {
     String imageUrl=await refrence.getDownloadURL();
 
     try {
+      CollectionReference realStateCollection = FirebaseFirestore.instance.collection('vehicle');
 
-
-      FirebaseFirestore.instance.collection('vehicle').doc().set({
+      // Add data to Firestore and get the DocumentReference
+      DocumentReference documentRef = await realStateCollection.add({
         'id':docId,
         'buyerDocId':vehicleModel.buyerDocId ,
         'vehicleType':vehicleModel.vehicleType,
@@ -45,6 +46,26 @@ class VehicleController {
         'imagePath':imageUrl,
         // Other user data fields
       });
+      String _docId = documentRef.id;
+ try{
+   FirebaseFirestore.instance.collection('HomePage').doc().set({
+     'userId':docId.toString(),
+     'id':_docId.toString(),
+     'name':vehicleModel.vehicleName ,
+     'city':vehicleModel.cityName,
+     'description':vehicleModel.description,
+     'price':vehicleModel.setBidPrice,
+     'imagePath':imageUrl,
+     "auctionType":vehicleModel.auctionType
+
+     // Other user data fields
+
+   });
+ }catch(e){
+   print("Foreeeeeeeeeeeeeeeeee Base"+e.toString());
+ }
+
+
 
      // return userCredential.user;
 
@@ -55,6 +76,25 @@ class VehicleController {
 
       return Future.error("An error occurred while signing in.");
     }
+  }
+
+
+  Future<List<VehicleModel>> getVehicle()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('vehicle').get();
+
+    List<VehicleModel> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(VehicleModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<VehicleModel> data=[];
+    data.addAll(users);
+
+
+     return data;
+
   }
 
 

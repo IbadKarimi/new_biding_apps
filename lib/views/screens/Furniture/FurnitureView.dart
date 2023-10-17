@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:biding_app/views/screens/Admin/AddFurniture.dart';
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/Widgets/Drawer.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/FurnitureController.dart';
+import '../../../model/FurnitureModel.dart';
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
 import '../authentication_repository/login.dart';
@@ -19,6 +22,22 @@ class FurnitureView extends StatefulWidget{
 }
 
 class _FurnitureViewState extends State<FurnitureView > {
+  FurnitureController  furnitureController=FurnitureController();
+  List<FurnitureModel> _furniture=[];
+  void initState() {
+
+
+    furnitureController.getFurniture().then((value){
+      setState(() {
+        _furniture.addAll(value);
+
+      });
+    });
+
+
+    super.initState();
+  }
+
   @override
   int index = 0;
 
@@ -50,15 +69,15 @@ class _FurnitureViewState extends State<FurnitureView > {
 
 
               ],),
-              for(int i=0;i<10;i++)
-                Column(
-                  children: [
+                   for(int i=0;i<_furniture.length;i++)
+                    Column(
+                    children: [
 
                     Container(
                       margin: EdgeInsets.only(left:20.w,top:20.h),
                       alignment: AlignmentDirectional.center,
                       width:320.w,
-                      height: 400.h,
+
                       decoration: BoxDecoration(
 
                           borderRadius: BorderRadius.circular(0.r),
@@ -69,10 +88,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                         mainAxisAlignment:MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                              mainAxisAlignment:MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: []),
+
 
                           Container(
                             margin: EdgeInsets.only(left:0.w,top:0.h),
@@ -80,7 +96,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                             width:320.w,
                             height: 180.h,
                             decoration: BoxDecoration(
-                                image: DecorationImage(image: AssetImage("lib/utils/images/BidPic.png",)),
+                                image: DecorationImage(image: NetworkImage(_furniture[i].imagePath),fit: BoxFit.cover),
 
                                 border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                             ),
@@ -89,7 +105,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                             child:  Text(
-                              "Toyota Corolla",
+                              _furniture[i].makingMaterial ,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16.sp,
@@ -100,7 +116,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10.w),
                             child:  Text(
-                              "This is my favourite Car I am giving it low cost",
+                              _furniture[i].description,
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14.sp,
@@ -119,22 +135,39 @@ class _FurnitureViewState extends State<FurnitureView > {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
-                            child:  Text(
-                              "1000000 RS",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 0.h),
+                                child:  Text(
+                                  _furniture[i].setBidPrice,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
-                            ),
+
+
+                            ],
                           ),
+                          Container(
+                            width: 240.w,
+
+                            margin: EdgeInsets.only(left:10.w),
+                            color: Colors.black,
+                            child: Text( _furniture[i].setBidEndTime,style:TextStyle(color: Colors.white),),
+                          ),
+
+
+
+
                           Center(
                             child: Container(
-                              margin: EdgeInsets.only(top:10.h,left:0.w),
+                              margin: EdgeInsets.only(top:10.h,bottom:5.h),
                               width: 160.w,
-                              height: 45.h,
+                              height: 35.h,
                               child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -202,9 +235,9 @@ class _FurnitureViewState extends State<FurnitureView > {
                                                             children: [
 
                                                               Container(
-                                                                margin: EdgeInsets.only(left:10.w),
+                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
                                                                 width: 100.w,
-                                                                height: 40.h,
+                                                                height: 35.h,
                                                                 child: ElevatedButton(
                                                                   onPressed: () {
                                                                     Navigator.of(context).pop();
@@ -239,10 +272,11 @@ class _FurnitureViewState extends State<FurnitureView > {
                                                                       const Color(
                                                                           0xFF363B42)),),
                                                               ),
+
                                                               Container(
                                                                 width: 100.w,
-                                                                height: 40.h,
-                                                                margin: EdgeInsets.only(left:10.w),
+                                                                height: 35.h,
+                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
                                                                 child: ElevatedButton(
                                                                   onPressed: () {
                                                                     showDialog(context: context, builder:(BuildContext context){
@@ -292,7 +326,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                                                                                           MaterialPageRoute(
                                                                                               builder:
                                                                                                   (context) =>
-                                                                                                  FurnitureView()));
+                                                                                                  HomePageView()));
 
                                                                                     },
                                                                                     // ignore: sort_child_properties_last
@@ -388,7 +422,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                                         Center(
                                             child:
                                             Text(
-                                              "Bid Now",
+                                              "Bidd Now",
                                               style: TextStyle(
                                                   color: Colors
                                                       .white,
@@ -403,7 +437,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                                         borderRadius:
                                         BorderRadius
                                             .circular(
-                                            20.0.r),
+                                            30.0.r),
                                       ),
                                       backgroundColor:
                                       Colors.lightGreen)),),

@@ -15,9 +15,10 @@ class RealStateModel{
   String completeAddress="";
   String description="";
   String status="";
+  String imagePath="";
 
   RealStateModel({this.id,this.buyerDocId,this.selectType,this.areaType,this.range,this.noFloors,this.noBedrooms,this.noBathrooms,
-  this.auctionType,this.setBidPrice,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status});
+  this.auctionType,this.setBidPrice,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath});
 
   factory  RealStateModel.fromFirestore(Map<String, dynamic> data) {
     return  RealStateModel(
@@ -37,6 +38,7 @@ class RealStateModel{
       completeAddress:data['completeAddress']??"",
       description:data['description']??"",
       status:data['status']??"",
+      imagePath:data['imagePath']??"",
 
 
 

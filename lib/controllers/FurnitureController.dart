@@ -31,7 +31,10 @@ class FurnitureController {
     try {
 
 
-      FirebaseFirestore.instance.collection('furniture').doc().set({
+      CollectionReference furnitureCollection = FirebaseFirestore.instance.collection('furniture');
+
+      // Add data to Firestore and get the DocumentReference
+      DocumentReference documentRef = await furnitureCollection .add({
         'id':docId,
         'buyerDocId':furnitureModel.buyerDocId ,
         'makingMaterial':furnitureModel.makingMaterial,
@@ -46,8 +49,28 @@ class FurnitureController {
         'description':furnitureModel.description,
         'status':furnitureModel.status,
         'imagePath':imageUrl,
+        'remainingTime':furnitureModel.remainingTime
         // Other user data fields
       });
+
+      String _docId = documentRef.id;
+      try{
+        FirebaseFirestore.instance.collection('HomePage').doc().set({
+          'userId':docId.toString(),
+          'id':_docId.toString(),
+          'name':furnitureModel.makingMaterial,
+          'city':furnitureModel.cityName,
+          'description':furnitureModel.description,
+          'price':furnitureModel.setBidPrice,
+          'imagePath':imageUrl,
+          "auctionType":furnitureModel.auctionType
+
+          // Other user data fields
+
+        });
+      }catch(e){
+        print("Foreeeeeeeeeeeeeeeeee Base"+e.toString());
+      }
 
       // return userCredential.user;
 
@@ -58,6 +81,27 @@ class FurnitureController {
 
       return Future.error("An error occurred while Insert Agriculture Data.");
     }
+
+
+
+  }
+
+  Future<List<FurnitureModel>> getFurniture()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('furniture').get();
+
+    List<FurnitureModel> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(FurnitureModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<FurnitureModel> data=[];
+    data.addAll(users);
+
+
+    return data;
+
   }
 
 

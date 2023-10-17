@@ -22,13 +22,19 @@ class AgricultureController {
     // Upload Image in FireBase
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();  // with same name only one image is uploaded and time changes new images uploaded
     Reference refrence=FirebaseStorage.instance.ref().child("agricultureImages/$fileName");
+
+
     await refrence.putFile(image.value);
+
     String imageUrl=await refrence.getDownloadURL();
 
     try {
 
 
-      FirebaseFirestore.instance.collection('agriculture').doc().set({
+      CollectionReference realStateCollection = FirebaseFirestore.instance.collection('agriculture');
+
+      // Add data to Firestore and get the DocumentReference
+      DocumentReference documentRef = await realStateCollection.add({
         'id':docId,
         'buyerDocId':agricultureModel.buyerDocId ,
         'typesCrop':agricultureModel.typesCrops,
@@ -46,6 +52,26 @@ class AgricultureController {
         // Other user data fields
       });
 
+      String _docId = documentRef.id;
+      try{
+        FirebaseFirestore.instance.collection('HomePage').doc().set({
+          'userId':docId.toString(),
+          'id':_docId.toString(),
+          'name':agricultureModel.typesCrops ,
+          'city':agricultureModel.cityName,
+          'description':agricultureModel.description,
+          'price':agricultureModel.setBidPrice,
+          'imagePath':imageUrl,
+          "auctionType":agricultureModel.auctionType
+
+          // Other user data fields
+
+        });
+      }catch(e){
+        print("Foreeeeeeeeeeeeeeeeee Base"+e.toString());
+      }
+
+
       // return userCredential.user;
 
     }  on FirebaseAuthException catch (e) {
@@ -55,7 +81,55 @@ class AgricultureController {
 
       return Future.error("An error occurred while Insert Agriculture Data.");
     }
+
+
+
+
+    try {
+
+
+      FirebaseFirestore.instance.collection('home').doc().set({
+        'id':docId,
+        'name':agricultureModel.typesCrops ,
+        'city':agricultureModel.cityName,
+        'description':agricultureModel.description,
+        'price':agricultureModel.setBidPrice,
+        'imagePath':imageUrl
+
+        // Other user data fields
+      });
+
+      // return userCredential.user;
+
+    }  on FirebaseAuthException catch (e) {
+
+      return Future.error(e.message);
+    } catch (e) {
+
+      return Future.error("An error occurred while Insert Agriculture Data.");
+    }
+
   }
+
+
+  Future<List<AgricultureModel>> getAgriculture()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('agriculture').get();
+
+    List<AgricultureModel> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(AgricultureModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<AgricultureModel> data=[];
+    data.addAll(users);
+
+
+    return data;
+
+  }
+
 
 
 

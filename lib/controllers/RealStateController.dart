@@ -32,7 +32,11 @@ class RealStateController {
     try {
 
 
-      FirebaseFirestore.instance.collection('realState').doc().set({
+
+      CollectionReference realStateCollection = FirebaseFirestore.instance.collection('realState');
+
+      // Add data to Firestore and get the DocumentReference
+      DocumentReference documentRef = await realStateCollection.add({
          "id":docId,
         'buyerDocId':realStateModel.buyerDocId ,
         'selectType':realStateModel.selectType,
@@ -52,6 +56,23 @@ class RealStateController {
         // Other user data fields
       });
 
+
+      String _docId = documentRef.id;
+      try{
+        FirebaseFirestore.instance.collection('HomePage').doc().set({
+          'userId':docId.toString(),
+          'id':_docId.toString(),
+          'name':realStateModel.selectType,
+          'city':realStateModel.cityName,
+          'description':realStateModel.description,
+          'price':realStateModel.setBidPrice,
+          'imagePath':imageUrl,
+          "auctionType":realStateModel.auctionType
+
+          // Other user data fields
+
+        });}catch(e){print("Fire Base Error in Home Psage Insertion"+e.toString());}
+
       // return userCredential.user;
 
     }  on FirebaseAuthException catch (e) {
@@ -65,7 +86,7 @@ class RealStateController {
 
 
   Future<User> InsertRealStateCommercial(RealStateModel realStateModel,Rx<File> image) async {
-
+    String _collectionId="";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String docId=prefs.getString("docId");
 
@@ -76,27 +97,60 @@ class RealStateController {
     String imageUrl=await refrence.getDownloadURL();
 
     try {
+      CollectionReference realStateCollection = FirebaseFirestore.instance.collection('realState');
 
-
-      FirebaseFirestore.instance.collection('realState').doc().set({
-        'id':docId,
-        'buyerDocId':realStateModel.buyerDocId ,
-        'selectType':realStateModel.selectType,
-        'areaType':realStateModel.areaType,
-        'range':realStateModel.range,
-        'noFloors':realStateModel.noFloors,
-        'noBedrooms':realStateModel.noBedrooms,
-        'noBathrooms':realStateModel.noBathrooms,
-        'auctionType':realStateModel.auctionType,
-        'setBidPrice':realStateModel.setBidPrice,
-        'setBidEndTime':realStateModel.setBidEndTime,
-        'cityName':realStateModel.cityName,
-        'completeAddress':realStateModel.completeAddress,
-        'description':realStateModel.description,
-        'status':realStateModel.status,
-        'imagePath':imageUrl,
+      // Add data to Firestore and get the DocumentReference
+      DocumentReference documentRef = await realStateCollection.add({
+        'buyerDocId': realStateModel.buyerDocId,
+        'selectType': realStateModel.selectType,
+        'areaType': realStateModel.areaType,
+        'range': realStateModel.range,
+        'noFloors': realStateModel.noFloors,
+        'noBedrooms': realStateModel.noBedrooms,
+        'noBathrooms': realStateModel.noBathrooms,
+        'auctionType': realStateModel.auctionType,
+        'setBidPrice': realStateModel.setBidPrice,
+        'setBidEndTime': realStateModel.setBidEndTime,
+        'cityName': realStateModel.cityName,
+        'completeAddress': realStateModel.completeAddress,
+        'description': realStateModel.description,
+        'status': realStateModel.status,
+        'imagePath': imageUrl,
         // Other user data fields
       });
+
+      // Get the document ID from the DocumentReference
+      _collectionId =  documentRef.id.toString();
+
+  try{
+    FirebaseFirestore.instance.collection('HomePage').doc().set({
+      'userId':docId.toString(),
+      'id':_collectionId.toString(),
+      'name':realStateModel.selectType ,
+      'city':realStateModel.cityName,
+      'description':realStateModel.description,
+      'price':realStateModel.setBidPrice,
+      'imagePath':imageUrl
+
+      // Other user data fields
+
+    });
+  }catch(e){print(e);}
+
+
+      print('Real State document added with ID: $docId');
+      // You can now use the docId or return it from the function if needed.
+    } catch (e) {
+      print('Error occurred while adding Real State data: $e');
+      // Handle the error as needed, for example, throw an exception or return an error message.
+    }
+
+    //----------Home
+
+    try {
+
+
+
 
       // return userCredential.user;
 
@@ -105,9 +159,30 @@ class RealStateController {
       return Future.error(e.message);
     } catch (e) {
 
-      return Future.error("An error occurred while Insert Real State Data.");
+      return Future.error("An error occurred while Insert Agriculture Data.");
     }
+
   }
+
+
+  Future<List<RealStateModel>> getrealState()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('realState').get();
+
+    List<RealStateModel> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(RealStateModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<RealStateModel> data=[];
+    data.addAll(users);
+
+
+    return data;
+
+  }
+
 
 
 }

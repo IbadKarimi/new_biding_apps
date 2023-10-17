@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/AgricultureController.dart';
+import '../../../model/AgricultureModel.dart';
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
 import '../authentication_repository/login.dart';
@@ -19,6 +21,22 @@ class AggricultureView extends StatefulWidget{
 }
 
 class _AggricultureViewState extends State<AggricultureView> {
+  AgricultureController  agricultureController=AgricultureController();
+  List<AgricultureModel> _agriculture=[];
+  void initState() {
+
+
+    agricultureController.getAgriculture().then((value){
+      setState(() {
+        _agriculture.addAll(value);
+
+      });
+    });
+
+
+    super.initState();
+  }
+
   @override
   int index = 0;
 
@@ -50,7 +68,7 @@ class _AggricultureViewState extends State<AggricultureView> {
 
               ],),
               //------------------------------------------ListView-------------------------//
-              for(int i=0;i<10;i++)
+              for(int i=0;i<_agriculture.length;i++)
                 Column(
                   children: [
 
@@ -58,7 +76,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                       margin: EdgeInsets.only(left:20.w,top:20.h),
                       alignment: AlignmentDirectional.center,
                       width:320.w,
-                      height: 400.h,
+
                       decoration: BoxDecoration(
 
                           borderRadius: BorderRadius.circular(0.r),
@@ -69,10 +87,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                         mainAxisAlignment:MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                              mainAxisAlignment:MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: []),
+
 
                           Container(
                             margin: EdgeInsets.only(left:0.w,top:0.h),
@@ -80,7 +95,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                             width:320.w,
                             height: 180.h,
                             decoration: BoxDecoration(
-                                image: DecorationImage(image: AssetImage("lib/utils/images/BidPic.png",)),
+                                image: DecorationImage(image: NetworkImage(_agriculture[i].imagePath),fit: BoxFit.cover),
 
                                 border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                             ),
@@ -89,7 +104,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                             child:  Text(
-                              "Toyota Corolla",
+                              _agriculture[i].typesCrops,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16.sp,
@@ -100,7 +115,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10.w),
                             child:  Text(
-                              "This is my favourite Car I am giving it low cost",
+                              _agriculture[i].description,
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14.sp,
@@ -122,7 +137,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                             child:  Text(
-                              "1000000 RS",
+                              _agriculture[i].setBidPrice,
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 16.sp,
@@ -130,11 +145,18 @@ class _AggricultureViewState extends State<AggricultureView> {
                               ),
                             ),
                           ),
+                          Container(
+                            width: 240.w,
+
+                            margin: EdgeInsets.only(left:10.w),
+                            color: Colors.black,
+                            child: Text( _agriculture[i].setBidEndTime,style:TextStyle(color: Colors.white),),
+                          ),
                           Center(
                             child: Container(
-                              margin: EdgeInsets.only(top:10.h,left:0.w),
+                              margin: EdgeInsets.only(top:10.h,bottom:5.h),
                               width: 160.w,
-                              height: 45.h,
+                              height: 35.h,
                               child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -388,7 +410,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                                         Center(
                                             child:
                                             Text(
-                                              "Bid Now",
+                                              "Bidd Now",
                                               style: TextStyle(
                                                   color: Colors
                                                       .white,
@@ -403,7 +425,7 @@ class _AggricultureViewState extends State<AggricultureView> {
                                         borderRadius:
                                         BorderRadius
                                             .circular(
-                                            20.0.r),
+                                            30.0.r),
                                       ),
                                       backgroundColor:
                                       Colors.lightGreen)),),

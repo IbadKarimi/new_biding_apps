@@ -46,6 +46,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
   DateTime selectedDate;
   String formattedSelectedDate = '';
 
+  DateTime selectedDateTime;
+  String formattedSelectedDateTime = '';
+  String remainingTime = '';
+
   Future<void> _pickDate() async {
     DateTime pickedDate = await showDatePicker(
       context: context,
@@ -54,14 +58,36 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
       lastDate: DateTime(DateTime.now().year + 1),
     );
 
-    if (pickedDate != null && pickedDate != selectedDate) {
-      final formattedDate = DateFormat('dd/MM/yyyy', 'en_US').format(pickedDate); // Format the date
-      setState(() {
-        selectedDate = pickedDate;
-        formattedSelectedDate = formattedDate; // Save the formatted date in your state variable
-      });
+    if (pickedDate != null) {
+      TimeOfDay pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+        setState(() {
+          selectedDateTime = combinedDateTime;
+          formattedSelectedDateTime = DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
+
+       remainingTime = calculateRemainingTime(combinedDateTime);
+        });
+      }
     }
   }
+
+  String calculateRemainingTime(DateTime pickedDateTime) {
+    DateTime now = DateTime.now();
+    Duration difference = pickedDateTime.isAfter(now) ? pickedDateTime.difference(now) : Duration.zero;
+
+    int days = difference.inDays;
+    int hours = difference.inHours % 24;
+    int minutes = difference.inMinutes % 60;
+    int seconds = difference.inSeconds % 60;
+
+    return '$days days, $hours hours, $minutes minutes, $seconds seconds';
+  }
+
 
 
   @override
@@ -280,7 +306,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         registerYear: registrationYear.text,
         enginePower: enginePower.text,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime: remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
@@ -323,7 +349,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         range: range.text,
         auctionType: _selectedValueAuctionType,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime: remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
@@ -350,6 +376,8 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
   }
   void _handleFurniture(BuildContext context) async {
 
+    String remainingTime=calculateRemainingTime(selectedDateTime);
+
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
     });
@@ -361,14 +389,16 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
       FurnitureModel furnitureModel = FurnitureModel (
         buyerDocId: "",
         makingMaterial: _selectedValuemMakingMaterial,
+        selectType:  _selectedValueSelectTypes,
         condition:_selectedValueCondition,
         auctionType: _selectedValueAuctionType,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime:remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
         status: "Pending",
+        remainingTime:  remainingTime,
       );
 
       User firebaseUser = await furnitureController.InsertFurniture(furnitureModel , image);
@@ -390,7 +420,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleRealStateResidential(BuildContext context) async {
-
+    String remainingTime=calculateRemainingTime(selectedDateTime);
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
     });
@@ -409,7 +439,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         noBathrooms: noOfBathrooms.text,
         auctionType: _selectedValueAuctionType,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime: remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
@@ -435,6 +465,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleRealStateCommercial(BuildContext context) async {
+    String remainingTime=calculateRemainingTime(selectedDateTime);
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -454,7 +485,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         noBathrooms: "",
         auctionType: _selectedValueAuctionType,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime: remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
@@ -480,6 +511,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleOtherCategory(BuildContext context) async {
+    String remainingTime=calculateRemainingTime(selectedDateTime);
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -495,7 +527,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         condition:_selectedValueCondition,
         auctionType: _selectedValueAuctionType,
         setBidPrice: price.text,
-        setBidEndTime: formattedSelectedDate.toString(),
+        setBidEndTime:  remainingTime.toString(),
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
@@ -1621,7 +1653,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
                 child: Icon(Icons.calendar_month),
               ),
             Padding(
-            padding:  EdgeInsets.only(left:5.w), child:Text(formattedSelectedDate.toString(),style: TextStyle(color: Colors.black,),),)
+            padding:  EdgeInsets.only(left:5.w), child:Text( formattedSelectedDateTime.toString(),style: TextStyle(color: Colors.black,),),)
             ],
           )
 
@@ -1781,7 +1813,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
                 }else{
                   _handleRealStateCommercial(context);
                 }
-                _handleFurniture(context);
+
               }
             }
               , child: Text("Add", style: TextStyle(color: Colors

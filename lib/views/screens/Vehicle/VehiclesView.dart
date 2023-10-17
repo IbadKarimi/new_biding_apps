@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+import 'package:biding_app/controllers/VehicleController.dart';
 import 'package:biding_app/views/screens/Widgets/Drawer.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../../model/VehicleModel.dart';
 import '../Admin/AddVehicle.dart';
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
@@ -19,8 +22,47 @@ class VehicleView extends StatefulWidget{
 }
 
 class _VehicleViewState extends State<VehicleView> {
+
+  VehicleController vehicleController=VehicleController();
+  List<VehicleModel> _vehicle=[];
+
+
+
+
+
+
+  void initState() {
+
+
+    vehicleController.getVehicle().then((value){
+      setState(() {
+        _vehicle.addAll(value);
+
+      });
+    });
+
+
+    super.initState();
+  }
+
   @override
   int index = 0;
+
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
+
+  String getRemainingTime(String selectedDateString) {
+    DateTime selectedDate = dateFormat.parse(selectedDateString, true).toLocal(); // Parse with the specified format
+
+    DateTime now = DateTime.now();
+    Duration difference = selectedDate.isAfter(now) ? selectedDate.difference(now) : Duration.zero;
+
+    int days = difference.inDays;
+    int hours = difference.inHours % 24;
+    int minutes = difference.inMinutes % 60;
+    int seconds = difference.inSeconds % 60;
+
+    return 'Remaining Time: $days days, $hours hours, $minutes minutes, $seconds seconds';
+  }
 
   TextEditingController offer=TextEditingController();
   Widget build(BuildContext context) {
@@ -50,7 +92,12 @@ class _VehicleViewState extends State<VehicleView> {
 
               ],),
 
-              for(int i=0;i<10;i++)
+
+
+
+
+
+              for(int i=0;i<_vehicle.length;i++)
               Column(
               children: [
 
@@ -58,21 +105,19 @@ class _VehicleViewState extends State<VehicleView> {
                   margin: EdgeInsets.only(left:20.w,top:20.h),
                   alignment: AlignmentDirectional.center,
                   width:320.w,
-                  height: 400.h,
+                  height: 350.h,
                   decoration: BoxDecoration(
 
                       borderRadius: BorderRadius.circular(0.r),
                       border: Border.all(color: Colors.black,width: 1)
                   ),
 
-                child:Column(
+                child:
+                Column(
                   mainAxisAlignment:MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                        mainAxisAlignment:MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: []),
+
 
                     Container(
                       margin: EdgeInsets.only(left:0.w,top:0.h),
@@ -80,7 +125,7 @@ class _VehicleViewState extends State<VehicleView> {
                       width:320.w,
                       height: 180.h,
                       decoration: BoxDecoration(
-                          image: DecorationImage(image: AssetImage("lib/utils/images/BidPic.png",)),
+                          image: DecorationImage(image: NetworkImage(_vehicle[i].imagePath),fit: BoxFit.cover),
 
                           border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                       ),
@@ -89,7 +134,7 @@ class _VehicleViewState extends State<VehicleView> {
                     Padding(
                       padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                       child:  Text(
-                        "Toyota Corolla",
+                        _vehicle[i].vehicleName ,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.sp,
@@ -100,7 +145,7 @@ class _VehicleViewState extends State<VehicleView> {
                     Padding(
                       padding: EdgeInsets.only(top: 10.h, left: 10.w),
                       child:  Text(
-                        "This is my favourite Car I am giving it low cost",
+                        _vehicle[i].description,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14.sp,
@@ -120,9 +165,9 @@ class _VehicleViewState extends State<VehicleView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
+                      padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 0.h),
                       child:  Text(
-                        "1000000 RS",
+                        _vehicle[i].setBidPrice,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16.sp,
@@ -130,6 +175,8 @@ class _VehicleViewState extends State<VehicleView> {
                         ),
                       ),
                     ),
+
+
                     Center(
                       child: Container(
                         margin: EdgeInsets.only(top:10.h,left:0.w),
@@ -239,6 +286,7 @@ class _VehicleViewState extends State<VehicleView> {
                                                             const Color(
                                                                 0xFF363B42)),),
                                                     ),
+                                                   
                                                     Container(
                                                       width: 100.w,
                                                       height: 40.h,
@@ -403,7 +451,7 @@ class _VehicleViewState extends State<VehicleView> {
                                   borderRadius:
                                   BorderRadius
                                       .circular(
-                                      20.0.r),
+                                      30.0.r),
                                 ),
                                 backgroundColor:
                                 Colors.lightGreen)),),
