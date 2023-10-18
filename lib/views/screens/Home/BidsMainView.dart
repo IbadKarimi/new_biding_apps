@@ -104,6 +104,7 @@ class _BidsMainViewState extends State<BidsMainView> {
 
 
 
+
   Future<String> _loadStoredValue() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -134,6 +135,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNameR=dataRealState[0].cityName.toString();
             _completeAddressR=dataRealState[0].completeAddress.toString();
             _descriptionR=dataRealState[0].description.toString();
+            _isLoading = true;
 
           });
         });
@@ -156,6 +158,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             imagePath = data[0].imagePath.toString();
             enginePower = data[0].enginePower.toString();
             completeAddress = data[0].completeAddress.toString();
+            _isLoading = true;
           });
         });
       }
@@ -174,6 +177,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNamef=dataFurniture[0].cityName.toString();
             _completeAddressf=dataFurniture[0].completeAddress.toString();
             _descriptionf=dataFurniture[0].description.toString();
+            _isLoading = true;
 
           });
         });
@@ -192,6 +196,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNameA=dataAgriculture[0].cityName.toString();
             _completeAddressA=dataAgriculture[0].completeAddress.toString();
             _descriptionA=dataAgriculture[0].description.toString();
+            _isLoading = true;
 
           });
         });
@@ -238,7 +243,12 @@ class _BidsMainViewState extends State<BidsMainView> {
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
       drawer: CustomDrawer(),
-      body: SingleChildScrollView(
+      body:_isLoading!=true?
+          Center(child: Padding(
+            padding: const EdgeInsets.only(top:30),
+            child: CircularProgressIndicator(),
+          ))
+      :SingleChildScrollView(
        scrollDirection: Axis.vertical,
         child:
 
