@@ -132,5 +132,26 @@ class AgricultureController {
 
 
 
+  Future<List<  AgricultureModel >> getAgricultureById(String docId) async {
 
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String docId=prefs.getString("id");
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('agriculture').doc(docId).get();
+    if (documentSnapshot.exists) {
+      // Document exists, you can access the data using documentSnapshot.data()
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      AgricultureModel agriculture =   AgricultureModel .fromFirestore(data);
+      return [agriculture];
+      //List<UserModel> users=[user];
+
+      //print("User on 0 index"+users[0].fullName);
+
+    } else {
+      // Document does not exist
+      return [];
+    }
+
+
+
+  }
 }

@@ -12,18 +12,20 @@ class HomePageModel{
  String price;
  String description;
  String imagePath;
+ String categoryName;
 
- HomePageModel({this.docId,this.name,this.city,this.price,this.description,this.imagePath});
+ HomePageModel({this.docId,this.name,this.city,this.price,this.description,this.imagePath,this.categoryName});
 
   factory   HomePageModel.fromFirestore(Map<String, dynamic> data) {
     return   HomePageModel(
 
-      docId: data['docId'] ??"",
+      docId: data['id'] ??"",
       name: data['name'] ??"",
       city:data['city']??"",
       price:data['price']??"",
       description:data['description']??"",
       imagePath: data['imagePath']??"",
+      categoryName:data['categoryType']??"",
 
 
 

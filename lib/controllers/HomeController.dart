@@ -1,7 +1,9 @@
 
 
 import 'package:biding_app/model/HomePageModel.dart';
+import 'package:biding_app/model/VehicleModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageController{
 
@@ -23,4 +25,7 @@ class HomePageController{
     return data;
 
   }
+
+
+
 }

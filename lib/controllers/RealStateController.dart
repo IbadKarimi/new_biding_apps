@@ -183,6 +183,29 @@ class RealStateController {
 
   }
 
+  Future<List<RealStateModel>> getRealEstateById(String docId) async {
 
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String _docId=prefs.getString("id");
+
+    print("ID in Function"+_docId.toString());
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('realState').doc(_docId).get();
+    if (documentSnapshot.exists) {
+      // Document exists, you can access the data using documentSnapshot.data()
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      RealStateModel realStateModel = RealStateModel.fromFirestore(data);
+      return [realStateModel];
+      //List<UserModel> users=[user];
+
+      //print("User on 0 index"+users[0].fullName);
+
+    } else {
+      // Document does not exist
+      return [];
+    }
+
+
+
+  }
 
 }

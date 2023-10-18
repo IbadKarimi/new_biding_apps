@@ -105,5 +105,29 @@ class FurnitureController {
   }
 
 
+  Future<List<  FurnitureModel >> getFurnitureById(String docId) async {
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String docId=prefs.getString("id");
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('furniture').doc(docId).get();
+    if (documentSnapshot.exists) {
+      // Document exists, you can access the data using documentSnapshot.data()
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      FurnitureModel furniture =   FurnitureModel .fromFirestore(data);
+      return [furniture];
+      //List<UserModel> users=[user];
+
+      //print("User on 0 index"+users[0].fullName);
+
+    } else {
+      // Document does not exist
+      return [];
+    }
+
+
+
+  }
+
+
 
 }

@@ -15,11 +15,12 @@ String completeAddress="";
 String description="";
 String status="";
 String imagePath="";
+String categoryName="";
 
 
 
 AgricultureModel({this.id,this.buyerDocId,this.typesCrops,this.workType,this.areaType,this.range,this.auctionType,this.setBidPrice
-,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath});
+,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.categoryName});
 
 
   factory  AgricultureModel.fromFirestore(Map<String, dynamic> data) {
@@ -39,6 +40,7 @@ AgricultureModel({this.id,this.buyerDocId,this.typesCrops,this.workType,this.are
       description:data['description']??"",
       status:data['status']??"",
       imagePath:data['imagePath']??"",
+      categoryName:data['categoryName']??"",
 
 
 

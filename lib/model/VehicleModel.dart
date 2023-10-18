@@ -17,10 +17,11 @@ class VehicleModel{
   String description="";
   String status="";
   String imagePath="";
+  String categoryName="";
 
   VehicleModel({this.buyerDocId,this.vehicleType,this.condition,this.auctionType,this.vehicleName,this.model,
     this.registerArea,this.registerYear,this.enginePower,this.setBidPrice,this.setBidEndTime,this.cityName,
-    this.completeAddress,this.description,this.status,this.imagePath
+    this.completeAddress,this.description,this.status,this.imagePath,this.categoryName
   });
 
   factory  VehicleModel.fromFirestore(Map<String, dynamic> data) {
@@ -43,6 +44,7 @@ class VehicleModel{
         description:data['description']??"",
         status:data['status']??"",
         imagePath:data['imagePath']??"",
+      categoryName:data['categoryName']??"",
 
 
     );

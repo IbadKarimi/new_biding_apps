@@ -4,6 +4,7 @@ import 'package:biding_app/model/HomePageModel.dart';
 import 'package:biding_app/views/screens/Admin/AddAgriculture.dart';
 import 'package:biding_app/views/screens/Aggriculture/AggricultureView.dart';
 import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
+import 'package:biding_app/views/screens/Home/BidsMainView.dart';
 import 'package:biding_app/views/screens/RealState/RealStateView.dart';
 import 'package:biding_app/views/screens/Vehicle/VehiclesView.dart';
 import 'package:biding_app/views/screens/Widgets/AppBar.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hovering/hovering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../controllers/AgricultureController.dart';
 import '../../../controllers/FurnitureController.dart';
@@ -32,6 +34,7 @@ class HomePageView extends StatefulWidget{
 }
 
 class _HomePageViewState extends State<HomePageView> {
+
   @override
   FurnitureController  furnitureController=FurnitureController();
   AgricultureController  agricultureController=AgricultureController();
@@ -503,7 +506,7 @@ class _HomePageViewState extends State<HomePageView> {
                SliverGrid(
                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                        crossAxisCount: 2,
-                       childAspectRatio:(3.3/4.3),
+                       childAspectRatio:(3.3/5.3),
                        crossAxisSpacing: 10.w,
                        mainAxisSpacing: 10.h
 
@@ -515,16 +518,30 @@ class _HomePageViewState extends State<HomePageView> {
 
 
                          return   GestureDetector(
-                           onTap: (){
+                           onTap: ()async{
+
+                             final SharedPreferences prefs = await SharedPreferences.getInstance();
+                             prefs.setString("id", data[index].docId.toString());
+
+                             prefs.setString("categoryName", data[index].categoryName.toString());
+
+                             String id="";
+                             id=prefs.getString("id");
+                              String categoryName="";
+                              categoryName= prefs.getString("categoryName");
+                             print("Category Type is "+categoryName.toString());
+
+                            if(id!=null){
+                               Get.to(()=>BidsMainView());
+                             }
+
+
 
                            },
-                           child: Container(
+                           child:
+                           Container(
                              margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
-
-
                              width:120.w,
-
-
                              decoration: BoxDecoration(
                                  color: Colors.white,
                                  borderRadius: BorderRadius.circular(0.r),

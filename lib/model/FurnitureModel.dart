@@ -14,9 +14,10 @@ class FurnitureModel{
   String status="";
   String imagePath="";
   String remainingTime="";
+  String categoryName="";
 
   FurnitureModel({this.buyerDocId,this.makingMaterial,this.condition,this.selectType,this.auctionType,this.setBidPrice,this.setBidEndTime,
-  this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.remainingTime});
+  this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.remainingTime,this.categoryName});
 
   factory  FurnitureModel.fromFirestore(Map<String, dynamic> data) {
     return FurnitureModel(
@@ -35,6 +36,7 @@ class FurnitureModel{
       status:data['status']??"",
       imagePath:data['imagePath']??"",
       remainingTime: data['remainingTime'] ??"",
+      categoryName:data['categoryName']??"",
 
 
     );
