@@ -54,7 +54,7 @@ class AgricultureController {
 
       String _docId = documentRef.id;
       try{
-        FirebaseFirestore.instance.collection('HomePage').doc().set({
+        FirebaseFirestore.instance.collection('HomePage').doc(_docId).set({
           'userId':docId.toString(),
           'id':_docId.toString(),
           'name':agricultureModel.typesCrops ,
@@ -62,7 +62,9 @@ class AgricultureController {
           'description':agricultureModel.description,
           'price':agricultureModel.setBidPrice,
           'imagePath':imageUrl,
-          "auctionType":agricultureModel.auctionType
+          "auctionType":agricultureModel.auctionType,
+          "categoryType":"Agriculture",
+          'auctionType':agricultureModel.auctionType,
 
           // Other user data fields
 

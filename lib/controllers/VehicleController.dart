@@ -48,7 +48,7 @@ class VehicleController {
       });
       String _docId = documentRef.id;
  try{
-   FirebaseFirestore.instance.collection('HomePage').doc().set({
+   FirebaseFirestore.instance.collection('HomePage').doc(_docId ).set({
      'userId':docId.toString(),
      'id':_docId.toString(),
      'name':vehicleModel.vehicleName ,
@@ -56,7 +56,9 @@ class VehicleController {
      'description':vehicleModel.description,
      'price':vehicleModel.setBidPrice,
      'imagePath':imageUrl,
-     "auctionType":vehicleModel.auctionType
+     "auctionType":vehicleModel.auctionType,
+     "categoryType":"Vehicle",
+    'auctionType':vehicleModel.auctionType,
 
      // Other user data fields
 
@@ -120,4 +122,8 @@ class VehicleController {
 
 
   }
+
+
+
+
 }

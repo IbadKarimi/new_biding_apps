@@ -97,9 +97,11 @@ class BidsMainView extends StatefulWidget{
 }
 
 class _BidsMainViewState extends State<BidsMainView> {
+  HomePageController homePageController=HomePageController();
   SharedPreferences _prefs;
   String _storedValue = "";
   String _categoryName="";
+  String _auctionType="";
   bool _isLoading = false;
 
 
@@ -110,6 +112,7 @@ class _BidsMainViewState extends State<BidsMainView> {
     setState(() {
       _storedValue = _prefs.getString('id');
       _isLoading = true;
+      _auctionType=_prefs.getString("auctionType");
 
       _categoryName= _prefs.getString("categoryName");
       print("Categoriiiiiiiiiiiies name +"+ _categoryName.toString()+_storedValue);
@@ -238,7 +241,7 @@ class _BidsMainViewState extends State<BidsMainView> {
  Widget build(BuildContext context) {
 
   print("Category Name is "+ _categoryName.toString());
-  print("image path is "+_imagePathR);
+  print("image path is "+_auctionType.toString());
   return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
@@ -464,13 +467,15 @@ class _BidsMainViewState extends State<BidsMainView> {
                    ),
                   ],
                  ),
-                Center(
-                                               child: Container(
+                                              Center(
+                                               child:  _auctionType=="Biding"?
+                                               Container(
                                                  margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
                                                  width: 220.w,
                                                  height: 35.h,
                                                  child: ElevatedButton(
-                                                     onPressed: () {
+
+                                                   onPressed: () {
                                                        showDialog(
                                                            context: context,
                                                            builder: (BuildContext context) {
@@ -580,8 +585,22 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                                    height: 40.h,
                                                                                    margin: EdgeInsets.only(left:30.w),
                                                                                    child: ElevatedButton(
-                                                                                     onPressed: () {
-                                                                                      // Add offer here
+                                                                                     onPressed: () async{
+
+                                                                                         final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                                         String userId=prefs.getString("docId"); //user id
+
+                                                                                      try{
+                                                                                        homePageController.InsertOffer(_storedValue, "Vehicle", price, offer.text);
+                                                                                        homePageController.updateStatus(_storedValue, "Pending");
+                                                                                        homePageController.updateStatusWithCollection(_storedValue, "Pending","vehicle");
+                                                                                      }catch(e){
+                                                                                        print(e);
+                                                                                      }
+
+
+
+
 
                                                                                        showDialog(context: context, builder: (BuildContext context){
                                                                                          return ShowConAlertDialog();
@@ -663,7 +682,45 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                20.0.r),
                                                          ),
                                                          backgroundColor:
-                                                         Colors.lightGreen)),),
+                                                         Colors.lightGreen))):
+                                               Container(
+                                                   margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                                                   width: 220.w,
+                                                   height: 35.h,
+                                                   child: ElevatedButton(
+
+                                                       onPressed: () {
+
+                                                         homePageController.updateStatus(_storedValue, "Accepted");
+                                                         homePageController.updateStatusWithCollection(_storedValue, "Accepted","vehicle");
+                                                       },
+                                                       // ignore: sort_child_properties_last
+                                                       child: Row(
+                                                           mainAxisAlignment: MainAxisAlignment.center,
+                                                           children:  <
+                                                               Widget>[
+                                                             Center(
+                                                                 child:
+                                                                 Text(
+                                                                   "Bid Now",
+                                                                   style: TextStyle(
+                                                                       color: Colors
+                                                                           .white,
+                                                                       fontSize:
+                                                                       14.sp),
+                                                                 )),
+                                                           ]),
+                                                       style: ElevatedButton
+                                                           .styleFrom(
+                                                           shape:
+                                                           RoundedRectangleBorder(
+                                                             borderRadius:
+                                                             BorderRadius
+                                                                 .circular(
+                                                                 20.0.r),
+                                                           ),
+                                                           backgroundColor:
+                                                           Colors.lightGreen)))
                                              ),
                 ],
                ),
@@ -825,207 +882,270 @@ class _BidsMainViewState extends State<BidsMainView> {
                           ),
                         ],
                       ),
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
-                          width: 220.w,
-                          height: 35.h,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 0, top: 0),
-                                          child: AlertDialog(
-                                              shape:
-                                              const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(
-                                                          10.0))),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children:[
+                   //Bid now button
+                            if(_auctionType=="Biding")
+                          Center(
+                            child: Container(
+                                margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                                width: 220.w,
+                                height: 35.h,
+                                child: ElevatedButton(
+
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 0, top: 0),
+                                                child: AlertDialog(
+                                                    shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
 
 
-                                              content:Container(
-                                                width: 250.w,
-                                                height: 250.h,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-
-                                                    Text(
-                                                      "Offer",
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors
-                                                              .black,
-                                                          fontSize:
-                                                          16.sp),
-                                                    ),
-
-
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                      child: Text(
-                                                        "Enter your offer",
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .black,
-                                                            fontSize:
-                                                            16.sp),
-                                                      ),
-                                                    ),
-
-                                                    SizedBox(
+                                                    content:Container(
                                                       width: 250.w,
-                                                      height: 45.h,
-                                                      child: TextFormField(
-                                                        controller: offer,
-                                                        style: TextStyle(color: Colors.black),
-                                                        decoration: InputDecoration(
-
-                                                          label: Text("Offer") ,
-                                                          border: OutlineInputBorder(),
-                                                        ),),
-                                                    ),
-
-                                                    Padding(
-                                                      padding:EdgeInsets.only(top:70.h),
-                                                      child: Row(
+                                                      height: 250.h,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
 
-                                                          Container(
-                                                            margin: EdgeInsets.only(left:10.w),
-                                                            width: 100.w,
-                                                            height: 40.h,
-                                                            child: ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.of(context).pop();
-
-                                                              },
-                                                              // ignore: sort_child_properties_last
-                                                              child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  children:  <
-                                                                      Widget>[
-                                                                    Center(
-                                                                        child:
-                                                                        Text(
-                                                                          "Cancel",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize:
-                                                                              12.sp),
-                                                                        )),
-                                                                  ]),
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                  shape:
-                                                                  RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20.0.r),
-                                                                  ),
-                                                                  backgroundColor:
-                                                                  const Color(
-                                                                      0xFF363B42)),),
+                                                          Text(
+                                                            "Offer",
+                                                            style: TextStyle(
+                                                                fontWeight: FontWeight.w600,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                16.sp),
                                                           ),
-                                                          //-------------Ok Button Starts here
-
-                                                          Container(
-                                                            width: 100.w,
-                                                            height: 40.h,
-                                                            margin: EdgeInsets.only(left:30.w),
-                                                            child: ElevatedButton(
-                                                              onPressed: () {
-                                                                // Add offer here
-
-                                                                showDialog(context: context, builder: (BuildContext context){
-                                                                  return ShowConAlertDialog();
-                                                                });
 
 
-
-
-
-                                                              },
-                                                              // ignore: sort_child_properties_last
-
-                                                              //------------------------ok approval-------------//
-                                                              child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  children:  <
-                                                                      Widget>[
-                                                                    Center(
-                                                                        child:
-                                                                        Text(
-                                                                          "Submit",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize:
-                                                                              12.sp),
-                                                                        )),
-                                                                  ]),
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                  shape:
-                                                                  RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20.0.r),
-                                                                  ),
-                                                                  backgroundColor:
-                                                                  const Color(
-                                                                      0xFF363B42)),),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top:20,bottom: 10),
+                                                            child: Text(
+                                                              "Enter your offer",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                  16.sp),
+                                                            ),
                                                           ),
-                                                        ],
-                                                      ),
+
+                                                          SizedBox(
+                                                            width: 250.w,
+                                                            height: 45.h,
+                                                            child: TextFormField(
+                                                              controller: offer,
+                                                              style: TextStyle(color: Colors.black),
+                                                              decoration: InputDecoration(
+
+                                                                label: Text("Offer") ,
+                                                                border: OutlineInputBorder(),
+                                                              ),),
+                                                          ),
+
+                                                          Padding(
+                                                            padding:EdgeInsets.only(top:70.h),
+                                                            child: Row(
+                                                              children: [
+
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left:10.w),
+                                                                  width: 100.w,
+                                                                  height: 40.h,
+                                                                  child: ElevatedButton(
+                                                                    onPressed: () {
+                                                                      Navigator.of(context).pop();
+
+                                                                    },
+                                                                    // ignore: sort_child_properties_last
+                                                                    child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        children:  <
+                                                                            Widget>[
+                                                                          Center(
+                                                                              child:
+                                                                              Text(
+                                                                                "Cancel",
+                                                                                style: TextStyle(
+                                                                                    color: Colors
+                                                                                        .white,
+                                                                                    fontSize:
+                                                                                    12.sp),
+                                                                              )),
+                                                                        ]),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                              20.0.r),
+                                                                        ),
+                                                                        backgroundColor:
+                                                                        const Color(
+                                                                            0xFF363B42)),),
+                                                                ),
+                                                                //-------------Ok Button Starts here
+
+                                                                Container(
+                                                                  width: 100.w,
+                                                                  height: 40.h,
+                                                                  margin: EdgeInsets.only(left:30.w),
+                                                                  child: ElevatedButton(
+                                                                    onPressed: () async{
+
+                                                                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                      String userId=prefs.getString("docId"); //user id
+
+                                                                      try{
+                                                                        homePageController.InsertOffer(_storedValue, "Furniture", _pricef, offer.text);
+                                                                        homePageController.updateStatus(_storedValue, "Pending");
+                                                                        homePageController.updateStatusWithCollection(_storedValue, "Pending","furniture");
+                                                                      }catch(e){
+                                                                        print(e);
+                                                                      }
+
+
+
+
+
+                                                                      showDialog(context: context, builder: (BuildContext context){
+                                                                        return ShowConAlertDialog();
+                                                                      });
+
+
+
+
+
+                                                                    },
+                                                                    // ignore: sort_child_properties_last
+
+                                                                    //------------------------ok approval-------------//
+                                                                    child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        children:  <
+                                                                            Widget>[
+                                                                          Center(
+                                                                              child:
+                                                                              Text(
+                                                                                "Submit",
+                                                                                style: TextStyle(
+                                                                                    color: Colors
+                                                                                        .white,
+                                                                                    fontSize:
+                                                                                    12.sp),
+                                                                              )),
+                                                                        ]),
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                              20.0.r),
+                                                                        ),
+                                                                        backgroundColor:
+                                                                        const Color(
+                                                                            0xFF363B42)),),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+
+                                                        ],),
                                                     )
 
-                                                  ],),
-                                              )
+
+
+                                                ));});
 
 
 
-                                          ));});
+                                    },
+                                    // ignore: sort_child_properties_last
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  <
+                                            Widget>[
+                                          Center(
+                                              child:
+                                              Text(
+                                                "Bid Now",
+                                                style: TextStyle(
+                                                    color: Colors
+                                                        .white,
+                                                    fontSize:
+                                                    14.sp),
+                                              )),
+                                        ]),
+                                    style: ElevatedButton
+                                        .styleFrom(
+                                        shape:
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius
+                                              .circular(
+                                              20.0.r),
+                                        ),
+                                        backgroundColor:
+                                        Colors.lightGreen))),
+                          ),
+                            if(_auctionType=="Fixed Auction")
+                          Center(
+                            child: Container(
+                                margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                                width: 220.w,
+                                height: 35.h,
+                                child: ElevatedButton(
 
+                                    onPressed: () {
 
-
-                              },
-                              // ignore: sort_child_properties_last
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children:  <
-                                      Widget>[
-                                    Center(
-                                        child:
-                                        Text(
-                                          "Bid Now",
-                                          style: TextStyle(
-                                              color: Colors
-                                                  .white,
-                                              fontSize:
-                                              14.sp),
-                                        )),
-                                  ]),
-                              style: ElevatedButton
-                                  .styleFrom(
-                                  shape:
-                                  RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius
-                                        .circular(
-                                        20.0.r),
-                                  ),
-                                  backgroundColor:
-                                  Colors.lightGreen)),),
-                      ),
+                                      homePageController.updateStatus(_storedValue, "Accepted");
+                                      homePageController.updateStatusWithCollection(_storedValue, "Accepted","furniture");
+                                    },
+                                    // ignore: sort_child_properties_last
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  <
+                                            Widget>[
+                                          Center(
+                                              child:
+                                              Text(
+                                                "Bid Now",
+                                                style: TextStyle(
+                                                    color: Colors
+                                                        .white,
+                                                    fontSize:
+                                                    14.sp),
+                                              )),
+                                        ]),
+                                    style: ElevatedButton
+                                        .styleFrom(
+                                        shape:
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius
+                                              .circular(
+                                              20.0.r),
+                                        ),
+                                        backgroundColor:
+                                        Colors.lightGreen))),
+                          )
+                     ] ),
                     ],
                   ),
                 ),
@@ -1198,213 +1318,265 @@ class _BidsMainViewState extends State<BidsMainView> {
                         ],
                       ),
                       Center(
-                        child: Container(
-                          margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
-                          width: 220.w,
-                          height: 35.h,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 0, top: 0),
-                                          child: AlertDialog(
-                                              shape:
-                                              const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(
-                                                          10.0))),
+                          child:  _auctionType=="Biding"?
+                          Container(
+                              margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                              width: 220.w,
+                              height: 35.h,
+                              child: ElevatedButton(
+
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 0, top: 0),
+                                              child: AlertDialog(
+                                                  shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0))),
 
 
-                                              content:Container(
-                                                width: 250.w,
-                                                height: 250.h,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
+                                                  content:Container(
+                                                    width: 250.w,
+                                                    height: 250.h,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
 
-                                                    Text(
-                                                      "Offer",
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight.w600,
-                                                          color: Colors
-                                                              .black,
-                                                          fontSize:
-                                                          16.sp),
-                                                    ),
+                                                        Text(
+                                                          "Offer",
+                                                          style: TextStyle(
+                                                              fontWeight: FontWeight.w600,
+                                                              color: Colors
+                                                                  .black,
+                                                              fontSize:
+                                                              16.sp),
+                                                        ),
 
 
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                      child: Text(
-                                                        "Enter your offer",
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .black,
-                                                            fontSize:
-                                                            16.sp),
-                                                      ),
-                                                    ),
-
-                                                    SizedBox(
-                                                      width: 250.w,
-                                                      height: 45.h,
-                                                      child: TextFormField(
-                                                        controller: offer,
-                                                        style: TextStyle(color: Colors.black),
-                                                        decoration: InputDecoration(
-
-                                                          label: Text("Offer") ,
-                                                          border: OutlineInputBorder(),
-                                                        ),),
-                                                    ),
-
-                                                    Padding(
-                                                      padding:EdgeInsets.only(top:70.h),
-                                                      child: Row(
-                                                        children: [
-
-                                                          Container(
-                                                            margin: EdgeInsets.only(left:10.w),
-                                                            width: 100.w,
-                                                            height: 40.h,
-                                                            child: ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.of(context).pop();
-
-                                                              },
-                                                              // ignore: sort_child_properties_last
-                                                              child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  children:  <
-                                                                      Widget>[
-                                                                    Center(
-                                                                        child:
-                                                                        Text(
-                                                                          "Cancel",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize:
-                                                                              12.sp),
-                                                                        )),
-                                                                  ]),
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                  shape:
-                                                                  RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20.0.r),
-                                                                  ),
-                                                                  backgroundColor:
-                                                                  const Color(
-                                                                      0xFF363B42)),),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top:20,bottom: 10),
+                                                          child: Text(
+                                                            "Enter your offer",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                16.sp),
                                                           ),
-                                                          //-------------Ok Button Starts here
+                                                        ),
 
-                                                          Container(
-                                                            width: 100.w,
-                                                            height: 40.h,
-                                                            margin: EdgeInsets.only(left:30.w),
-                                                            child: ElevatedButton(
-                                                              onPressed: () {
-                                                                // Add offer here
+                                                        SizedBox(
+                                                          width: 250.w,
+                                                          height: 45.h,
+                                                          child: TextFormField(
+                                                            controller: offer,
+                                                            style: TextStyle(color: Colors.black),
+                                                            decoration: InputDecoration(
 
-                                                                showDialog(context: context, builder: (BuildContext context){
-                                                                  return ShowConAlertDialog();
-                                                                });
+                                                              label: Text("Offer") ,
+                                                              border: OutlineInputBorder(),
+                                                            ),),
+                                                        ),
+
+                                                        Padding(
+                                                          padding:EdgeInsets.only(top:70.h),
+                                                          child: Row(
+                                                            children: [
+
+                                                              Container(
+                                                                margin: EdgeInsets.only(left:10.w),
+                                                                width: 100.w,
+                                                                height: 40.h,
+                                                                child: ElevatedButton(
+                                                                  onPressed: () {
+                                                                    Navigator.of(context).pop();
+
+                                                                  },
+                                                                  // ignore: sort_child_properties_last
+                                                                  child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      children:  <
+                                                                          Widget>[
+                                                                        Center(
+                                                                            child:
+                                                                            Text(
+                                                                              "Cancel",
+                                                                              style: TextStyle(
+                                                                                  color: Colors
+                                                                                      .white,
+                                                                                  fontSize:
+                                                                                  12.sp),
+                                                                            )),
+                                                                      ]),
+                                                                  style: ElevatedButton
+                                                                      .styleFrom(
+                                                                      shape:
+                                                                      RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                            20.0.r),
+                                                                      ),
+                                                                      backgroundColor:
+                                                                      const Color(
+                                                                          0xFF363B42)),),
+                                                              ),
+                                                              //-------------Ok Button Starts here
+
+                                                              Container(
+                                                                width: 100.w,
+                                                                height: 40.h,
+                                                                margin: EdgeInsets.only(left:30.w),
+                                                                child: ElevatedButton(
+                                                                  onPressed: () async{
+
+                                                                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                    String userId=prefs.getString("docId"); //user id
+
+                                                                    try{
+                                                                      homePageController.InsertOffer(_storedValue, "Agriculture", _priceA, offer.text);
+                                                                      homePageController.updateStatus(_storedValue, "Pending");
+                                                                      homePageController.updateStatusWithCollection(_storedValue, "Pending","agriculture");
+                                                                    }catch(e){
+                                                                      print(e);
+                                                                    }
 
 
 
 
 
-                                                              },
-                                                              // ignore: sort_child_properties_last
+                                                                    showDialog(context: context, builder: (BuildContext context){
+                                                                      return ShowConAlertDialog();
+                                                                    });
 
-                                                              //------------------------ok approval-------------//
-                                                              child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  children:  <
-                                                                      Widget>[
-                                                                    Center(
-                                                                        child:
-                                                                        Text(
-                                                                          "Submit",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize:
-                                                                              12.sp),
-                                                                        )),
-                                                                  ]),
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                  shape:
-                                                                  RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20.0.r),
-                                                                  ),
-                                                                  backgroundColor:
-                                                                  const Color(
-                                                                      0xFF363B42)),),
+
+
+
+
+                                                                  },
+                                                                  // ignore: sort_child_properties_last
+
+                                                                  //------------------------ok approval-------------//
+                                                                  child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      children:  <
+                                                                          Widget>[
+                                                                        Center(
+                                                                            child:
+                                                                            Text(
+                                                                              "Submit",
+                                                                              style: TextStyle(
+                                                                                  color: Colors
+                                                                                      .white,
+                                                                                  fontSize:
+                                                                                  12.sp),
+                                                                            )),
+                                                                      ]),
+                                                                  style: ElevatedButton
+                                                                      .styleFrom(
+                                                                      shape:
+                                                                      RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                            20.0.r),
+                                                                      ),
+                                                                      backgroundColor:
+                                                                      const Color(
+                                                                          0xFF363B42)),),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    )
+                                                        )
 
-                                                  ],),
-                                              )
+                                                      ],),
+                                                  )
 
 
 
-                                          ));});
+                                              ));});
 
 
 
-                              },
-                              // ignore: sort_child_properties_last
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children:  <
-                                      Widget>[
-                                    Center(
-                                        child:
-                                        Text(
-                                          "Bid Now",
-                                          style: TextStyle(
-                                              color: Colors
-                                                  .white,
-                                              fontSize:
-                                              14.sp),
-                                        )),
-                                  ]),
-                              style: ElevatedButton
-                                  .styleFrom(
-                                  shape:
-                                  RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius
-                                        .circular(
-                                        20.0.r),
-                                  ),
-                                  backgroundColor:
-                                  Colors.lightGreen)),),
+                                  },
+                                  // ignore: sort_child_properties_last
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children:  <
+                                          Widget>[
+                                        Center(
+                                            child:
+                                            Text(
+                                              "Bid Now",
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .white,
+                                                  fontSize:
+                                                  14.sp),
+                                            )),
+                                      ]),
+                                  style: ElevatedButton
+                                      .styleFrom(
+                                      shape:
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius
+                                            .circular(
+                                            20.0.r),
+                                      ),
+                                      backgroundColor:
+                                      Colors.lightGreen))):
+                          Container(
+                              margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                              width: 220.w,
+                              height: 35.h,
+                              child: ElevatedButton(
+
+                                  onPressed: () {
+
+                                    homePageController.updateStatus(_storedValue, "Accepted");
+                                    homePageController.updateStatusWithCollection(_storedValue, "Accepted","agriculture");
+                                  },
+                                  // ignore: sort_child_properties_last
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children:  <
+                                          Widget>[
+                                        Center(
+                                            child:
+                                            Text(
+                                              "Bid Now",
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .white,
+                                                  fontSize:
+                                                  14.sp),
+                                            )),
+                                      ]),
+                                  style: ElevatedButton
+                                      .styleFrom(
+                                      shape:
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius
+                                            .circular(
+                                            20.0.r),
+                                      ),
+                                      backgroundColor:
+                                      Colors.lightGreen)))
                       ),
                     ],
                   ),
                 ),
-
-
-                  if(_categoryName=="RealState")
-                    Padding(
+              if(_categoryName=="RealState")
+                Padding(
                       padding: const EdgeInsets.only(top:20),
                       child:   Container(
                         margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
@@ -1646,207 +1818,262 @@ class _BidsMainViewState extends State<BidsMainView> {
                                 ),
                               ],
                             ),
+
                             Center(
-                              child: Container(
-                                margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
-                                width: 220.w,
-                                height: 35.h,
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 0, top: 0),
-                                                child: AlertDialog(
-                                                    shape:
-                                                    const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0))),
+                                child:  _auctionType=="Biding"?
+                                Container(
+                                    margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                                    width: 220.w,
+                                    height: 35.h,
+                                    child: ElevatedButton(
+
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        left: 0, top: 0),
+                                                    child: AlertDialog(
+                                                        shape:
+                                                        const RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0))),
 
 
-                                                    content:Container(
-                                                      width: 250.w,
-                                                      height: 250.h,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
+                                                        content:Container(
+                                                          width: 250.w,
+                                                          height: 250.h,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
 
-                                                          Text(
-                                                            "Offer",
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight.w600,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                16.sp),
-                                                          ),
+                                                              Text(
+                                                                "Offer",
+                                                                style: TextStyle(
+                                                                    fontWeight: FontWeight.w600,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                    16.sp),
+                                                              ),
 
 
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                            child: Text(
-                                                              "Enter your offer",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                  16.sp),
-                                                            ),
-                                                          ),
-
-                                                          SizedBox(
-                                                            width: 250.w,
-                                                            height: 45.h,
-                                                            child: TextFormField(
-                                                              controller: offer,
-                                                              style: TextStyle(color: Colors.black),
-                                                              decoration: InputDecoration(
-
-                                                                label: Text("Offer") ,
-                                                                border: OutlineInputBorder(),
-                                                              ),),
-                                                          ),
-
-                                                          Padding(
-                                                            padding:EdgeInsets.only(top:70.h),
-                                                            child: Row(
-                                                              children: [
-
-                                                                Container(
-                                                                  margin: EdgeInsets.only(left:10.w),
-                                                                  width: 100.w,
-                                                                  height: 40.h,
-                                                                  child: ElevatedButton(
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop();
-
-                                                                    },
-                                                                    // ignore: sort_child_properties_last
-                                                                    child: Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        children:  <
-                                                                            Widget>[
-                                                                          Center(
-                                                                              child:
-                                                                              Text(
-                                                                                "Cancel",
-                                                                                style: TextStyle(
-                                                                                    color: Colors
-                                                                                        .white,
-                                                                                    fontSize:
-                                                                                    12.sp),
-                                                                              )),
-                                                                        ]),
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                        shape:
-                                                                        RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                              20.0.r),
-                                                                        ),
-                                                                        backgroundColor:
-                                                                        const Color(
-                                                                            0xFF363B42)),),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(top:20,bottom: 10),
+                                                                child: Text(
+                                                                  "Enter your offer",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                      16.sp),
                                                                 ),
-                                                                //-------------Ok Button Starts here
+                                                              ),
 
-                                                                Container(
-                                                                  width: 100.w,
-                                                                  height: 40.h,
-                                                                  margin: EdgeInsets.only(left:30.w),
-                                                                  child: ElevatedButton(
-                                                                    onPressed: () {
-                                                                      // Add offer here
+                                                              SizedBox(
+                                                                width: 250.w,
+                                                                height: 45.h,
+                                                                child: TextFormField(
+                                                                  controller: offer,
+                                                                  style: TextStyle(color: Colors.black),
+                                                                  decoration: InputDecoration(
 
-                                                                      showDialog(context: context, builder: (BuildContext context){
-                                                                        return ShowConAlertDialog();
-                                                                      });
+                                                                    label: Text("Offer") ,
+                                                                    border: OutlineInputBorder(),
+                                                                  ),),
+                                                              ),
+
+                                                              Padding(
+                                                                padding:EdgeInsets.only(top:70.h),
+                                                                child: Row(
+                                                                  children: [
+
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left:10.w),
+                                                                      width: 100.w,
+                                                                      height: 40.h,
+                                                                      child: ElevatedButton(
+                                                                        onPressed: () {
+                                                                          Navigator.of(context).pop();
+
+                                                                        },
+                                                                        // ignore: sort_child_properties_last
+                                                                        child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children:  <
+                                                                                Widget>[
+                                                                              Center(
+                                                                                  child:
+                                                                                  Text(
+                                                                                    "Cancel",
+                                                                                    style: TextStyle(
+                                                                                        color: Colors
+                                                                                            .white,
+                                                                                        fontSize:
+                                                                                        12.sp),
+                                                                                  )),
+                                                                            ]),
+                                                                        style: ElevatedButton
+                                                                            .styleFrom(
+                                                                            shape:
+                                                                            RoundedRectangleBorder(
+                                                                              borderRadius:
+                                                                              BorderRadius
+                                                                                  .circular(
+                                                                                  20.0.r),
+                                                                            ),
+                                                                            backgroundColor:
+                                                                            const Color(
+                                                                                0xFF363B42)),),
+                                                                    ),
+                                                                    //-------------Ok Button Starts here
+
+                                                                    Container(
+                                                                      width: 100.w,
+                                                                      height: 40.h,
+                                                                      margin: EdgeInsets.only(left:30.w),
+                                                                      child: ElevatedButton(
+                                                                        onPressed: () async{
+
+                                                                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                          String userId=prefs.getString("docId"); //user id
+
+                                                                          try{
+                                                                            homePageController.InsertOffer(_storedValue, "RealState", _priceR, offer.text);
+                                                                            homePageController.updateStatus(_storedValue, "Pending");
+                                                                            homePageController.updateStatusWithCollection(_storedValue, "Pending","realState");
+                                                                          }catch(e){
+                                                                            print(e);
+                                                                          }
 
 
 
 
 
-                                                                    },
-                                                                    // ignore: sort_child_properties_last
+                                                                          showDialog(context: context, builder: (BuildContext context){
+                                                                            return ShowConAlertDialog();
+                                                                          });
 
-                                                                    //------------------------ok approval-------------//
-                                                                    child: Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        children:  <
-                                                                            Widget>[
-                                                                          Center(
-                                                                              child:
-                                                                              Text(
-                                                                                "Submit",
-                                                                                style: TextStyle(
-                                                                                    color: Colors
-                                                                                        .white,
-                                                                                    fontSize:
-                                                                                    12.sp),
-                                                                              )),
-                                                                        ]),
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                        shape:
-                                                                        RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                              20.0.r),
-                                                                        ),
-                                                                        backgroundColor:
-                                                                        const Color(
-                                                                            0xFF363B42)),),
+
+
+
+
+                                                                        },
+                                                                        // ignore: sort_child_properties_last
+
+                                                                        //------------------------ok approval-------------//
+                                                                        child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children:  <
+                                                                                Widget>[
+                                                                              Center(
+                                                                                  child:
+                                                                                  Text(
+                                                                                    "Submit",
+                                                                                    style: TextStyle(
+                                                                                        color: Colors
+                                                                                            .white,
+                                                                                        fontSize:
+                                                                                        12.sp),
+                                                                                  )),
+                                                                            ]),
+                                                                        style: ElevatedButton
+                                                                            .styleFrom(
+                                                                            shape:
+                                                                            RoundedRectangleBorder(
+                                                                              borderRadius:
+                                                                              BorderRadius
+                                                                                  .circular(
+                                                                                  20.0.r),
+                                                                            ),
+                                                                            backgroundColor:
+                                                                            const Color(
+                                                                                0xFF363B42)),),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          )
+                                                              )
 
-                                                        ],),
-                                                    )
+                                                            ],),
+                                                        )
 
 
 
-                                                ));});
+                                                    ));});
 
 
 
-                                    },
-                                    // ignore: sort_child_properties_last
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children:  <
-                                            Widget>[
-                                          Center(
-                                              child:
-                                              Text(
-                                                "Bid Now",
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .white,
-                                                    fontSize:
-                                                    14.sp),
-                                              )),
-                                        ]),
-                                    style: ElevatedButton
-                                        .styleFrom(
-                                        shape:
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius
-                                              .circular(
-                                              20.0.r),
-                                        ),
-                                        backgroundColor:
-                                        Colors.lightGreen)),),
+                                        },
+                                        // ignore: sort_child_properties_last
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children:  <
+                                                Widget>[
+                                              Center(
+                                                  child:
+                                                  Text(
+                                                    "Bid Now",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .white,
+                                                        fontSize:
+                                                        14.sp),
+                                                  )),
+                                            ]),
+                                        style: ElevatedButton
+                                            .styleFrom(
+                                            shape:
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  20.0.r),
+                                            ),
+                                            backgroundColor:
+                                            Colors.lightGreen))): Container(
+                                    margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
+                                    width: 220.w,
+                                    height: 35.h,
+                                    child: ElevatedButton(
+
+                                        onPressed: () {
+
+                                          homePageController.updateStatus(_storedValue, "Accepted");
+                                          homePageController.updateStatusWithCollection(_storedValue, "Accepted","realState");
+                                        },
+                                        // ignore: sort_child_properties_last
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children:  <
+                                                Widget>[
+                                              Center(
+                                                  child:
+                                                  Text(
+                                                    "Bid Now",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .white,
+                                                        fontSize:
+                                                        14.sp),
+                                                  )),
+                                            ]),
+                                        style: ElevatedButton
+                                            .styleFrom(
+                                            shape:
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  20.0.r),
+                                            ),
+                                            backgroundColor:
+                                            Colors.lightGreen)))
                             ),
+
                           ],
                         ),
                       ),

@@ -4,12 +4,15 @@ import 'package:biding_app/views/screens/Admin/AddFurniture.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/Widgets/Drawer.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../controllers/FurnitureController.dart';
 import '../../../model/FurnitureModel.dart';
+import '../Home/BidsMainView.dart';
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
 import '../authentication_repository/login.dart';
@@ -48,30 +51,81 @@ class _FurnitureViewState extends State<FurnitureView > {
         drawer: CustomDrawer(),
         bottomNavigationBar: CustomBottomNavigationBar(),
 
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10.h, left: 20.w, bottom: 0.h),
-                  child:  Text(
-                    "Furniture",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
+        body: FurnitureData(),
+
+    ) ;
+
+  }}
+
+
+
+
+class FurnitureData extends StatefulWidget{
+  @override
+  State<FurnitureData > createState() => _FurnitureDataState();
+}
+
+class _FurnitureDataState extends State<FurnitureData > {
+  @override
+  TextEditingController offer=TextEditingController();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('furniture').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+
+          var items = snapshot.data.docs;
+
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              var item = items[index];
+              var data = item.data() as Map<String, dynamic>;
+
+              String furnitureDocId = item.id;
+              String categoryName = data['categoryName'] ?? ''; // Use a default value if the field is null
+              String auctionType = data['auctionType'] ?? ''; // Use a default value if the field is null
+              print(furnitureDocId.toString());
+              // Rest of your code
+              // ...
+
+              return GestureDetector(
+                onTap: ()async{
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setString("id", furnitureDocId);
+                  prefs.setString("categoryName", "Furniture");
+                  prefs.setString("auctionType", data['auctionType']);
+
+                  String id="";
+                  id=prefs.getString("id");
+                  String categoryName="";
+                  categoryName= prefs.getString("categoryName");
+                  print("Category Type is "+categoryName.toString());
+
+                  if(id!=null){
+                    Get.to(()=>BidsMainView());
+                  }
+
+
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.h, left: 20.w, bottom: 0.h),
+                      child:  Text(
+                        "Furniture",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-
-
-              ],),
-                   for(int i=0;i<_furniture.length;i++)
-                    Column(
-                    children: [
 
                     Container(
                       margin: EdgeInsets.only(left:20.w,top:20.h),
@@ -96,7 +150,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                             width:320.w,
                             height: 180.h,
                             decoration: BoxDecoration(
-                                image: DecorationImage(image: NetworkImage(_furniture[i].imagePath),fit: BoxFit.cover),
+                                image: DecorationImage(image: NetworkImage(data['imagePath']),fit: BoxFit.cover),
 
                                 border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                             ),
@@ -105,29 +159,7 @@ class _FurnitureViewState extends State<FurnitureView > {
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
                             child:  Text(
-                              _furniture[i].makingMaterial ,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h, left: 10.w),
-                            child:  Text(
-                              _furniture[i].description,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
-                            child:  Text(
-                              "Price",
+                              data['makingMaterial'] ,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16.sp,
@@ -138,12 +170,53 @@ class _FurnitureViewState extends State<FurnitureView > {
                           Row(
                             children: [
                               Padding(
+                                padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                child: Icon(Icons.location_pin,color: Colors.red,),),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                child:  Text(
+                                  data['cityName'],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.h, left: 10.w),
+                            child:  Text(
+                              data['description'],
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 0.h, left: 10, bottom: 0.h),
+                                child:  Text(
+                                  "Rs",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Padding(
                                 padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 0.h),
                                 child:  Text(
-                                  _furniture[i].setBidPrice,
+                                  data['setBidPrice'],
                                   style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 16.sp,
+                                    color: Colors.green,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -152,302 +225,18 @@ class _FurnitureViewState extends State<FurnitureView > {
 
                             ],
                           ),
-                          Container(
-                            width: 240.w,
 
-                            margin: EdgeInsets.only(left:10.w),
-                            color: Colors.black,
-                            child: Text( _furniture[i].setBidEndTime,style:TextStyle(color: Colors.white),),
-                          ),
-
-
-
-
-                          Center(
-                            child: Container(
-                              margin: EdgeInsets.only(top:10.h,bottom:5.h),
-                              width: 160.w,
-                              height: 35.h,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 0, top: 0),
-                                              child: AlertDialog(
-                                                  shape:
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0))),
-
-
-                                                  content:Container(
-                                                    width: 250.w,
-                                                    height: 250.h,
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-
-                                                        Text(
-                                                          "Offer",
-                                                          style: TextStyle(
-                                                              fontWeight: FontWeight.w600,
-                                                              color: Colors
-                                                                  .black,
-                                                              fontSize:
-                                                              16.sp),
-                                                        ),
-
-
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                          child: Text(
-                                                            "Enter your offer",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                16.sp),
-                                                          ),
-                                                        ),
-
-                                                        SizedBox(
-                                                          width: 250.w,
-                                                          height: 45.h,
-                                                          child: TextFormField(
-                                                            controller: offer,
-
-                                                            decoration: InputDecoration(
-
-                                                              label: Text("10,0000") ,
-                                                              border: OutlineInputBorder(),
-                                                            ),),
-                                                        ),
-
-                                                        Padding(
-                                                          padding:EdgeInsets.only(top:70.h),
-                                                          child: Row(
-                                                            children: [
-
-                                                              Container(
-                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
-                                                                width: 100.w,
-                                                                height: 35.h,
-                                                                child: ElevatedButton(
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-
-                                                                  },
-                                                                  // ignore: sort_child_properties_last
-                                                                  child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                      children:  <
-                                                                          Widget>[
-                                                                        Center(
-                                                                            child:
-                                                                            Text(
-                                                                              "Cancel",
-                                                                              style: TextStyle(
-                                                                                  color: Colors
-                                                                                      .white,
-                                                                                  fontSize:
-                                                                                  12.sp),
-                                                                            )),
-                                                                      ]),
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                      shape:
-                                                                      RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                            20.0.r),
-                                                                      ),
-                                                                      backgroundColor:
-                                                                      const Color(
-                                                                          0xFF363B42)),),
-                                                              ),
-
-                                                              Container(
-                                                                width: 100.w,
-                                                                height: 35.h,
-                                                                margin: EdgeInsets.only(left:10.w,bottom: 5.h),
-                                                                child: ElevatedButton(
-                                                                  onPressed: () {
-                                                                    showDialog(context: context, builder:(BuildContext context){
-                                                                      return AlertDialog(
-                                                                        shape: RoundedRectangleBorder(borderRadius:
-                                                                        BorderRadius.all(
-                                                                            Radius.circular(
-                                                                                10.0))),
-                                                                        content: Container(
-                                                                          width: 250.w,
-                                                                          height: 250.h,
-                                                                          child: Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.start,
-
-                                                                              children:
-                                                                              [
-                                                                                Container(width: 100.w,height:100.h,
-                                                                                    margin: EdgeInsets.only(top:30.h),
-
-                                                                                    decoration:BoxDecoration(
-                                                                                      image: DecorationImage(
-                                                                                          image: AssetImage("lib/utils/images/accept.png")
-                                                                                      ),
-                                                                                    ) ),
-                                                                                Center(
-                                                                                    child:
-                                                                                    Padding(
-                                                                                      padding: EdgeInsets.only(top:10.h,bottom: 20.h),
-                                                                                      child: Text(
-                                                                                        "Congragulations ! Your offer sent to Bidding Sale System ",
-                                                                                        style: TextStyle(
-                                                                                            fontWeight: FontWeight.w600,
-                                                                                            color: Colors
-                                                                                                .green,
-                                                                                            fontSize:
-                                                                                            12.sp),
-                                                                                      ),
-                                                                                    )),
-
-                                                                                Container(
-                                                                                  margin: EdgeInsets.only(left:5.w),
-                                                                                  width: 100.w,
-                                                                                  height: 40.h,
-                                                                                  child: ElevatedButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.of(context).push(
-                                                                                          MaterialPageRoute(
-                                                                                              builder:
-                                                                                                  (context) =>
-                                                                                                  HomePageView()));
-
-                                                                                    },
-                                                                                    // ignore: sort_child_properties_last
-                                                                                    child: Row(
-                                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                                        children:  <
-                                                                                            Widget>[
-                                                                                          Center(
-                                                                                              child:
-                                                                                              Text(
-                                                                                                "Ok",
-                                                                                                style: TextStyle(
-                                                                                                    color: Colors
-                                                                                                        .white,
-                                                                                                    fontSize:
-                                                                                                    12.sp),
-                                                                                              )),
-                                                                                        ]),
-                                                                                    style: ElevatedButton
-                                                                                        .styleFrom(
-                                                                                        shape:
-                                                                                        RoundedRectangleBorder(
-                                                                                          borderRadius:
-                                                                                          BorderRadius
-                                                                                              .circular(
-                                                                                              20.0.r),
-                                                                                        ),
-                                                                                        backgroundColor:
-                                                                                        const Color(
-                                                                                            0xFF363B42)),),
-                                                                                ),
-                                                                              ]),
-                                                                        ),
-
-                                                                      );
-
-                                                                    });
-
-
-
-
-                                                                  },
-                                                                  // ignore: sort_child_properties_last
-
-                                                                  //------------------------ok approval-------------//
-                                                                  child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                      children:  <
-                                                                          Widget>[
-                                                                        Center(
-                                                                            child:
-                                                                            Text(
-                                                                              "Ok",
-                                                                              style: TextStyle(
-                                                                                  color: Colors
-                                                                                      .white,
-                                                                                  fontSize:
-                                                                                  12.sp),
-                                                                            )),
-                                                                      ]),
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                      shape:
-                                                                      RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                            20.0.r),
-                                                                      ),
-                                                                      backgroundColor:
-                                                                      const Color(
-                                                                          0xFF363B42)),),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-
-                                                      ],),
-                                                  )
-
-
-
-                                              ));});
-
-
-
-                                  },
-                                  // ignore: sort_child_properties_last
-                                  child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children:  <
-                                          Widget>[
-                                        Center(
-                                            child:
-                                            Text(
-                                              "Bidd Now",
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .white,
-                                                  fontSize:
-                                                  16.sp),
-                                            )),
-                                      ]),
-                                  style: ElevatedButton
-                                      .styleFrom(
-                                      shape:
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                            30.0.r),
-                                      ),
-                                      backgroundColor:
-                                      Colors.lightGreen)),),
-                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-            ],
-          ),
-        )
-    );}}
+              );
+            },
+          );
+        },
+      ));
+
+  }
+
+}

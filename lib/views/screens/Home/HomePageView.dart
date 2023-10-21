@@ -35,6 +35,8 @@ class HomePageView extends StatefulWidget{
 
 class _HomePageViewState extends State<HomePageView> {
 
+  String onTapAuctionType="Biding";
+
   @override
   FurnitureController  furnitureController=FurnitureController();
   AgricultureController  agricultureController=AgricultureController();
@@ -42,7 +44,13 @@ class _HomePageViewState extends State<HomePageView> {
   VehicleController vehicleController=VehicleController();
 
   HomePageController homePageController=HomePageController();
+
+
   List<HomePageModel> data=[];
+
+  List<HomePageModel> bidingData=[];
+
+  List<HomePageModel> fixedAuctionData=[];
 
   List<FurnitureModel> furniture=[];
 
@@ -57,13 +65,35 @@ class _HomePageViewState extends State<HomePageView> {
   List<AgricultureModel> agriculture=[];
 
 
+
+void sortingData(){
+
+  bidingData = data.where((item) => item.auctionType.contains("Biding")).toList();
+  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction")).toList();
+
+
+
+  for(int i=0;i<bidingData.length;i++){
+    print("Auction Type is "+i.toString() +":"+bidingData[i].auctionType.toString());
+  }
+
+  for(int i=0;i< fixedAuctionData .length;i++){
+    print("Auction Type is "+i.toString() +":"+ fixedAuctionData [i].auctionType.toString());
+  }
+
+}
+
   void initState() {
+
 
     homePageController.getCategoriesData().then((value) {
       setState(() {
         data.addAll(value);
+        sortingData();
+
       });
     });
+
     furnitureController.getFurniture().then((value) {
       setState(() {
         furniture.addAll(value);
@@ -119,15 +149,28 @@ class _HomePageViewState extends State<HomePageView> {
                    //------------Buttons Fixed Price ----------//
                    Row(
                      children: [
-                       Container(
-                         margin: EdgeInsets.only(left:20.w,top:20.h),
-                         width: 150.w,height: 40,
-                         child: Center(child: Text("Bid")),
-                         decoration: BoxDecoration(
-                             color: Colors.grey.shade300,
-                             borderRadius: BorderRadius.circular(10)),
+                       GestureDetector(
+                         onTap: (){
+                           setState(() {
+                             onTapAuctionType="Biding";
+                           });
+                         },
+                         child: Container(
+                           margin: EdgeInsets.only(left:20.w,top:20.h),
+                           width: 150.w,height: 40,
+                           child: Center(child: Text("Bid")),
+                           decoration: BoxDecoration(
+                               color: Colors.grey.shade300,
+                               borderRadius: BorderRadius.circular(10)),
+                         ),
                        ),
-                       Container(
+               GestureDetector(
+                 onTap: (){
+                   setState(() {
+                     onTapAuctionType="Fixed Auction";
+                   });
+                 },
+                 child:Container(
                          margin: EdgeInsets.only(left:20.w,top:20.h),
                          width: 150.w,height: 40,
                          child: Center(child: Text("Fixed Price",style: TextStyle(color: Colors.white),)),
@@ -135,7 +178,7 @@ class _HomePageViewState extends State<HomePageView> {
                              color: Colors.black,
                              borderRadius: BorderRadius.circular(10)),
                        ),
-                     ],
+               )],
                    ),
 
                    Padding(
@@ -150,282 +193,126 @@ class _HomePageViewState extends State<HomePageView> {
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.start,
                          children: [
-                           for(int i=0;i<10;i++)
-                             Container(
-                               margin: EdgeInsets.only(left:5.w,top:20.h,bottom: 10.h),
-                               alignment: AlignmentDirectional.center,
-                               width:150.w,
+                           for(int i=0;i<bidingData.length;i++)
+                             if(bidingData[i].status=="Pending")
 
-                               decoration: BoxDecoration(
-                                   color: Colors.white,
-                                   borderRadius: BorderRadius.circular(0.r),
-                                   border: Border.all(color: Colors.black,width: 1)
-                               ),
+                             GestureDetector(
+                               onTap: ()async{
+                                 final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                 prefs.setString("id", bidingData[i].docId.toString());
+                                 prefs.setString("auctionType", bidingData[i].auctionType);
+                                 prefs.setString("categoryName", bidingData[i].categoryName.toString());
 
-                               child:Column(
-                                 mainAxisAlignment:MainAxisAlignment.start,
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
+                                 String id="";
+                                 id=prefs.getString("id");
+                                 String categoryName="";
+                                 categoryName= prefs.getString("categoryName");
+                                 print("Category Type is "+bidingData[i].auctionType.toString());
 
-                                   //----------------------Pic Box----------------------//
+                                 if(id!=null){
+                                  Get.to(()=>BidsMainView());
+                                 }
+                               },
+                               child: Container(
+                                 margin: EdgeInsets.only(left:5.w,top:20.h,bottom: 10.h),
+                                 alignment: AlignmentDirectional.center,
+                                 width:150.w,
+                                 height:230.h,
 
-                                   Container(
-                                     margin: EdgeInsets.only(left:0.w,top:0.h),
+                                 decoration: BoxDecoration(
+                                     color: Colors.white,
+                                     borderRadius: BorderRadius.circular(0.r),
+                                     border: Border.all(color: Colors.black,width: 1)
+                                 ),
 
-                                     width:150.w,
-                                     height: 100.h,
-                                     decoration: BoxDecoration(
-                                         image: DecorationImage(image: AssetImage("lib/utils/images/car.jpg",),fit:BoxFit.cover),
+                                 child:Column(
+                                   mainAxisAlignment:MainAxisAlignment.start,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
 
-                                         border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
+                                     //----------------------Pic Box----------------------//
+
+                                     Container(
+                                       margin: EdgeInsets.only(left:0.w,top:0.h),
+
+                                       width:150.w,
+                                       height: 100.h,
+                                       decoration: BoxDecoration(
+                                           image: DecorationImage(image: NetworkImage(bidingData[i].imagePath,),fit:BoxFit.cover),
+
+                                           border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
+                                       ),
+
                                      ),
-
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                     child:  Text(
-                                       "Toyota Corolla",
-                                       style: TextStyle(
-                                         color: Colors.black,
-                                         fontSize: 10.sp,
-                                         fontWeight: FontWeight.w600,
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                       child:  Text(
+                                         bidingData[i].categoryName,
+                                         style: TextStyle(
+                                           color: Colors.black,
+                                           fontSize: 12.sp,
+                                           fontWeight: FontWeight.w700,
+                                         ),
                                        ),
                                      ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(top: 5.h, left: 10.w),
-                                     child:  Text(
-                                       "This is my favourite Car I am giving it low cost",
-                                       style: TextStyle(
-                                         color: Colors.grey,
-                                         fontSize: 10.sp,
-                                         fontWeight: FontWeight.w500,
+                                     Row(
+                                       children: [
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                           child: Icon(Icons.location_pin,color: Colors.red,),),
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                           child:  Text(
+                                             bidingData[i].city,
+                                             style: TextStyle(
+                                               color: Colors.black,
+                                               fontSize: 10.sp,
+                                               fontWeight: FontWeight.w600,
+                                             ),
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                       child:  Text(
+                                         bidingData[i].description,
+                                         style: TextStyle(
+                                           color: Colors.grey,
+                                           fontSize: 10.sp,
+                                           fontWeight: FontWeight.w500,
+                                         ),
                                        ),
                                      ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                     child:  Text(
-                                       "Price",
-                                       style: TextStyle(
-                                         color: Colors.black,
-                                         fontSize: 10.sp,
-                                         fontWeight: FontWeight.w600,
-                                       ),
-                                     ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                     child:  Text(
-                                       "1000000 RS",
-                                       style: TextStyle(
-                                         color: Colors.grey,
-                                         fontSize: 10.sp,
-                                         fontWeight: FontWeight.w600,
-                                       ),
-                                     ),
-                                   ),
-                                   Center(
-                                     child: Container(
-                                       margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
-                                       width: 80.w,
-                                       height: 25.h,
-                                       child: ElevatedButton(
-                                           onPressed: () {
-                                             showDialog(
-                                                 context: context,
-                                                 builder: (BuildContext context) {
-                                                   return Padding(
-                                                       padding: const EdgeInsets.only(
-                                                           left: 0, top: 0),
-                                                       child: AlertDialog(
-                                                           shape:
-                                                           const RoundedRectangleBorder(
-                                                               borderRadius:
-                                                               BorderRadius.all(
-                                                                   Radius.circular(
-                                                                       10.0))),
 
-
-                                                           content:Container(
-                                                             width: 250.w,
-                                                             height: 250.h,
-                                                             child: Column(
-                                                               mainAxisAlignment: MainAxisAlignment.start,
-                                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                                               children: [
-
-                                                                 Text(
-                                                                   "Offer",
-                                                                   style: TextStyle(
-                                                                       fontWeight: FontWeight.w600,
-                                                                       color: Colors
-                                                                           .black,
-                                                                       fontSize:
-                                                                       16.sp),
-                                                                 ),
-
-
-                                                                 Padding(
-                                                                   padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                                   child: Text(
-                                                                     "Enter your offer",
-                                                                     style: TextStyle(
-                                                                         color: Colors
-                                                                             .black,
-                                                                         fontSize:
-                                                                         16.sp),
-                                                                   ),
-                                                                 ),
-
-                                                                 SizedBox(
-                                                                   width: 250.w,
-                                                                   height: 45.h,
-                                                                   child: TextFormField(
-                                                                     controller: offer,
-                                                                     style: TextStyle(color: Colors.black),
-                                                                     decoration: InputDecoration(
-
-                                                                       label: Text("10,0000") ,
-                                                                       border: OutlineInputBorder(),
-                                                                     ),),
-                                                                 ),
-
-                                                                 Padding(
-                                                                   padding:EdgeInsets.only(top:70.h),
-                                                                   child: Row(
-                                                                     children: [
-
-                                                                       Container(
-                                                                         margin: EdgeInsets.only(left:10.w),
-                                                                         width: 100.w,
-                                                                         height: 40.h,
-                                                                         child: ElevatedButton(
-                                                                           onPressed: () {
-                                                                             Navigator.of(context).pop();
-
-                                                                           },
-                                                                           // ignore: sort_child_properties_last
-                                                                           child: Row(
-                                                                               mainAxisAlignment: MainAxisAlignment.center,
-                                                                               children:  <
-                                                                                   Widget>[
-                                                                                 Center(
-                                                                                     child:
-                                                                                     Text(
-                                                                                       "Cancel",
-                                                                                       style: TextStyle(
-                                                                                           color: Colors
-                                                                                               .white,
-                                                                                           fontSize:
-                                                                                           12.sp),
-                                                                                     )),
-                                                                               ]),
-                                                                           style: ElevatedButton
-                                                                               .styleFrom(
-                                                                               shape:
-                                                                               RoundedRectangleBorder(
-                                                                                 borderRadius:
-                                                                                 BorderRadius
-                                                                                     .circular(
-                                                                                     20.0.r),
-                                                                               ),
-                                                                               backgroundColor:
-                                                                               const Color(
-                                                                                   0xFF363B42)),),
-                                                                       ),
-                                                                       //-------------Ok Button Starts here
-
-                                                                       Container(
-                                                                         width: 100.w,
-                                                                         height: 40.h,
-                                                                         margin: EdgeInsets.only(left:30.w),
-                                                                         child: ElevatedButton(
-                                                                           onPressed: () {
-
-                                                                             showDialog(context: context, builder: (BuildContext context){
-                                                                               return ShowConAlertDialog();
-                                                                             });
-
-
-
-
-
-                                                                           },
-                                                                           // ignore: sort_child_properties_last
-
-                                                                           //------------------------ok approval-------------//
-                                                                           child: Row(
-                                                                               mainAxisAlignment: MainAxisAlignment.center,
-                                                                               children:  <
-                                                                                   Widget>[
-                                                                                 Center(
-                                                                                     child:
-                                                                                     Text(
-                                                                                       "Submit",
-                                                                                       style: TextStyle(
-                                                                                           color: Colors
-                                                                                               .white,
-                                                                                           fontSize:
-                                                                                           12.sp),
-                                                                                     )),
-                                                                               ]),
-                                                                           style: ElevatedButton
-                                                                               .styleFrom(
-                                                                               shape:
-                                                                               RoundedRectangleBorder(
-                                                                                 borderRadius:
-                                                                                 BorderRadius
-                                                                                     .circular(
-                                                                                     20.0.r),
-                                                                               ),
-                                                                               backgroundColor:
-                                                                               const Color(
-                                                                                   0xFF363B42)),),
-                                                                       ),
-                                                                     ],
-                                                                   ),
-                                                                 )
-
-                                                               ],),
-                                                           )
-
-
-
-                                                       ));});
-
-
-
-                                           },
-                                           // ignore: sort_child_properties_last
-                                           child: Row(
-                                               mainAxisAlignment: MainAxisAlignment.center,
-                                               children:  <
-                                                   Widget>[
-                                                 Center(
-                                                     child:
-                                                     Text(
-                                                       "Bid Now",
-                                                       style: TextStyle(
-                                                           color: Colors
-                                                               .white,
-                                                           fontSize:
-                                                           10.sp),
-                                                     )),
-                                               ]),
-                                           style: ElevatedButton
-                                               .styleFrom(
-                                               shape:
-                                               RoundedRectangleBorder(
-                                                 borderRadius:
-                                                 BorderRadius
-                                                     .circular(
-                                                     20.0.r),
+                                     Row(
+                                       children: [
+                                         Padding(
+                                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                             child:  Text(
+                                               "RS :",
+                                               style: TextStyle(
+                                                 color: Colors.black,
+                                                 fontSize: 12.sp,
+                                                 fontWeight: FontWeight.w600,
                                                ),
-                                               backgroundColor:
-                                               Colors.lightGreen)),),
-                                   ),
-                                 ],
+                                             )),
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                           child:  Text(
+                                             bidingData[i].price,
+                                             style: TextStyle(
+                                               color: Colors.green,
+                                               fontSize: 12.sp,
+                                               fontWeight: FontWeight.w600,
+                                             ),
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+
+                                   ],
+                                 ),
                                ),
                              ),
                          ],),
@@ -441,6 +328,7 @@ class _HomePageViewState extends State<HomePageView> {
                      mainAxisAlignment: MainAxisAlignment.start,
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
+
                        GestureDetector(
                            onTap: (){
                              Get.to(()=>VehicleView());
@@ -506,7 +394,7 @@ class _HomePageViewState extends State<HomePageView> {
                SliverGrid(
                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                        crossAxisCount: 2,
-                       childAspectRatio:(3.3/5.3),
+                       childAspectRatio:(3.3/4.3),
                        crossAxisSpacing: 10.w,
                        mainAxisSpacing: 10.h
 
@@ -517,344 +405,280 @@ class _HomePageViewState extends State<HomePageView> {
 
 
 
-                         return   GestureDetector(
-                           onTap: ()async{
+                         return   Container(
+                           child:onTapAuctionType=="Biding"?
+                             GestureDetector(
+                               onTap:()async{
+                                 final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                 prefs.setString("id", bidingData[index].docId.toString());
+                                 prefs.setString("categoryName", bidingData[index].categoryName.toString());
+                                 prefs.setString("auctionType", bidingData[index].auctionType);
 
-                             final SharedPreferences prefs = await SharedPreferences.getInstance();
-                             prefs.setString("id", data[index].docId.toString());
+                                 String id="";
+                                 id=prefs.getString("id");
+                                 String categoryName="";
+                                 categoryName= prefs.getString("categoryName");
+                                 print("Category Type is "+categoryName.toString());
 
-                             prefs.setString("categoryName", data[index].categoryName.toString());
-
-                             String id="";
-                             id=prefs.getString("id");
-                              String categoryName="";
-                              categoryName= prefs.getString("categoryName");
-                             print("Category Type is "+categoryName.toString());
-
-                            if(id!=null){
-                               Get.to(()=>BidsMainView());
-                             }
-
-
-
-                           },
-                           child:
-                           Container(
-                             margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
-                             width:120.w,
-                             decoration: BoxDecoration(
-                                 color: Colors.white,
-                                 borderRadius: BorderRadius.circular(0.r),
-                                 border: Border.all(color: Colors.black,width: 1)
-                             ),
-
-                             child:Column(
-                               mainAxisAlignment:MainAxisAlignment.start,
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               children: [
-
-                                 //----------------------Pic Box----------------------//
-
-                                 Container(
-                                   margin: EdgeInsets.only(left:0.w,top:0.h),
-
-                                   width:200.w,
-                                   height: 80.h,
-                                   decoration: BoxDecoration(
-
-                                       image: DecorationImage(image: NetworkImage(data[index].imagePath,),fit:BoxFit.cover),
-
-                                       border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
-                                   ),
-
+                                 if(id!=null){
+                                   Get.to(()=>BidsMainView());
+                                 }
+                               },
+                               child: Container(
+                                 margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
+                                 width:160.w,
+                                 decoration: BoxDecoration(
+                                     color: Colors.white,
+                                     borderRadius: BorderRadius.circular(0.r),
+                                     border: Border.all(color: Colors.black,width: 1)
                                  ),
-                                 Padding(
-                                   padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                   child:  Text(
-                                     data[index].name,
-                                     style: TextStyle(
-                                       color: Colors.black,
-                                       fontSize: 12.sp,
-                                       fontWeight: FontWeight.w600,
-                                     ),
-                                   ),
-                                 ),
-                                 Row(
+
+                                 child:Column(
+                                   mainAxisAlignment:MainAxisAlignment.start,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
-                                     Padding(
-                                       padding: EdgeInsets.only(top: 5.h, left: 7.w),
-                                       child: Icon(Icons.location_pin,color: Colors.red,),),
-                                     Padding(
-                                       padding: EdgeInsets.only(top: 5.h, left: 3.w),
-                                       child:  Text(
-                                         data[index].city,
-                                         style: TextStyle(
-                                           color: Colors.black,
-                                           fontSize: 10.sp,
-                                           fontWeight: FontWeight.w500,
-                                         ),
-                                       ),
-                                     ),
+
+
+                                      Container(
+                                        margin: EdgeInsets.only(left:0.w,top:0.h),
+
+                                        width:200.w,
+                                        height: 80.h,
+                                        decoration: BoxDecoration(
+
+                                            image: DecorationImage(image: NetworkImage(bidingData[index].imagePath,),fit:BoxFit.cover),
+
+                                            border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
+                                        ),
+
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                        child:  Text(
+                                          bidingData[index].name,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                            child: Icon(Icons.location_pin,color: Colors.red,),),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                            child:  Text(
+                                              bidingData[index].city,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                        child:  Text(
+                                          bidingData[index].description,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                        child:  Text(
+                                          "Price",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                              padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                              child:  Text(
+                                                "RS :",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              )),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                            child:  Text(
+                                              bidingData[index].price,
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                     //----------------------Pic Box----------------------//
+
+
+
                                    ],
                                  ),
-                                 Padding(
-                                   padding: EdgeInsets.only(top: 5.h, left: 10.w),
-                                   child:  Text(
-                                     data[index].description,
-                                     style: TextStyle(
-                                       color: Colors.grey,
-                                       fontSize: 10.sp,
-                                       fontWeight: FontWeight.w500,
-                                     ),
+                               ),
+                             ):
+
+                               GestureDetector(
+                                 onTap:()async{
+                                   final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                   prefs.setString("id", fixedAuctionData[index].docId.toString());
+                                   prefs.setString("categoryName", fixedAuctionData[index].categoryName.toString());
+                                   prefs.setString("auctionType", fixedAuctionData[index].auctionType);
+
+                                   String id="";
+                                   id=prefs.getString("id");
+                                   String categoryName="";
+                                   categoryName= prefs.getString("categoryName");
+                                   print("Category Type is "+categoryName.toString());
+
+                                   if(id!=null){
+                                     Get.to(()=>BidsMainView());
+                                   }
+
+                                 },
+                                 child: Container(
+                                   margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
+                                   width:160.w,
+                                   decoration: BoxDecoration(
+                                       color: Colors.white,
+                                       borderRadius: BorderRadius.circular(0.r),
+                                       border: Border.all(color: Colors.black,width: 1)
                                    ),
-                                 ),
-                                 Padding(
-                                   padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                   child:  Text(
-                                     "Price",
-                                     style: TextStyle(
-                                       color: Colors.black,
-                                       fontSize: 12.sp,
-                                       fontWeight: FontWeight.w600,
-                                     ),
-                                   ),
-                                 ),
-                                 Row(
-                                   children: [
-                                     Padding(
-                                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                       child:  Text(
-                                         "RS :",
-                                         style: TextStyle(
-                                           color: Colors.black,
-                                           fontSize: 12.sp,
-                                           fontWeight: FontWeight.w600,
+
+                                   child:Column(
+                                     mainAxisAlignment:MainAxisAlignment.start,
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+
+
+                                       Container(
+                                         margin: EdgeInsets.only(left:0.w,top:0.h),
+
+                                         width:200.w,
+                                         height: 80.h,
+                                         decoration: BoxDecoration(
+
+                                             image: DecorationImage(image: NetworkImage(fixedAuctionData[index].imagePath,),fit:BoxFit.cover),
+
+                                             border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                                          ),
-                                       )),
+
+                                       ),
                                        Padding(
                                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                                          child:  Text(
-                                          data[index].price,
+                                           fixedAuctionData[index].name,
                                            style: TextStyle(
-                                             color: Colors.green,
+                                             color: Colors.black,
                                              fontSize: 12.sp,
                                              fontWeight: FontWeight.w600,
                                            ),
                                          ),
-                                     ),
-                                   ],
-                                 ),
-                                 /*Center(
-                                       child: Container(
-                                         margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
-                                         width: 80.w,
-                                         height: 25.h,
-                                         child: ElevatedButton(
-                                             onPressed: () {
-                                               showDialog(
-                                                   context: context,
-                                                   builder: (BuildContext context) {
-                                                     return Padding(
-                                                         padding: const EdgeInsets.only(
-                                                             left: 0, top: 0),
-                                                         child: AlertDialog(
-                                                             shape:
-                                                             const RoundedRectangleBorder(
-                                                                 borderRadius:
-                                                                 BorderRadius.all(
-                                                                     Radius.circular(
-                                                                         10.0))),
-
-
-                                                             content:Container(
-                                                               width: 250.w,
-                                                               height: 250.h,
-                                                               child: Column(
-                                                                 mainAxisAlignment: MainAxisAlignment.start,
-                                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                                 children: [
-
-                                                                   Text(
-                                                                     "Offer",
-                                                                     style: TextStyle(
-                                                                         fontWeight: FontWeight.w600,
-                                                                         color: Colors
-                                                                             .black,
-                                                                         fontSize:
-                                                                         16.sp),
-                                                                   ),
-
-
-                                                                   Padding(
-                                                                     padding: const EdgeInsets.only(top:20,bottom: 10),
-                                                                     child: Text(
-                                                                       "Enter your offer",
-                                                                       style: TextStyle(
-                                                                           color: Colors
-                                                                               .black,
-                                                                           fontSize:
-                                                                           16.sp),
-                                                                     ),
-                                                                   ),
-
-                                                                   SizedBox(
-                                                                     width: 250.w,
-                                                                     height: 45.h,
-                                                                     child: TextFormField(
-                                                                       controller: offer,
-                                                                       style: TextStyle(color: Colors.black),
-                                                                       decoration: InputDecoration(
-
-                                                                         label: Text("10,0000") ,
-                                                                         border: OutlineInputBorder(),
-                                                                       ),),
-                                                                   ),
-
-                                                                   Padding(
-                                                                     padding:EdgeInsets.only(top:70.h),
-                                                                     child: Row(
-                                                                       children: [
-
-                                                                         Container(
-                                                                           margin: EdgeInsets.only(left:10.w),
-                                                                           width: 100.w,
-                                                                           height: 40.h,
-                                                                           child: ElevatedButton(
-                                                                             onPressed: () {
-                                                                               Navigator.of(context).pop();
-
-                                                                             },
-                                                                             // ignore: sort_child_properties_last
-                                                                             child: Row(
-                                                                                 mainAxisAlignment: MainAxisAlignment.center,
-                                                                                 children:  <
-                                                                                     Widget>[
-                                                                                   Center(
-                                                                                       child:
-                                                                                       Text(
-                                                                                         "Cancel",
-                                                                                         style: TextStyle(
-                                                                                             color: Colors
-                                                                                                 .white,
-                                                                                             fontSize:
-                                                                                             12.sp),
-                                                                                       )),
-                                                                                 ]),
-                                                                             style: ElevatedButton
-                                                                                 .styleFrom(
-                                                                                 shape:
-                                                                                 RoundedRectangleBorder(
-                                                                                   borderRadius:
-                                                                                   BorderRadius
-                                                                                       .circular(
-                                                                                       20.0.r),
-                                                                                 ),
-                                                                                 backgroundColor:
-                                                                                 const Color(
-                                                                                     0xFF363B42)),),
-                                                                         ),
-                                                                         //-------------Ok Button Starts here
-
-                                                                         Container(
-                                                                           width: 100.w,
-                                                                           height: 40.h,
-                                                                           margin: EdgeInsets.only(left:30.w),
-                                                                           child: ElevatedButton(
-                                                                             onPressed: () {
-
-                                                                               showDialog(context: context, builder: (BuildContext context){
-                                                                                 return ShowConAlertDialog();
-                                                                               });
-
-
-
-
-
-                                                                             },
-                                                                             // ignore: sort_child_properties_last
-
-                                                                             //------------------------ok approval-------------//
-                                                                             child: Row(
-                                                                                 mainAxisAlignment: MainAxisAlignment.center,
-                                                                                 children:  <
-                                                                                     Widget>[
-                                                                                   Center(
-                                                                                       child:
-                                                                                       Text(
-                                                                                         "Submit",
-                                                                                         style: TextStyle(
-                                                                                             color: Colors
-                                                                                                 .white,
-                                                                                             fontSize:
-                                                                                             12.sp),
-                                                                                       )),
-                                                                                 ]),
-                                                                             style: ElevatedButton
-                                                                                 .styleFrom(
-                                                                                 shape:
-                                                                                 RoundedRectangleBorder(
-                                                                                   borderRadius:
-                                                                                   BorderRadius
-                                                                                       .circular(
-                                                                                       20.0.r),
-                                                                                 ),
-                                                                                 backgroundColor:
-                                                                                 const Color(
-                                                                                     0xFF363B42)),),
-                                                                         ),
-                                                                       ],
-                                                                     ),
-                                                                   )
-
-                                                                 ],),
-                                                             )
-
-
-
-                                                         ));});
-
-
-
-                                             },
-                                             // ignore: sort_child_properties_last
-                                             child: Row(
-                                                 mainAxisAlignment: MainAxisAlignment.center,
-                                                 children:  <
-                                                     Widget>[
-                                                   Center(
-                                                       child:
-                                                       Text(
-                                                         "Bid Now",
-                                                         style: TextStyle(
-                                                             color: Colors
-                                                                 .white,
-                                                             fontSize:
-                                                             10.sp),
-                                                       )),
-                                                 ]),
-                                             style: ElevatedButton
-                                                 .styleFrom(
-                                                 shape:
-                                                 RoundedRectangleBorder(
-                                                   borderRadius:
-                                                   BorderRadius
-                                                       .circular(
-                                                       20.0.r),
+                                       ),
+                                       Row(
+                                         children: [
+                                           Padding(
+                                             padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                             child: Icon(Icons.location_pin,color: Colors.red,),),
+                                           Padding(
+                                             padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                             child:  Text(
+                                               fixedAuctionData[index].city,
+                                               style: TextStyle(
+                                                 color: Colors.black,
+                                                 fontSize: 10.sp,
+                                                 fontWeight: FontWeight.w500,
+                                               ),
+                                             ),
+                                           ),
+                                         ],
+                                       ),
+                                       Padding(
+                                         padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                         child:  Text(
+                                           fixedAuctionData[index].description,
+                                           style: TextStyle(
+                                             color: Colors.grey,
+                                             fontSize: 10.sp,
+                                             fontWeight: FontWeight.w500,
+                                           ),
+                                         ),
+                                       ),
+                                       Padding(
+                                         padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                         child:  Text(
+                                           "Price",
+                                           style: TextStyle(
+                                             color: Colors.black,
+                                             fontSize: 12.sp,
+                                             fontWeight: FontWeight.w600,
+                                           ),
+                                         ),
+                                       ),
+                                       Row(
+                                         children: [
+                                           Padding(
+                                               padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                               child:  Text(
+                                                 "RS :",
+                                                 style: TextStyle(
+                                                   color: Colors.black,
+                                                   fontSize: 12.sp,
+                                                   fontWeight: FontWeight.w600,
                                                  ),
-                                                 backgroundColor:
-                                                 Colors.lightGreen)),),
-                                     ),*/
-                               ],
-                             ),
-                           ),
+                                               )),
+                                           Padding(
+                                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                             child:  Text(
+                                               fixedAuctionData[index].price,
+                                               style: TextStyle(
+                                                 color: Colors.green,
+                                                 fontSize: 12.sp,
+                                                 fontWeight: FontWeight.w600,
+                                               ),
+                                             ),
+                                           ),
+                                         ],
+                                       ),
+
+                                       //----------------------Pic Box----------------------//
+
+
+
+                                     ],
+                                   ),
+                                 ),
+                               ),
+
                          );
                        },
-                       childCount:data.length
+                       childCount:onTapAuctionType=="Biding"?bidingData.length:fixedAuctionData.length
                    )
                ),
              ])),
    );
   }
+
 }
 
 

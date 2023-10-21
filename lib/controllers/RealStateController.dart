@@ -51,7 +51,7 @@ class RealStateController {
         'cityName':realStateModel.cityName,
         'completeAddress':realStateModel.completeAddress,
         'description':realStateModel.description,
-        'status':realStateModel.status,
+        'status':"",
         'imagePath':imageUrl,
         // Other user data fields
       });
@@ -59,7 +59,7 @@ class RealStateController {
 
       String _docId = documentRef.id;
       try{
-        FirebaseFirestore.instance.collection('HomePage').doc().set({
+        FirebaseFirestore.instance.collection('HomePage').doc(_docId ).set({
           'userId':docId.toString(),
           'id':_docId.toString(),
           'name':realStateModel.selectType,
@@ -67,7 +67,10 @@ class RealStateController {
           'description':realStateModel.description,
           'price':realStateModel.setBidPrice,
           'imagePath':imageUrl,
-          "auctionType":realStateModel.auctionType
+          "auctionType":realStateModel.auctionType,
+          "categoryType":"RealState",
+          'auctionType':realStateModel.auctionType,
+          'status':"",
 
           // Other user data fields
 

@@ -13,8 +13,10 @@ class HomePageModel{
  String description;
  String imagePath;
  String categoryName;
+ String status;
+ String auctionType;
 
- HomePageModel({this.docId,this.name,this.city,this.price,this.description,this.imagePath,this.categoryName});
+ HomePageModel({this.docId,this.name,this.city,this.price,this.description,this.imagePath,this.categoryName,this.status,this.auctionType});
 
   factory   HomePageModel.fromFirestore(Map<String, dynamic> data) {
     return   HomePageModel(
@@ -26,12 +28,14 @@ class HomePageModel{
       description:data['description']??"",
       imagePath: data['imagePath']??"",
       categoryName:data['categoryType']??"",
-
+      status: data['status']??"",
+      auctionType: data['auctionType']??"",
 
 
 
     );
   }
+
 
   }
 

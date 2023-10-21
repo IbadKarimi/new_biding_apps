@@ -55,7 +55,7 @@ class FurnitureController {
 
       String _docId = documentRef.id;
       try{
-        FirebaseFirestore.instance.collection('HomePage').doc().set({
+        FirebaseFirestore.instance.collection('HomePage').doc(_docId).set({
           'userId':docId.toString(),
           'id':_docId.toString(),
           'name':furnitureModel.makingMaterial,
@@ -63,7 +63,9 @@ class FurnitureController {
           'description':furnitureModel.description,
           'price':furnitureModel.setBidPrice,
           'imagePath':imageUrl,
-          "auctionType":furnitureModel.auctionType
+          "auctionType":furnitureModel.auctionType,
+          "categoryType":"Furniture",
+          'auctionType':furnitureModel.auctionType,
 
           // Other user data fields
 
