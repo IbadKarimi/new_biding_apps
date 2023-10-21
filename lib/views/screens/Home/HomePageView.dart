@@ -357,7 +357,7 @@ void sortingData(){
                        ),
                        GestureDetector(
                            onTap: (){
-                             Get.to(()=>VehicleView());
+                             Get.to(()=>AgricultureView());
                            },
                            child:Container(
                              margin: EdgeInsets.only(left:10.w,top:10.h),

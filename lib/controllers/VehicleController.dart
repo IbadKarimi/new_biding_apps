@@ -42,7 +42,7 @@ class VehicleController {
         'cityName':vehicleModel.cityName,
         'completeAddress':vehicleModel.completeAddress,
         'description':vehicleModel.description,
-        'status':vehicleModel.status,
+        'status':"",
         'imagePath':imageUrl,
         // Other user data fields
       });
@@ -58,7 +58,8 @@ class VehicleController {
      'imagePath':imageUrl,
      "auctionType":vehicleModel.auctionType,
      "categoryType":"Vehicle",
-    'auctionType':vehicleModel.auctionType,
+     'auctionType':vehicleModel.auctionType,
+     'status':"",
 
      // Other user data fields
 

@@ -200,7 +200,7 @@ class _FurnitureDataState extends State<FurnitureData > {
                           Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(top: 0.h, left: 10, bottom: 0.h),
+                                padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 5.h),
                                 child:  Text(
                                   "Rs",
                                   style: TextStyle(
@@ -211,7 +211,7 @@ class _FurnitureDataState extends State<FurnitureData > {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 5.h, left: 10, bottom: 0.h),
+                                padding: EdgeInsets.only(top: 5.h, left: 5.w, bottom: 5.h),
                                 child:  Text(
                                   data['setBidPrice'],
                                   style: TextStyle(

@@ -96,7 +96,7 @@ Row(
         Column(
           children: [
             GestureDetector(
-              onTap: (){  Get.to(()=>AggricultureView());},
+              onTap: (){  Get.to(()=>AgricultureView());},
               child: Container(
                   width: 150.w,
                   height:200.h,

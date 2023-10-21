@@ -47,7 +47,7 @@ class AgricultureController {
         'cityName':agricultureModel.cityName,
         'completeAddress':agricultureModel.completeAddress,
         'description':agricultureModel.description,
-        'status':agricultureModel.status,
+        'status':"",
         'imagePath':imageUrl,
         // Other user data fields
       });
@@ -65,6 +65,7 @@ class AgricultureController {
           "auctionType":agricultureModel.auctionType,
           "categoryType":"Agriculture",
           'auctionType':agricultureModel.auctionType,
+          'status':"",
 
           // Other user data fields
 
