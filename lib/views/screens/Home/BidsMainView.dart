@@ -4,6 +4,8 @@
 import 'package:biding_app/controllers/HomeController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -20,75 +22,7 @@ import '../Widgets/BottomNavigationBar.dart';
 import '../Widgets/Drawer.dart';
 import 'HomePageView.dart';
 
-//---------Vehicle-------//
-String _docId="";
-String vehicleName="";
-String cityName="";
-String imagePath="";
-String description="";
-String price="";
-String completeAddress="";
-String condtion="";
-String enginePower="";
-String model;
-String registerYear="";
-String registerArea="";
-String vehicleType="";
 
-//----------Furniture------//
-String _buyerDocIdf="";
-String _makingMaterialf="";
-String _conditionf="";
-String _selectTypef="";
-String _auctionTypef="";
-String _setBidPricef="";
-String _setBidEndTimef="";
-
-String _statusf="";
-
-String _remainingTimef="";
-String _cityNamef="";
-String _imagePathf="";
-String _descriptionf="";
-String _pricef="";
-String _completeAddressf="";
-
-
-
-//------------Agriculture-------//
-
-String id;
-String _typesCropsA="";
-String _workTypeA="";
-String _areaTypeA="";
-String _rangeA="";
-String _cityNameA="";
-String _imagePathA="";
-String _descriptionA="";
-String _priceA="";
-String _completeAddressA="";
-
-String categoryName="";
-
-
-//-----------RealEstate---------//
-
-String noFloors="";
-String noBedrooms="";
-String noBathrooms="";
-String _selectTypeR="";
-String _areaTypeR="";
-String _imagePathR="";
-String _rangeR="";
-
-String _priceR="";
-String _completeAddressR="";
-String _cityNameR="";
-String _descriptionR="";
-
-
-
-//-----------------------------------------//
 
 class BidsMainView extends StatefulWidget{
 
@@ -97,6 +31,75 @@ class BidsMainView extends StatefulWidget{
 }
 
 class _BidsMainViewState extends State<BidsMainView> {
+  //---------Vehicle-------//
+  String _docId="";
+  String vehicleName="";
+  String cityName="";
+  String imagePath="";
+  String description="";
+  String price="";
+  String completeAddress="";
+  String condtion="";
+  String enginePower="";
+  String model;
+  String registerYear="";
+  String registerArea="";
+  String vehicleType="";
+
+//----------Furniture------//
+  String _buyerDocIdf="";
+  String _makingMaterialf="";
+  String _conditionf="";
+  String _selectTypef="";
+  String _auctionTypef="";
+  String _setBidPricef="";
+  String _setBidEndTimef="";
+
+  String _statusf="";
+
+  String _remainingTimef="";
+  String _cityNamef="";
+  String _imagePathf="";
+  String _descriptionf="";
+  String _pricef="";
+  String _completeAddressf="";
+
+
+
+//------------Agriculture-------//
+
+  String id;
+  String _typesCropsA="";
+  String _workTypeA="";
+  String _areaTypeA="";
+  String _rangeA="";
+  String _cityNameA="";
+  String _imagePathA="";
+  String _descriptionA="";
+  String _priceA="";
+  String _completeAddressA="";
+
+  String categoryName="";
+
+
+//-----------RealEstate---------//
+
+  String noFloors="";
+  String noBedrooms="";
+  String noBathrooms="";
+  String _selectTypeR="";
+  String _areaTypeR="";
+  String _imagePathR="";
+  String _rangeR="";
+
+  String _priceR="";
+  String _completeAddressR="";
+  String _cityNameR="";
+  String _descriptionR="";
+
+
+
+//-----------------------------------------//
   HomePageController homePageController=HomePageController();
   SharedPreferences _prefs;
   String _storedValue = "";
@@ -246,7 +249,8 @@ class _BidsMainViewState extends State<BidsMainView> {
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
       drawer: CustomDrawer(),
-      body:_isLoading!=true?
+      body:_imagePathR==""&&imagePath==""&&_imagePathA==""&&_imagePathf==""
+          ?
           Center(child: Padding(
             padding: const EdgeInsets.only(top:30),
             child: CircularProgressIndicator(),
@@ -259,7 +263,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             children:[
               if(_categoryName=="Vehicle")
               Container(
-               margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
+               margin: EdgeInsets.only(top:10.h,left:10.w,right: 10.w),
 
                decoration: BoxDecoration(
                    color: Colors.white,
@@ -683,6 +687,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                          ),
                                                          backgroundColor:
                                                          Colors.lightGreen))):
+                                                   //Fixed Auction Vehicle
                                                Container(
                                                    margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
                                                    width: 220.w,
@@ -693,6 +698,9 @@ class _BidsMainViewState extends State<BidsMainView> {
 
                                                          homePageController.updateStatus(_storedValue, "Accepted");
                                                          homePageController.updateStatusWithCollection(_storedValue, "Accepted","vehicle");
+
+
+                                                         Get.to(()=>HomePageView());
                                                        },
                                                        // ignore: sort_child_properties_last
                                                        child: Row(
@@ -1116,6 +1124,8 @@ class _BidsMainViewState extends State<BidsMainView> {
 
                                       homePageController.updateStatus(_storedValue, "Accepted");
                                       homePageController.updateStatusWithCollection(_storedValue, "Accepted","furniture");
+
+                                      Get.to(()=>HomePageView());
                                     },
                                     // ignore: sort_child_properties_last
                                     child: Row(
@@ -1533,6 +1543,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                       ),
                                       backgroundColor:
                                       Colors.lightGreen))):
+                              //Fixed Auction Agriculture
                           Container(
                               margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
                               width: 220.w,
@@ -1543,6 +1554,8 @@ class _BidsMainViewState extends State<BidsMainView> {
 
                                     homePageController.updateStatus(_storedValue, "Accepted");
                                     homePageController.updateStatusWithCollection(_storedValue, "Accepted","agriculture");
+
+                                    Get.to(()=>HomePageView());
                                   },
                                   // ignore: sort_child_properties_last
                                   child: Row(
@@ -2034,7 +2047,10 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                   20.0.r),
                                             ),
                                             backgroundColor:
-                                            Colors.lightGreen))): Container(
+                                            Colors.lightGreen))):
+                                    //Fixed Auction real State
+
+                                Container(
                                     margin: EdgeInsets.only(top:10.h,left:0.w,bottom: 5.h),
                                     width: 220.w,
                                     height: 35.h,

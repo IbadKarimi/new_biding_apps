@@ -1,8 +1,12 @@
 
 
 
+import 'package:biding_app/controllers/user_controller.dart';
+import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../Widgets/AppBar.dart';
 import '../Widgets/BottomNavigationBar.dart';
@@ -14,10 +18,12 @@ class FeedBackView extends StatefulWidget{
 }
 
 class _FeedBackViewState extends State<FeedBackView  > {
+  UserController userController=UserController();
   @override
   int index = 0;
 
   TextEditingController email=TextEditingController();
+  TextEditingController feedBack=TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
         appBar:CustomAppBar(),
@@ -41,6 +47,7 @@ class _FeedBackViewState extends State<FeedBackView  > {
           height: 45.h,
           margin: EdgeInsets.only(left:0.w,top:20.w),
           child: TextFormField(
+            style: TextStyle(color: Colors.black),
             controller: email,
 
             decoration: InputDecoration(
@@ -64,6 +71,8 @@ class _FeedBackViewState extends State<FeedBackView  > {
                 shrinkWrap: true,
                 children: <Widget>[
                   new TextFormField(
+                    style: TextStyle(color: Colors.black),
+                    controller: feedBack,
                     keyboardType: TextInputType.multiline,
 
                     maxLines: null,
@@ -81,7 +90,9 @@ class _FeedBackViewState extends State<FeedBackView  > {
           width: 250.w,
           height: 45.h,
           child:ElevatedButton(onPressed: (){
+           userController.InsertFeedBack(email.text, feedBack.text);
 
+           Get.to(()=>HomePageView());
 
 
           }, child:  Text("Submit"),

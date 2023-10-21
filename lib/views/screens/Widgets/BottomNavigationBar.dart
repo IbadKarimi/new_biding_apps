@@ -35,7 +35,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         onTap: (int index) { setState((){
           this.index = index;
           if(index==0){
-            Get.to(()=>MyBids());
+            Get.to(()=>MyBidsView());
           }
           if(index==1){
             Get.to(()=>FeedBackView());

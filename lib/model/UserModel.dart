@@ -6,8 +6,9 @@ class UserModel {
   String phoneNo;
   String fullName;
   String imagePath;
+  String feedBack;
 
-  UserModel({ this.email,this.password,this.fullName,this.phoneNo, this.imagePath});
+  UserModel({ this.email,this.password,this.fullName,this.phoneNo, this.imagePath,this.feedBack});
 
 
   factory UserModel.fromFirestore(Map<String, dynamic> data) {
@@ -15,6 +16,8 @@ class UserModel {
 
       fullName: data['fullName'] ?? '',
       imagePath: data['imagePath'] ?? '',
+      feedBack: data['feedBack'] ?? '',
+      email: data['email'] ?? '',
     );
   }
 

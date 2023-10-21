@@ -68,8 +68,10 @@ class _HomePageViewState extends State<HomePageView> {
 
 void sortingData(){
 
-  bidingData = data.where((item) => item.auctionType.contains("Biding")).toList();
-  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction")).toList();
+  bidingData = data.where((item) =>
+  item.auctionType.contains("Biding") && item.status.contains("Pending")||item.status.contains("")).toList();
+  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction") && item.status.contains(" ")).toList();
+
 
 
 
@@ -172,7 +174,8 @@ void sortingData(){
                  },
                  child:Container(
                          margin: EdgeInsets.only(left:20.w,top:20.h),
-                         width: 150.w,height: 40,
+                         width: 150.w,
+                         height: 40,
                          child: Center(child: Text("Fixed Price",style: TextStyle(color: Colors.white),)),
                          decoration: BoxDecoration(
                              color: Colors.black,
@@ -201,7 +204,7 @@ void sortingData(){
                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
                                  prefs.setString("id", bidingData[i].docId.toString());
                                  prefs.setString("auctionType", bidingData[i].auctionType);
-                                 prefs.setString("categoryName", bidingData[i].categoryName.toString());
+                                 prefs.setString("categoryName", bidingData[i].categoryType.toString());
 
                                  String id="";
                                  id=prefs.getString("id");
@@ -217,7 +220,7 @@ void sortingData(){
                                  margin: EdgeInsets.only(left:5.w,top:20.h,bottom: 10.h),
                                  alignment: AlignmentDirectional.center,
                                  width:150.w,
-                                 height:230.h,
+                                 height:260.h,
 
                                  decoration: BoxDecoration(
                                      color: Colors.white,
@@ -394,7 +397,7 @@ void sortingData(){
                SliverGrid(
                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                        crossAxisCount: 2,
-                       childAspectRatio:(3.3/4.3),
+                       childAspectRatio:(3.3/5.3),
                        crossAxisSpacing: 10.w,
                        mainAxisSpacing: 10.h
 
@@ -411,7 +414,7 @@ void sortingData(){
                                onTap:()async{
                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
                                  prefs.setString("id", bidingData[index].docId.toString());
-                                 prefs.setString("categoryName", bidingData[index].categoryName.toString());
+                                 prefs.setString("categoryName", bidingData[index].categoryType.toString());
                                  prefs.setString("auctionType", bidingData[index].auctionType);
 
                                  String id="";

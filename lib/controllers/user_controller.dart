@@ -139,7 +139,52 @@ class UserController {
   }
 
 
+
+  Future<void> InsertFeedBack(String email,String feedback) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+
+
+      FirebaseFirestore.instance.collection('FeedBack').doc().set({
+        'email':email ,
+        'feedBack':feedback,
+
+        // Other user data fields
+      });
+
+
+
+    }  on FirebaseAuthException catch (e) {
+
+      return Future.error(e.message);
+    } catch (e) {
+
+      return Future.error("An error occurred while signing in.");
+    }
+  }
+
+  Future<List<UserModel>> getFeedBack()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('FeedBack').get();
+
+    List<UserModel> getFeedBack = [];
+    querySnapshot.docs.forEach((doc) {
+      getFeedBack.add(UserModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<UserModel> data=[];
+    data.addAll(getFeedBack);
+
+
+    return data;
+
+  }
+
+
 }
+
+
 
 
 

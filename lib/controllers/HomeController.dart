@@ -120,4 +120,23 @@ class HomePageController{
   }
 
 
+  Future<List<HomePageModel>> getOffers()async{
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('offers').get();
+
+    List<HomePageModel> getOffers = [];
+    querySnapshot.docs.forEach((doc) {
+      getOffers.add(HomePageModel.fromFirestore(doc.data() as Map<String, dynamic>));
+    });
+
+
+    List<HomePageModel> data=[];
+    data.addAll(getOffers);
+
+
+    return data;
+
+  }
+
+
 }

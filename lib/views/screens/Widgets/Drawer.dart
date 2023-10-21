@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:biding_app/AboutUs/AboutUs.dart';
 import 'package:biding_app/controllers/user_controller.dart';
 import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
-import 'package:biding_app/views/screens/Admin/ViewBids.dart';
+import 'package:biding_app/views/screens/Admin/AcceptedBids.dart';
+import 'package:biding_app/views/screens/Admin/AdminViewFeedBack.dart';
 import 'package:biding_app/views/screens/FeedBack/Feedback.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -184,7 +186,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           leading: Icon(Icons.account_box_outlined),
           title: const Text('About Us',style: TextStyle(color: Colors.black),),
           onTap: () {
-            Get.to(()=>HomePageView());
+            Get.to(()=>AboutUsView());
             // Update the state of the app.
             // ...
           },
@@ -215,11 +217,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ListTile(
           leading: Icon(Icons.login_rounded),
           title: GestureDetector(onTap:(){
-            Get.to(()=>ViewBids());
+            Get.to(()=>AcceptedBidsView());
           },
-              child: const Text('View Bids',style: TextStyle(color: Colors.black),)),
+              child: const Text('Admin View Bids',style: TextStyle(color: Colors.black),)),
           onTap: () {
-          Get.to(()=>ViewBids());
+          Get.to(()=>AcceptedBidsView());
+          },
+        ),
+
+        ListTile(
+          leading: Icon(Icons.login_rounded),
+          title: GestureDetector(onTap:(){
+            Get.to(()=>AdminFeedBackView());
+          },
+              child: const Text('Admin  FeedBack View',style: TextStyle(color: Colors.black),)),
+          onTap: () {
+            Get.to(()=>AdminFeedBackView());
           },
         ),
         ListTile(
