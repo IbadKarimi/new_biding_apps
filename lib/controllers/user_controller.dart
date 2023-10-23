@@ -167,22 +167,60 @@ class UserController {
 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('FeedBack').get();
 
-    List<UserModel> getFeedBack = [];
+    List<UserModel> users = [];
     querySnapshot.docs.forEach((doc) {
-      getFeedBack.add(UserModel.fromFirestore(doc.data() as Map<String, dynamic>));
+      users.add(UserModel.fromFirestore(doc.data() as Map<String, dynamic>));
     });
 
 
     List<UserModel> data=[];
-    data.addAll(getFeedBack);
+    data.addAll(users);
 
 
     return data;
 
   }
 
+  Future<void> updateName(String name) async {
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String docId = prefs.getString('docId');//userID
+    FirebaseFirestore.instance
+        .collection('your_collection_name') // Replace 'your_collection_name' with your actual collection name
+        .doc(docId) // Specify the document ID you want to update
+        .update({
+      'name': name, // Update the 'name' field with the new value
+      // Add more fields if you want to update multiple fields at once
+    })
+        .then((_) {
+      print('Document successfully updated!');
+    })
+        .catchError((error) {
+      print('Error updating document: $error');
+    });
+  }
+
+  Future<void> updateEmail(String newEmail) async {
+    User user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        await user.updateEmail(newEmail);
+
+        await user.sendEmailVerification();
+        print('Email updated successfully to $newEmail');
+      } catch (e) {
+        print('Failed to update email: $e');
+        throw e;
+      }
+    } else {
+      print('User not authenticated.');
+      // Handle this scenario (e.g., redirect to sign-in page)
+    }
+  }
 
 }
+
+
 
 
 

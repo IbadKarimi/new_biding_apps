@@ -67,6 +67,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 300.w,
                       margin: EdgeInsets.only(top: 5.h,left: 30.w),
                       child: TextFormField(
+                        style: TextStyle(color: Colors.black),
                         controller:fullName,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -85,6 +86,22 @@ class _EditProfileViewState extends State<EditProfileView > {
                           () async {
                         Get.offAll(()=>Category());
                         if (_formKey.currentState.validate()) {
+
+                          try{
+                            userController.updateName(fullName.text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Name updated successfully!',style:TextStyle(color: Colors.black),),
+                              ),
+                            );
+                          }catch(e){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString(),style: TextStyle(color: Colors.black),),
+                              ),
+                            );
+
+                          }
 
 
 
@@ -116,7 +133,8 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 300.w,
                       margin: EdgeInsets.only(top: 5.h,left: 30.w),
                       child: TextFormField(
-                        controller:fullName,
+                        controller:email,
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             label: Text("Email"),
@@ -132,11 +150,20 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 100.w,
                       child: ElevatedButton(onPressed:
                           () async {
-                        Get.offAll(()=>Category());
+
                         if (_formKey.currentState.validate()) {
 
 
-
+                      try {
+                        userController.updateEmail(email.text);
+                        SnackBar(
+                          content: Text('Email updated successfully!',style:TextStyle(color: Colors.black),),
+                        );
+                      }catch(e){
+                        SnackBar(
+                          content: Text(e.toString(),style:TextStyle(color: Colors.black),),
+                        );
+                      }
 
 
                         }
@@ -167,6 +194,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       margin: EdgeInsets.only(top: 5.h,left: 30.w),
                       child: TextFormField(
                         controller:fullName,
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             label: Text("Old Paaword"),
@@ -180,6 +208,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 300.w,
                       margin: EdgeInsets.only(top: 5.h,left: 30.w),
                       child: TextFormField(
+                        style: TextStyle(color: Colors.black),
                         controller:fullName,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -194,6 +223,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 300.w,
                       margin: EdgeInsets.only(top: 5.h,left: 30.w),
                       child: TextFormField(
+                        style: TextStyle(color: Colors.black),
                         controller:fullName,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),

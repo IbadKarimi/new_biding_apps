@@ -35,6 +35,9 @@ class _AdminFeedBackView extends State<AdminFeedBackView> {
     userController.getFeedBack().then((value) {
       setState(() {
         feeedBack.addAll(value);
+        for(int i=0;i<feeedBack.length;i++){
+          print(feeedBack[i].feedBack);
+        }
       });
     });
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:biding_app/views/screens/Admin/AddFurniture.dart';
@@ -74,7 +75,10 @@ class _FurnitureDataState extends State<FurnitureData > {
         stream: FirebaseFirestore.instance.collection('furniture').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: Padding(
+              padding: const EdgeInsets.only(top:20),
+              child: CircularProgressIndicator(),
+            ));
           }
 
           var items = snapshot.data.docs;
@@ -155,6 +159,22 @@ class _FurnitureDataState extends State<FurnitureData > {
                                 border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                             ),
 
+                          ),
+
+                          Center(
+                            child: Container(
+                              margin: EdgeInsets.only(top:5.h),
+                              width: 100.w,
+                              height: 15.h,
+                              child:MyCountdownWidget(
+                                bidEndTime: data['setBidEndTime'],
+                                index: index,
+                                onTimerEnd: (int index) {
+                                  setState(() {
+                                    // Sort the list based on bidding end times
+                                  });
+                                },
+                              ),),
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 10.h, left: 10, bottom: 0.h),
@@ -239,4 +259,71 @@ class _FurnitureDataState extends State<FurnitureData > {
 
   }
 
+}
+
+class MyCountdownWidget extends StatefulWidget {
+  final String bidEndTime;
+  final int index;
+
+  final Function(int) onTimerEnd; // Define the callback function
+
+  MyCountdownWidget({Key key, @required this.bidEndTime, @required this.index, @required this.onTimerEnd})
+      : super(key: key);
+
+  @override
+  _MyCountdownWidgetState createState() => _MyCountdownWidgetState();
+}
+
+class _MyCountdownWidgetState extends State<MyCountdownWidget> {
+  Duration duration;
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    duration = parseDuration(widget.bidEndTime);
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (duration.inSeconds > 0) {
+          duration = duration - Duration(seconds: 1);
+        }
+        else {
+          timer.cancel(); // Cancel the timer when the duration reaches 0
+          widget.onTimerEnd(widget.index); // Call the callback function with the index
+        } // Cancel the timer when the duration reaches 0
+
+      });
+    });
+  }
+
+  static Duration parseDuration(String formattedString) {
+    var parts = formattedString.split(', ');
+    var days = int.parse(parts[0].split(' ')[0]);
+    var hours = int.parse(parts[1].split(' ')[0]);
+    var minutes = int.parse(parts[2].split(' ')[0]);
+    var seconds = int.parse(parts[3].split(' ')[0]);
+
+    return Duration(days: days, hours: hours, minutes: minutes, seconds: seconds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Text(
+        '${duration.inDays}d: ${duration.inHours.remainder(24)}h:${duration.inMinutes.remainder(60)}m: ${duration.inSeconds.remainder(60)}s ',
+        style: TextStyle(fontSize: 12,color: Colors.white),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
+  }
 }

@@ -71,6 +71,7 @@ class RealStateController {
           "categoryType":"RealState",
           'auctionType':realStateModel.auctionType,
           'status':"",
+          "setBidEndTime":realStateModel.setBidEndTime,
 
           // Other user data fields
 

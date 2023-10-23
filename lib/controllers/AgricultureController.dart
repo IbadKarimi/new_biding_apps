@@ -66,6 +66,7 @@ class AgricultureController {
           "categoryType":"Agriculture",
           'auctionType':agricultureModel.auctionType,
           'status':"",
+         "setBidEndTime":agricultureModel.setBidEndTime,
 
           // Other user data fields
 

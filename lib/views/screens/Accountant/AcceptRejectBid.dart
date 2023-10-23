@@ -2,6 +2,7 @@
 
 
 import 'package:biding_app/controllers/HomeController.dart';
+import 'package:biding_app/model/HomePageModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,71 +24,6 @@ import '../Widgets/Drawer.dart';
 import 'AccountantView.dart';
 
 
-//---------Vehicle-------//
-String _docId="";
-String vehicleName="";
-String cityName="";
-String imagePath;
-String description="";
-String price="";
-String completeAddress="";
-String condtion="";
-String enginePower="";
-String model;
-String registerYear="";
-String registerArea="";
-String vehicleType="";
-
-//----------Furniture------//
-String _buyerDocIdf="";
-String _makingMaterialf="";
-String _conditionf="";
-String _selectTypef="";
-String _auctionTypef="";
-String _setBidPricef="";
-String _setBidEndTimef="";
-
-String _statusf="";
-
-String _remainingTimef="";
-String _cityNamef="";
-String _imagePathf;
-String _descriptionf="";
-String _pricef="";
-String _completeAddressf="";
-
-
-
-//------------Agriculture-------//
-
-String id;
-String _typesCropsA="";
-String _workTypeA="";
-String _areaTypeA="";
-String _rangeA="";
-String _cityNameA="";
-String _imagePathA="";
-String _descriptionA="";
-String _priceA="";
-String _completeAddressA="";
-
-String categoryName="";
-
-
-//-----------RealEstate---------//
-
-String noFloors="";
-String noBedrooms="";
-String noBathrooms="";
-String _selectTypeR="";
-String _areaTypeR="";
-String _imagePathR="";
-String _rangeR="";
-
-String _priceR="";
-String _completeAddressR="";
-String _cityNameR="";
-String _descriptionR="";
 
 
 
@@ -100,6 +36,73 @@ class AcceptRejectBidView extends StatefulWidget{
 }
 
 class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
+  //---------Vehicle-------//
+
+  String _docId="";
+  String vehicleName="";
+  String cityName="";
+  String imagePath;
+  String description="";
+  String price="";
+  String completeAddress="";
+  String condtion="";
+  String enginePower="";
+  String model;
+  String registerYear="";
+  String registerArea="";
+  String vehicleType="";
+
+//----------Furniture------//
+  String _buyerDocIdf="";
+  String _makingMaterialf="";
+  String _conditionf="";
+  String _selectTypef="";
+  String _auctionTypef="";
+  String _setBidPricef="";
+  String _setBidEndTimef="";
+
+  String _statusf="";
+
+  String _remainingTimef="";
+  String _cityNamef="";
+  String _imagePathf;
+  String _descriptionf="";
+  String _pricef="";
+  String _completeAddressf="";
+
+
+
+//------------Agriculture-------//
+
+  String id;
+  String _typesCropsA="";
+  String _workTypeA="";
+  String _areaTypeA="";
+  String _rangeA="";
+  String _cityNameA="";
+  String _imagePathA;
+  String _descriptionA="";
+  String _priceA="";
+  String _completeAddressA="";
+
+  String categoryName="";
+
+
+//-----------RealEstate---------//
+
+  String noFloors="";
+  String noBedrooms="";
+  String noBathrooms="";
+  String _selectTypeR="";
+  String _areaTypeR="";
+  String _imagePathR;
+  String _rangeR="";
+
+  String _priceR="";
+  String _completeAddressR="";
+  String _cityNameR="";
+  String _descriptionR="";
+
   HomePageController homePageController=HomePageController();
   SharedPreferences _prefs;
   String _storedValue = "";
@@ -219,7 +222,7 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
     });
   }
-
+String offer;
   VehicleController vehicleController=VehicleController();
   FurnitureController furnitureController=FurnitureController();
   AgricultureController agricultureController=AgricultureController();
@@ -232,15 +235,31 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
   int index=0;
 
-
+  List<HomePageModel> offers=[];
   void initState()  {
     super.initState();
     _loadStoredValue() ;
 
+    homePageController.getOffers().then((value) {
+      setState(() {
+        offers.addAll(value);
+        for(int i=0;i<offers.length;i++){
+          if(offers[i].docId==_storedValue){
+            setState(() {
+              offer=offers[i].offer ;
+            });
+
+          }
+
+        }
+
+      });
+    });
+
 
   }
 
-  TextEditingController offer=TextEditingController();
+
 
 
 
@@ -253,11 +272,12 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
       drawer: CustomDrawer(),
-      body:_isLoading!=true?
+      body:_imagePathR==null&&imagePath==null&&_imagePathA==null&&_imagePathf==null ?
       Center(child: Padding(
         padding: const EdgeInsets.only(top:30),
         child: CircularProgressIndicator(),
       ))
+
           :SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child:
@@ -465,6 +485,31 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
                           padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                           child:  Text(
                             price,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              "Offer :",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                          child:  Text(
+                            offer,
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 14.sp,

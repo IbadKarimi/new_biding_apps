@@ -16,11 +16,11 @@ class HomePageModel{
  String status;
  String auctionType;
  String offer;
-
+String setBidEndTime;
  String startPrice;
  String productId;
 String categoryType;
- HomePageModel({this.categoryType,this.productId,this.docId,this.name,this.city,this.price,this.description,this.imagePath,this.categoryName,this.status,this.auctionType,this.offer,this.startPrice});
+ HomePageModel({this.setBidEndTime,this.categoryType,this.productId,this.docId,this.name,this.city,this.price,this.description,this.imagePath,this.categoryName,this.status,this.auctionType,this.offer,this.startPrice});
 
   factory   HomePageModel.fromFirestore(Map<String, dynamic> data) {
     return   HomePageModel(
@@ -38,8 +38,7 @@ String categoryType;
       startPrice: data['startPrice']??"",
       productId: data['productId']??"",
       categoryType:data['categoryType']??"",
-
-
+      setBidEndTime:data['setBidEndTime']??"",
 
 
     );

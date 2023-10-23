@@ -26,8 +26,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         PopupMenuButton<int>(
           onSelected: (item) => handleClick(item),
           itemBuilder: (context) => [
-            PopupMenuItem<int>(value: 0, child: Text('Edit Profile')),
-            PopupMenuItem<int>(value: 1, child: Text('Reset password')),
+            PopupMenuItem<int>(value: 0, child: Text('Edit Profile',style: TextStyle(color: Colors.black),)),
+            PopupMenuItem<int>(value: 1, child: Text('Reset password',style: TextStyle(color: Colors.black),)),
 
           ],
         ),

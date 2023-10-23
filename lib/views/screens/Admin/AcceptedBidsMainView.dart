@@ -24,72 +24,6 @@ import 'AcceptedBids.dart';
 
 
 
-//---------Vehicle-------//
-String _docId="";
-String vehicleName="";
-String cityName="";
-String imagePath;
-String description="";
-String price="";
-String completeAddress="";
-String condtion="";
-String enginePower="";
-String model;
-String registerYear="";
-String registerArea="";
-String vehicleType="";
-
-//----------Furniture------//
-String _buyerDocIdf="";
-String _makingMaterialf="";
-String _conditionf="";
-String _selectTypef="";
-String _auctionTypef="";
-String _setBidPricef="";
-String _setBidEndTimef="";
-
-String _statusf="";
-
-String _remainingTimef="";
-String _cityNamef="";
-String _imagePathf;
-String _descriptionf="";
-String _pricef="";
-String _completeAddressf="";
-
-
-
-//------------Agriculture-------//
-
-String id;
-String _typesCropsA="";
-String _workTypeA="";
-String _areaTypeA="";
-String _rangeA="";
-String _cityNameA="";
-String _imagePathA="";
-String _descriptionA="";
-String _priceA="";
-String _completeAddressA="";
-
-String categoryName="";
-
-
-//-----------RealEstate---------//
-
-String noFloors="";
-String noBedrooms="";
-String noBathrooms="";
-String _selectTypeR="";
-String _areaTypeR="";
-String _imagePathR="";
-String _rangeR="";
-
-String _priceR="";
-String _completeAddressR="";
-String _cityNameR="";
-String _descriptionR="";
-
 
 
 //-----------------------------------------//
@@ -101,6 +35,70 @@ class AcceptedBidsMainView extends StatefulWidget{
 }
 
 class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
+  String _docId="";
+  String vehicleName="";
+  String cityName="";
+  String imagePath;
+  String description="";
+  String price="";
+  String completeAddress="";
+  String condtion="";
+  String enginePower="";
+  String model;
+  String registerYear="";
+  String registerArea="";
+  String vehicleType="";
+
+//----------Furniture------//
+  String _buyerDocIdf="";
+  String _makingMaterialf="";
+  String _conditionf="";
+  String _selectTypef="";
+  String _auctionTypef="";
+  String _setBidPricef="";
+  String _setBidEndTimef="";
+
+  String _statusf="";
+
+  String _remainingTimef="";
+  String _cityNamef="";
+  String _imagePathf;
+  String _descriptionf="";
+  String _pricef="";
+  String _completeAddressf="";
+
+
+
+//------------Agriculture-------//
+
+  String id;
+  String _typesCropsA="";
+  String _workTypeA="";
+  String _areaTypeA="";
+  String _rangeA="";
+  String _cityNameA="";
+  String _imagePathA;
+  String _descriptionA="";
+  String _priceA="";
+  String _completeAddressA="";
+
+  String categoryName="";
+
+
+//-----------RealEstate---------//
+
+  String noFloors="";
+  String noBedrooms="";
+  String noBathrooms="";
+  String _selectTypeR="";
+  String _areaTypeR="";
+  String _imagePathR;
+  String _rangeR="";
+
+  String _priceR="";
+  String _completeAddressR="";
+  String _cityNameR="";
+  String _descriptionR="";
   HomePageController homePageController=HomePageController();
   SharedPreferences _prefs;
   String _storedValue = "";
@@ -254,9 +252,9 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
       drawer: CustomDrawer(),
-      body:_isLoading!=true?
+      body:_imagePathR==null&&imagePath==null&&_imagePathA==null&&_imagePathf==null ?
       Center(child: Padding(
-        padding: const EdgeInsets.only(top:30),
+        padding: const EdgeInsets.only(top:20),
         child: CircularProgressIndicator(),
       ))
           :SingleChildScrollView(

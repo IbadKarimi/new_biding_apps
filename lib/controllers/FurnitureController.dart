@@ -66,6 +66,7 @@ class FurnitureController {
           "auctionType":furnitureModel.auctionType,
           "categoryType":"Furniture",
           'auctionType':furnitureModel.auctionType,
+          "setBidEndTime":furnitureModel.setBidEndTime,
 
           // Other user data fields
 

@@ -21,11 +21,14 @@ class AccountantView extends StatefulWidget{
 }
 
 class _AccountantViewState extends State<AccountantView> {
+  String offer="";
+  List<HomePageModel> offers=[];
   @override
   HomePageController homePageController=HomePageController();
   List<HomePageModel> data=[];
 
   void initState() {
+
     homePageController.getCategoriesData().then((value) {
       setState(() {
         data.addAll(value);
@@ -35,7 +38,7 @@ class _AccountantViewState extends State<AccountantView> {
 
   int index = 0;
 
-  TextEditingController offer=TextEditingController();
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:CustomAppBar(),
@@ -70,13 +73,14 @@ class _AccountantViewState extends State<AccountantView> {
                       final SharedPreferences prefs = await SharedPreferences.getInstance();
                       prefs.setString("id", data[i].docId.toString());
                       prefs.setString("auctionType", data[i].auctionType);
-                      prefs.setString("categoryName", data[i].categoryName.toString());
+                      prefs.setString("categoryName", data[i].categoryType.toString());
 
                       String id="";
                       id=prefs.getString("id");
                       String categoryName="";
                       categoryName= prefs.getString("categoryName");
-                      print("Category Type is "+data[i].auctionType.toString());
+                      print("Category Type is "+categoryName.toString());
+                      print("Id is "+id);
 
                       if(id!=null){
                         Get.to(()=>AcceptRejectBidView());

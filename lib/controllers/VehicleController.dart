@@ -60,6 +60,7 @@ class VehicleController {
      "categoryType":"Vehicle",
      'auctionType':vehicleModel.auctionType,
      'status':"",
+     "setBidEndTime":vehicleModel.setBidEndTime,
 
      // Other user data fields
 

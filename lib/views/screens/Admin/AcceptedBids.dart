@@ -71,7 +71,7 @@ class _AcceptedBidsViewState extends State<AcceptedBidsView> {
                       final SharedPreferences prefs = await SharedPreferences.getInstance();
                       prefs.setString("id", data[i].docId.toString());
                       prefs.setString("auctionType", data[i].auctionType);
-                      prefs.setString("categoryName", data[i].categoryName.toString());
+                      prefs.setString("categoryName", data[i].categoryType.toString());
 
                       String id="";
                       id=prefs.getString("id");

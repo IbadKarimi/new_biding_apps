@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:biding_app/model/HomePageModel.dart';
 import 'package:biding_app/views/screens/Admin/AddAgriculture.dart';
 import 'package:biding_app/views/screens/Aggriculture/AggricultureView.dart';
@@ -34,6 +36,33 @@ class HomePageView extends StatefulWidget{
 }
 
 class _HomePageViewState extends State<HomePageView> {
+  Duration duration = parseDuration("3 days, 14 hours, 59 minutes, 1 seconds");
+  Timer timer;
+
+  @override
+
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (duration.inSeconds > 0) {
+          duration = duration - Duration(seconds: 1);
+        } else {
+          timer.cancel(); // Cancel the timer when the duration reaches 0
+        }
+      });
+    });
+  }
+
+  static Duration parseDuration(String formattedString) {
+    var parts = formattedString.split(', ');
+    var days = int.parse(parts[0].split(' ')[0]);
+    var hours = int.parse(parts[1].split(' ')[0]);
+    var minutes = int.parse(parts[2].split(' ')[0]);
+    var seconds = int.parse(parts[3].split(' ')[0]);
+
+    return Duration(days: days, hours: hours, minutes: minutes, seconds: seconds);
+  }
 
   String onTapAuctionType="Biding";
 
@@ -69,8 +98,8 @@ class _HomePageViewState extends State<HomePageView> {
 void sortingData(){
 
   bidingData = data.where((item) =>
-  item.auctionType.contains("Biding") && item.status.contains("Pending")||item.status.contains("")).toList();
-  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction") && item.status.contains(" ")).toList();
+  item.auctionType.contains("Biding")).toList();
+  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction")).toList();
 
 
 
@@ -86,7 +115,8 @@ void sortingData(){
 }
 
   void initState() {
-
+    super.initState();
+    startTimer();
 
     homePageController.getCategoriesData().then((value) {
       setState(() {
@@ -195,6 +225,7 @@ void sortingData(){
                        padding:  EdgeInsets.only(left:5.w),
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.start,
+                         crossAxisAlignment: CrossAxisAlignment.start,
                          children: [
                            for(int i=0;i<bidingData.length;i++)
                              if(bidingData[i].status=="Pending")
@@ -220,7 +251,7 @@ void sortingData(){
                                  margin: EdgeInsets.only(left:5.w,top:20.h,bottom: 10.h),
                                  alignment: AlignmentDirectional.center,
                                  width:150.w,
-                                 height:260.h,
+                                 height:280.h,
 
                                  decoration: BoxDecoration(
                                      color: Colors.white,
@@ -247,6 +278,23 @@ void sortingData(){
                                        ),
 
                                      ),
+                                     Center(
+                                       child: Container(
+                                           margin: EdgeInsets.only(top:5.h),
+                                           width: 100.w,
+                                           height: 15.h,
+                                           child:MyCountdownWidget(
+                                             bidEndTime: bidingData[i].setBidEndTime.toString(),
+                                             index: i,
+                                             onTimerEnd: (int index) {
+                                               setState(() {
+                                                 bidingData.removeAt(index);
+                                                 bidingData.sort(); // Sort the list based on bidding end times
+                                               });
+                                             },
+                                           ),),
+                                     ),
+
                                      Padding(
                                        padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                                        child:  Text(
@@ -261,7 +309,7 @@ void sortingData(){
                                      Row(
                                        children: [
                                          Padding(
-                                           padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                           padding: EdgeInsets.only( left: 7.w),
                                            child: Icon(Icons.location_pin,color: Colors.red,),),
                                          Padding(
                                            padding: EdgeInsets.only(top: 5.h, left: 3.w),
@@ -277,7 +325,7 @@ void sortingData(){
                                        ],
                                      ),
                                      Padding(
-                                       padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                       padding: EdgeInsets.only(top: 0.h, left: 10.w),
                                        child:  Text(
                                          bidingData[i].description,
                                          style: TextStyle(
@@ -455,6 +503,22 @@ void sortingData(){
                                         ),
 
                                       ),
+                                     Center(
+                                       child: Container(
+                                         margin: EdgeInsets.only(top:5.h),
+                                         width: 100.w,
+                                         height: 15.h,
+                                         child:MyCountdownWidget(
+                                           bidEndTime: bidingData[index].setBidEndTime.toString(),
+                                           index: index,
+                                           onTimerEnd: (int index) {
+                                             setState(() {
+                                               bidingData.removeAt(index);
+                                               bidingData.sort(); // Sort the list based on bidding end times
+                                             });
+                                           },
+                                         ),),
+                                     ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                                         child:  Text(
@@ -586,6 +650,22 @@ void sortingData(){
                                              border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
                                          ),
 
+                                       ),
+                                       Center(
+                                         child: Container(
+                                           margin: EdgeInsets.only(top:5.h),
+                                           width: 100.w,
+                                           height: 15.h,
+                                           child:MyCountdownWidget(
+                                             bidEndTime: fixedAuctionData[index].setBidEndTime.toString(),
+                                             index: index,
+                                             onTimerEnd: (int index) {
+                                               setState(() {
+                                                 fixedAuctionData.removeAt(index);
+                                                 fixedAuctionData.sort(); // Sort the list based on bidding end times
+                                               });
+                                             },
+                                           ),),
                                        ),
                                        Padding(
                                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
@@ -882,5 +962,74 @@ class _ShowConAlertDialogState extends State<ShowConAlertDialog > {
 
 
 
+  }
+}
+
+
+
+class MyCountdownWidget extends StatefulWidget {
+  final String bidEndTime;
+  final int index;
+
+  final Function(int) onTimerEnd; // Define the callback function
+
+  MyCountdownWidget({Key key, @required this.bidEndTime, @required this.index, @required this.onTimerEnd})
+      : super(key: key);
+
+  @override
+  _MyCountdownWidgetState createState() => _MyCountdownWidgetState();
+}
+
+class _MyCountdownWidgetState extends State<MyCountdownWidget> {
+  Duration duration;
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    duration = parseDuration(widget.bidEndTime);
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (duration.inSeconds > 0) {
+          duration = duration - Duration(seconds: 1);
+        }
+        else {
+        timer.cancel(); // Cancel the timer when the duration reaches 0
+        widget.onTimerEnd(widget.index); // Call the callback function with the index
+        } // Cancel the timer when the duration reaches 0
+
+      });
+    });
+  }
+
+  static Duration parseDuration(String formattedString) {
+    var parts = formattedString.split(', ');
+    var days = int.parse(parts[0].split(' ')[0]);
+    var hours = int.parse(parts[1].split(' ')[0]);
+    var minutes = int.parse(parts[2].split(' ')[0]);
+    var seconds = int.parse(parts[3].split(' ')[0]);
+
+    return Duration(days: days, hours: hours, minutes: minutes, seconds: seconds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Text(
+        '${duration.inDays}d: ${duration.inHours.remainder(24)}h:${duration.inMinutes.remainder(60)}m: ${duration.inSeconds.remainder(60)}s ',
+        style: TextStyle(fontSize: 12,color: Colors.white),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
   }
 }
