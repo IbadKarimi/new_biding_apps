@@ -2,6 +2,7 @@
 
 
 import 'package:biding_app/controllers/HomeController.dart';
+import 'package:biding_app/views/screens/%20Chat/ChatView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -106,6 +107,7 @@ class _BidsMainViewState extends State<BidsMainView> {
   String _categoryName="";
   String _auctionType="";
   bool _isLoading = false;
+  String _recieverId="";
 
 
 
@@ -113,7 +115,8 @@ class _BidsMainViewState extends State<BidsMainView> {
   Future<String> _loadStoredValue() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
-      _storedValue = _prefs.getString('id');
+      _storedValue = _prefs.getString('id'); //productID
+
       _isLoading = true;
       _auctionType=_prefs.getString("auctionType");
 
@@ -141,6 +144,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNameR=dataRealState[0].cityName.toString();
             _completeAddressR=dataRealState[0].completeAddress.toString();
             _descriptionR=dataRealState[0].description.toString();
+            _recieverId=dataRealState[0].userId.toString();
             _isLoading = true;
 
           });
@@ -164,6 +168,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             imagePath = data[0].imagePath.toString();
             enginePower = data[0].enginePower.toString();
             completeAddress = data[0].completeAddress.toString();
+            _recieverId=data[0].userId.toString();
             _isLoading = true;
           });
         });
@@ -183,6 +188,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNamef=dataFurniture[0].cityName.toString();
             _completeAddressf=dataFurniture[0].completeAddress.toString();
             _descriptionf=dataFurniture[0].description.toString();
+            _recieverId=dataFurniture[0].userId.toString();
             _isLoading = true;
 
           });
@@ -202,6 +208,7 @@ class _BidsMainViewState extends State<BidsMainView> {
             _cityNameA=dataAgriculture[0].cityName.toString();
             _completeAddressA=dataAgriculture[0].completeAddress.toString();
             _descriptionA=dataAgriculture[0].description.toString();
+            _recieverId=dataAgriculture[0].userId.toString();
             _isLoading = true;
 
           });
@@ -730,6 +737,10 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                            backgroundColor:
                                                            Colors.lightGreen)))
                                              ),
+
+                  IconButton(onPressed: (){
+                    Get.to(()=>ChatScreen(recieverId: _recieverId.toString()));
+                  }, icon:Icon(Icons.chat))
                 ],
                ),
               ),
@@ -1154,8 +1165,11 @@ class _BidsMainViewState extends State<BidsMainView> {
                                         ),
                                         backgroundColor:
                                         Colors.lightGreen))),
-                          )
+                          ),
                      ] ),
+                      IconButton(onPressed: (){
+                        Get.to(()=>ChatScreen(recieverId: _recieverId.toString()));
+                      }, icon:Icon(Icons.chat))
                     ],
                   ),
                 ),
@@ -1585,6 +1599,9 @@ class _BidsMainViewState extends State<BidsMainView> {
                                       backgroundColor:
                                       Colors.lightGreen)))
                       ),
+                      IconButton(onPressed: (){
+                        Get.to(()=>ChatScreen(recieverId: _recieverId.toString()));
+                      }, icon:Icon(Icons.chat))
                     ],
                   ),
                 ),
@@ -2096,6 +2113,9 @@ class _BidsMainViewState extends State<BidsMainView> {
 
                     ),
 
+              IconButton(onPressed: (){
+                Get.to(()=>ChatScreen(recieverId: _recieverId.toString()));
+              }, icon:Icon(Icons.chat))
             ],
           ),
 

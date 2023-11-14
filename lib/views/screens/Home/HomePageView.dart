@@ -36,33 +36,13 @@ class HomePageView extends StatefulWidget{
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  Duration duration = parseDuration("3 days, 14 hours, 59 minutes, 1 seconds");
-  Timer timer;
+
 
   @override
 
 
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (duration.inSeconds > 0) {
-          duration = duration - Duration(seconds: 1);
-        } else {
-          timer.cancel(); // Cancel the timer when the duration reaches 0
-        }
-      });
-    });
-  }
 
-  static Duration parseDuration(String formattedString) {
-    var parts = formattedString.split(', ');
-    var days = int.parse(parts[0].split(' ')[0]);
-    var hours = int.parse(parts[1].split(' ')[0]);
-    var minutes = int.parse(parts[2].split(' ')[0]);
-    var seconds = int.parse(parts[3].split(' ')[0]);
 
-    return Duration(days: days, hours: hours, minutes: minutes, seconds: seconds);
-  }
 
   String onTapAuctionType="Biding";
 
@@ -116,7 +96,7 @@ void sortingData(){
 
   void initState() {
     super.initState();
-    startTimer();
+
 
     homePageController.getCategoriesData().then((value) {
       setState(() {
@@ -158,13 +138,7 @@ void sortingData(){
   TextEditingController offer=TextEditingController();
   TextEditingController search=TextEditingController();
 
-  /*void _filterData() {
-    setState(() {
-      _filteredData = dataList
-          .where((item) => item.toLowerCase().contains(_searchQuery.toLowerCase()))
-          .toList();
-    });
-  }*/
+
 
   Widget build(BuildContext context) {
    return Scaffold(
@@ -233,7 +207,7 @@ void sortingData(){
                              GestureDetector(
                                onTap: ()async{
                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                 prefs.setString("id", bidingData[i].docId.toString());
+                                 prefs.setString("id", bidingData[i].docId.toString());  // seller Id
                                  prefs.setString("auctionType", bidingData[i].auctionType);
                                  prefs.setString("categoryName", bidingData[i].categoryType.toString());
 
@@ -456,7 +430,8 @@ void sortingData(){
 
 
 
-                         return   Container(
+                         return
+                           Container(
                            child:onTapAuctionType=="Biding"?
                              GestureDetector(
                                onTap:()async{

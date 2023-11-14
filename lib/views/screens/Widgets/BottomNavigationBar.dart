@@ -1,5 +1,6 @@
 
 
+import 'package:biding_app/views/screens/%20Chat/ChatView.dart';
 import 'package:biding_app/views/screens/Aggriculture/AggricultureView.dart';
 import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
 import 'package:biding_app/views/screens/MyBids/MyBids.dart';
@@ -47,7 +48,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             Get.to(()=>HomePageView());
           }
           if(index==4){
-           //notification
+            Get.to(()=>ChatScreen());
           }
 
 

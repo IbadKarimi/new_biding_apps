@@ -218,6 +218,103 @@ class UserController {
     }
   }
 
+
+  Future<List<UserModel>> getUserNameById() async {
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String _docId=prefs.getString("id");
+
+    print("ID in Function"+_docId.toString());
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('userSignUp').doc(_docId).get();
+    if (documentSnapshot.exists) {
+      // Document exists, you can access the data using documentSnapshot.data()
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      UserModel realStateModel = UserModel.fromFirestore(data);
+      return [realStateModel];
+      //List<UserModel> users=[user];
+
+      //print("User on 0 index"+users[0].fullName);
+
+    } else {
+      // Document does not exist
+      return [];
+    }
+
+
+
+  }
+  createChatRoom(
+      String chatRoomId, Map<String, dynamic> chatRoomInfoMap) async {
+    final snapShot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .get();
+    if (snapShot.exists) {
+      return true;
+    } else {
+      return FirebaseFirestore.instance
+        ..collection("chatrooms").doc(chatRoomId).set(chatRoomInfoMap);
+    }
+  }
+
+  Future addMessage(String chatRoomId, String messageId,
+      Map<String, dynamic> messageInfoMap) async {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc(messageId)
+        .set(messageInfoMap);
+  }
+
+  updateLastSendedMessage(
+      String chatRoomId, Map<String, dynamic> lastMsgInfoMap) {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .update(lastMsgInfoMap);
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .orderBy("time", descending: true)
+        .snapshots();
+  }
+
+  Future<QuerySnapshot> getUserName(String username) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .where("username", isEqualTo: username)
+        .get();
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRooms(String userName) async {
+
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .orderBy("time", descending: true)
+        .where("users", arrayContains: userName)
+        .snapshots();
+  }
+
+  Future<String> getFullNameById(String userId) async {
+    String userName = '';
+    try {
+      DocumentSnapshot userDoc =
+      await FirebaseFirestore.instance.collection('userSignUp').doc(userId).get();
+      if (userDoc.exists) {
+        userName = userDoc.get('fullName');
+        print("User name is "+userName );
+      }
+    } catch (e) {
+      print('Error getting user data: $e');
+    }
+    return userName;
+  }
+
 }
 
 

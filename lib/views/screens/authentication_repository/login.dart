@@ -1,5 +1,6 @@
 
 import 'package:biding_app/controllers/user_controller.dart';
+import 'package:biding_app/views/screens/%20Chat/ChatList.dart';
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
 import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
@@ -39,7 +40,7 @@ class LoginFormWidget extends StatefulWidget{
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
       await _authController.signIn(email, password);
-      Get.offAll(()=>HomePageView());
+      Get.offAll(()=>ChatListScreen());
       // Handle successful login here, e.g., navigate to the next screen
     } catch (e) {
       // Handle login error, e.g., show error message in SnackBar
@@ -149,7 +150,8 @@ class LoginFormWidget extends StatefulWidget{
                           margin: EdgeInsets.only(top:60.h,bottom: 20.h),
                           width: 250.w,
                           height: 45.h,
-                          child:ElevatedButton(onPressed:_signIn,
+                          child:ElevatedButton(
+                              onPressed:_signIn,
 
 
                            /* List<String> list1 = ["Item 1", "Item 2"];

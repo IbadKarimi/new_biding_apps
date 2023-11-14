@@ -16,10 +16,11 @@ String description="";
 String status="";
 String imagePath="";
 String categoryName="";
+String userId="";
 
 
 
-AgricultureModel({this.id,this.buyerDocId,this.typesCrops,this.workType,this.areaType,this.range,this.auctionType,this.setBidPrice
+AgricultureModel({this.userId,this.id,this.buyerDocId,this.typesCrops,this.workType,this.areaType,this.range,this.auctionType,this.setBidPrice
 ,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.categoryName});
 
 
@@ -41,6 +42,7 @@ AgricultureModel({this.id,this.buyerDocId,this.typesCrops,this.workType,this.are
       status:data['status']??"",
       imagePath:data['imagePath']??"",
       categoryName:data['categoryName']??"",
+      userId: data['id'] ??"",
 
 
 

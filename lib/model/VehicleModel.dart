@@ -18,8 +18,9 @@ class VehicleModel{
   String status="";
   String imagePath="";
   String categoryName="";
+  String userId="";
 
-  VehicleModel({this.buyerDocId,this.vehicleType,this.condition,this.auctionType,this.vehicleName,this.model,
+  VehicleModel({this.userId,this.buyerDocId,this.vehicleType,this.condition,this.auctionType,this.vehicleName,this.model,
     this.registerArea,this.registerYear,this.enginePower,this.setBidPrice,this.setBidEndTime,this.cityName,
     this.completeAddress,this.description,this.status,this.imagePath,this.categoryName
   });
@@ -45,6 +46,7 @@ class VehicleModel{
         status:data['status']??"",
         imagePath:data['imagePath']??"",
       categoryName:data['categoryName']??"",
+      userId: data['id'] ??"",
 
 
     );

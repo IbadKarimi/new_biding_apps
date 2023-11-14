@@ -17,6 +17,15 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
   bool _isLoading = false;
 
+  final selectedRoleList = [
+
+    "Buyer",
+    'Seller',
+
+
+  ];
+  String _selectedRole = "Buyer";
+
 
   @override
   final UserController userController = UserController();
@@ -41,7 +50,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     String phoneNo = phoneNoController.text.trim();
 
     try {
-      UserModel user = UserModel(email: email,
+      UserModel user = UserModel(
+          role:_selectedRole,
+          email: email,
           password: password,
           fullName: fullName,
           phoneNo: phoneNo);
@@ -147,6 +158,30 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                               prefixIcon: Icon(Icons.fingerprint)
 
                           ),)),
+                    Container(
+                        width: 300.w,
+
+                        margin:  EdgeInsets.only(top: 10.h,left:0.w),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38, width: 1),
+                            borderRadius: BorderRadius.circular(5.r),
+                            boxShadow: <BoxShadow>[]),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField(
+                              value: _selectedRole,
+                              items: selectedRoleList.map((e) {
+                                return DropdownMenuItem<String>(
+                                    child:
+                                    Text(e,style: TextStyle(color: Colors.black),), value: e);
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedRole = newValue as String;
+
+                                });
+                              },
+                              isExpanded: true,
+                            ))),
 
                     Center(
                         child: Container(
@@ -163,6 +198,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                                     borderRadius: BorderRadius.circular(5.r))
                             ),),
                         )),
+
 
 
                     Center(

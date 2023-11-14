@@ -17,14 +17,15 @@ class RealStateModel{
   String status="";
   String imagePath="";
   String categoryName="";
+  String userId="";
 
-  RealStateModel({this.id,this.buyerDocId,this.selectType,this.areaType,this.range,this.noFloors,this.noBedrooms,this.noBathrooms,
+  RealStateModel({this.userId,this.id,this.buyerDocId,this.selectType,this.areaType,this.range,this.noFloors,this.noBedrooms,this.noBathrooms,
   this.auctionType,this.setBidPrice,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.categoryName});
 
   factory  RealStateModel.fromFirestore(Map<String, dynamic> data) {
     return  RealStateModel(
-
-      id: data['id'] ??"",
+      userId: data['id'] ??"",
+      id: data['id'] ??"", //productId
       buyerDocId: data['buyerDocId'] ??"",
       selectType:data['selectType']??"",
       areaType:data['areaType']??"",
