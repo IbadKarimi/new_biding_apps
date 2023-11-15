@@ -281,7 +281,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Get.to(()=>Category());
           },
         ),
-
+        if(user=="admin@gmail.com")
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
