@@ -1,4 +1,5 @@
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
+import 'package:biding_app/views/screens/authentication_repository/login.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           email: email,
           password: password,
           fullName: fullName,
-          phoneNo: phoneNo);
-          User firebaseUser = await userController.InsertSignUp(user);
+          phoneNo: phoneNo, imagePath: '', feedBack: '');
+          User? firebaseUser = await userController.InsertSignUp(user);
           Get.offAll(()=>HomePageView());
     }
     catch (e) {
@@ -158,7 +159,23 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                               prefixIcon: Icon(Icons.fingerprint)
 
                           ),)),
-                    Container(
+                    GestureDetector(
+                      onTap: (){
+                        Get.offAll(()=>LoginFormWidget());
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.h, left: 280.w, bottom: 0),
+                        child:  Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                 /*   Container(
                         width: 300.w,
 
                         margin:  EdgeInsets.only(top: 10.h,left:0.w),
@@ -181,7 +198,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                                 });
                               },
                               isExpanded: true,
-                            ))),
+                            ))),*/
 
                     Center(
                         child: Container(

@@ -116,7 +116,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView > {
                       child: ElevatedButton(onPressed:
                           () async {
                         Get.offAll(()=>Category());
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
 
 
 

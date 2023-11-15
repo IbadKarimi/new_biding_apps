@@ -20,8 +20,8 @@ String userId="";
 
 
 
-AgricultureModel({this.userId,this.id,this.buyerDocId,this.typesCrops,this.workType,this.areaType,this.range,this.auctionType,this.setBidPrice
-,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.categoryName});
+AgricultureModel({required this.userId,required this.id,required this.buyerDocId,required this.typesCrops,required this.workType,required this.areaType,required this.range,required this.auctionType,required this.setBidPrice
+,required this.setBidEndTime,required this.cityName,required this.completeAddress,required this.description,required this.status,required this.imagePath,required this.categoryName});
 
 
   factory  AgricultureModel.fromFirestore(Map<String, dynamic> data) {

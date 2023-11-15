@@ -62,7 +62,7 @@ class _AgricultureViewState extends State<AgricultureView > {
             );
           }
 
-          var items = snapshot.data.docs;
+          var items = snapshot.data!.docs;
 
           return ListView.builder(
             itemCount: items.length,
@@ -84,9 +84,9 @@ class _AgricultureViewState extends State<AgricultureView > {
                   prefs.setString("auctionType", data['auctionType']);
 
                   String id="";
-                  id=prefs.getString("id");
+                  id=prefs.getString("id")!;
                   String categoryName="";
-                  categoryName= prefs.getString("categoryName");
+                  categoryName= prefs.getString("categoryName")!;
                   print("Category Type is "+categoryName.toString());
 
                   if(id!=null){
@@ -248,16 +248,15 @@ class MyCountdownWidget extends StatefulWidget {
 
   final Function(int) onTimerEnd; // Define the callback function
 
-  MyCountdownWidget({Key key, @required this.bidEndTime, @required this.index, @required this.onTimerEnd})
-      : super(key: key);
+  MyCountdownWidget({ required this.bidEndTime, required this.index, required this.onTimerEnd});
 
   @override
   _MyCountdownWidgetState createState() => _MyCountdownWidgetState();
 }
 
 class _MyCountdownWidgetState extends State<MyCountdownWidget> {
-  Duration duration;
-  Timer timer;
+  Duration? duration;
+  Timer? timer;
 
   @override
   void initState() {
@@ -269,8 +268,8 @@ class _MyCountdownWidgetState extends State<MyCountdownWidget> {
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (duration.inSeconds > 0) {
-          duration = duration - Duration(seconds: 1);
+        if (duration!.inSeconds > 0) {
+          duration = duration! - Duration(seconds: 1);
         }
         else {
           timer.cancel(); // Cancel the timer when the duration reaches 0
@@ -296,7 +295,7 @@ class _MyCountdownWidgetState extends State<MyCountdownWidget> {
     return Container(
       color: Colors.black,
       child: Text(
-        '${duration.inDays}d: ${duration.inHours.remainder(24)}h:${duration.inMinutes.remainder(60)}m: ${duration.inSeconds.remainder(60)}s ',
+        '${duration!.inDays}d: ${duration!.inHours.remainder(24)}h:${duration!.inMinutes.remainder(60)}m: ${duration!.inSeconds.remainder(60)}s ',
         style: TextStyle(fontSize: 12,color: Colors.white),
       ),
     );
@@ -304,7 +303,7 @@ class _MyCountdownWidgetState extends State<MyCountdownWidget> {
 
   @override
   void dispose() {
-    timer.cancel(); // Cancel the timer when the widget is disposed
+    timer!.cancel(); // Cancel the timer when the widget is disposed
     super.dispose();
   }
 }

@@ -48,7 +48,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             Get.to(()=>HomePageView());
           }
           if(index==4){
-            Get.to(()=>ChatScreen());
+            Get.to(()=>ChatScreen(recieverId: '',));
           }
 
 

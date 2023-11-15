@@ -38,13 +38,13 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
   String _docId="";
   String vehicleName="";
   String cityName="";
-  String imagePath;
+  String ?imagePath;
   String description="";
   String price="";
   String completeAddress="";
   String condtion="";
   String enginePower="";
-  String model;
+  String? model;
   String registerYear="";
   String registerArea="";
   String vehicleType="";
@@ -62,7 +62,7 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
 
   String _remainingTimef="";
   String _cityNamef="";
-  String _imagePathf;
+  String? _imagePathf;
   String _descriptionf="";
   String _pricef="";
   String _completeAddressf="";
@@ -71,13 +71,13 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
 
 //------------Agriculture-------//
 
-  String id;
+  String? id;
   String _typesCropsA="";
   String _workTypeA="";
   String _areaTypeA="";
   String _rangeA="";
   String _cityNameA="";
-  String _imagePathA;
+  String ?_imagePathA;
   String _descriptionA="";
   String _priceA="";
   String _completeAddressA="";
@@ -92,7 +92,7 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
   String noBathrooms="";
   String _selectTypeR="";
   String _areaTypeR="";
-  String _imagePathR;
+  String ?_imagePathR;
   String _rangeR="";
 
   String _priceR="";
@@ -100,7 +100,7 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
   String _cityNameR="";
   String _descriptionR="";
   HomePageController homePageController=HomePageController();
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   String _storedValue = "";
   String _categoryName="";
   String _auctionType="";
@@ -109,14 +109,14 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
 
 
 
-  Future<String> _loadStoredValue() async {
+  Future<void> _loadStoredValue() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
-      _storedValue = _prefs.getString('id');
+      _storedValue = _prefs!.getString('id')!;
       _isLoading = true;
-      _auctionType=_prefs.getString("auctionType");
+      _auctionType=_prefs!.getString("auctionType")!;
 
-      _categoryName= _prefs.getString("categoryName");
+      _categoryName= _prefs!.getString("categoryName")!;
       print("Categoriiiiiiiiiiiies name +"+ _categoryName.toString()+_storedValue);
       if(_categoryName=="RealState"){
         realStateController.getRealEstateById(_storedValue ).then((value) {
@@ -213,7 +213,7 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
 
 
 
-      return _categoryName;
+
 
 
     });
@@ -353,7 +353,7 @@ class _AcceptedBidsMainViewState extends State<AcceptedBidsMainView> {
                     Padding(
                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                       child:  Text(
-                        model,
+                        model!,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 12.sp,

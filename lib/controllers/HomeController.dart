@@ -48,7 +48,7 @@ class HomePageController{
 
   Future<String> InsertOffer(String productId,String categoryName,String price ,String offer) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId=prefs.getString("docId"); //user id
+    String? userId=prefs.getString("docId"); //user id
 
 
 
@@ -76,12 +76,12 @@ class HomePageController{
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while signing in.");
     }
-
+return "";
   }
 
   void updateOffer(String documentId, String offer) async {

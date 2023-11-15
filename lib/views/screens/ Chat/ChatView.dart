@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
   String recieverId;
-  ChatScreen({this.recieverId});
+  ChatScreen({required this.recieverId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -14,7 +14,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  User _user;
+  User ?_user;
   String _message = '';
 
   @override
@@ -33,10 +33,10 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_message.isNotEmpty) {
       await _firestore.collection('messages').add({
         'text': _message,
-        'senderId': _user.uid,
+        'senderId': _user!.uid,
         'reciverId':widget.recieverId,
         'timestamp': FieldValue.serverTimestamp(),
-        'senderName':_user.email,
+        'senderName':_user!.email,
       });
       setState(() {
         _message = '';
@@ -60,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
-                var messages = snapshot.data.docs;
+                var messages = snapshot.data!.docs;
                 List<Widget> messageWidgets = [];
                 for (var message in messages) {
                   var messageText = message['text'];

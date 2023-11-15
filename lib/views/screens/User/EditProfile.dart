@@ -85,7 +85,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       child: ElevatedButton(onPressed:
                           () async {
                         Get.offAll(()=>Category());
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
 
                           try{
                             userController.updateName(fullName.text);
@@ -151,7 +151,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       child: ElevatedButton(onPressed:
                           () async {
 
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
 
 
                       try {
@@ -243,7 +243,7 @@ class _EditProfileViewState extends State<EditProfileView > {
                       child: ElevatedButton(onPressed:
                           () async {
                         Get.offAll(()=>Category());
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
 
                          // UserModel userModel=UserModel();
 

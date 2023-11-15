@@ -25,7 +25,7 @@ import '../authentication_repository/login.dart';
 import '../categories/categories.dart';
 
 
-PlatformFile _getImageFile;
+PlatformFile? _getImageFile;
 var picked;
 String imagePath="";
 String fullName="";
@@ -47,12 +47,43 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   List<UserModel> _getUserData=[];
 
+  String? userEmail;
+  var user;
+  Future<void> getCurrentUser() async {
+     user=await FirebaseAuth.instance.currentUser!.email.toString();
+    try {
+      if (user!= null) {
+        userEmail = user.toString();
+
+        print("User Email: " + userEmail.toString());
+
+        if (user != null) {
+          if (user == "admin@gmail.com") {
+            print("User Email is Admin: " + user.toString());
+            // Your logic for admin user here
+          } else if (user == "accountant@gmail.com") {
+            print("User Email is Accountant: " + user.toString());
+            // Your logic for accountant user here
+          } else {
+            print("User Email is not recognized: " + userEmail.toString());
+          }
+        }
+      } else {
+        print("User is not authenticated");
+      }
+    } catch (e) {
+      print("Error getting current user: $e");
+    }
+  }
+
+
+
 
   Rx<File> image=File('').obs;
   Future getImage()async{
 
     final pickImage=await ImagePicker().pickImage(source: ImageSource.gallery);
-    final imageTemp=File(pickImage.path);
+    final imageTemp=File(pickImage!.path);
     image.value=imageTemp;
     print(imageTemp.path.toString());
  if(image.value!=""){
@@ -61,8 +92,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
    }}
 
   void initState() {
+
     // var ownerAbout=getOwnerAbout(currentUserEmail.toString());
 
+   getCurrentUser();
 
 
     controller.getUserData().then((value){
@@ -87,7 +120,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    String email=FirebaseAuth.instance.currentUser.email.toString();
+    String email=FirebaseAuth.instance.currentUser!.email.toString();
     return Drawer( child: ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
@@ -120,7 +153,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             border: Border.all(width: 1,color: Colors.grey),
 
                           ),
-                          child:imagePath=="null"? Container(
+                          child:imagePath==""? Container(
                             width:60.w,
                             height: 60.h,
 
@@ -203,7 +236,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
 
 
-
+        if(user=="accountant@gmail.com")
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
@@ -214,6 +247,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
            Get.to(()=>AccountantView());
           },
         ),
+        if(user=="admin@gmail.com")
         ListTile(
           leading: Icon(Icons.login_rounded),
           title: GestureDetector(onTap:(){
@@ -224,7 +258,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           Get.to(()=>AcceptedBidsView());
           },
         ),
-
+        if(user=="admin@gmail.com")
         ListTile(
           leading: Icon(Icons.login_rounded),
           title: GestureDetector(onTap:(){
@@ -235,18 +269,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Get.to(()=>AdminFeedBackView());
           },
         ),
-        ListTile(
-          leading: Icon(Icons.login_rounded),
-          title: GestureDetector(onTap:(){
-            FirebaseAuth.instance.signOut();
-            Get.offAll(()=>LoginFormWidget());
-          },
-              child: const Text('LogOut',style: TextStyle(color: Colors.black),)),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
+
+        if(user.toString()=="accountant@gmail.com")
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
@@ -266,6 +290,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
           title: const Text('Feed Back',style: TextStyle(color: Colors.black),),
           onTap: () {
             Get.to(()=>FeedBackView());
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.login_rounded),
+          title: GestureDetector(onTap:(){
+            FirebaseAuth.instance.signOut();
+            Get.offAll(()=>LoginFormWidget());
+          },
+              child: const Text('LogOut',style: TextStyle(color: Colors.black),)),
+          onTap: () {
+            // Update the state of the app.
+            // ...
           },
         ),
       ],

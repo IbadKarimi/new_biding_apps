@@ -14,10 +14,10 @@ import '../model/AgricultureModel.dart';
 
 class AgricultureController {
 
-  Future<User> InsertAgriculture(AgricultureModel agricultureModel,Rx<File> image) async {
+  Future<void> InsertAgriculture(AgricultureModel agricultureModel,Rx<File> image) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("docId");
+    String? docId=prefs.getString("docId");
 
     // Upload Image in FireBase
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();  // with same name only one image is uploaded and time changes new images uploaded
@@ -80,7 +80,7 @@ class AgricultureController {
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while Insert Agriculture Data.");
@@ -107,7 +107,7 @@ class AgricultureController {
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while Insert Agriculture Data.");
@@ -136,10 +136,10 @@ class AgricultureController {
 
 
 
-  Future<List<  AgricultureModel >> getAgricultureById(String docId) async {
+  Future<List< AgricultureModel >> getAgricultureById(String docId) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("id");
+    String? docId=prefs.getString("id");
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('agriculture').doc(docId).get();
     if (documentSnapshot.exists) {
       // Document exists, you can access the data using documentSnapshot.data()

@@ -18,13 +18,13 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  String currentUserId;
+  String ? currentUserId;
   ChatController chatController=ChatController();
   List<ChatModel>  _chatList=[];
 
   void getUserCurrentId()async{
-    currentUserId=FirebaseAuth.instance.currentUser.uid;
-    print("id isssssssssssssssssssssssssss"+currentUserId);
+    currentUserId=FirebaseAuth.instance.currentUser!.uid;
+    print("id isssssssssssssssssssssssssss"+currentUserId.toString());
 
 
   }

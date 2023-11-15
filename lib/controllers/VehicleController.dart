@@ -12,9 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VehicleController {
 
-  Future<User> InsertVehicle(VehicleModel vehicleModel,Rx<File> image) async {
+  Future<void> InsertVehicle(VehicleModel vehicleModel,Rx<File> image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("docId");
+    String? docId=prefs.getString("docId");
 
     // Upload Image in FireBase
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();  // with same name only one image is uploaded and time changes new images uploaded
@@ -75,7 +75,7 @@ class VehicleController {
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while signing in.");
@@ -105,7 +105,7 @@ class VehicleController {
   Future<List<VehicleModel>> getVehicleById(String docId) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("id");
+    String? docId=prefs.getString("id");
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('vehicle').doc(docId).get();
     if (documentSnapshot.exists) {
       // Document exists, you can access the data using documentSnapshot.data()

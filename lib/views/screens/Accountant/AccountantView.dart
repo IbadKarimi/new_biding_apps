@@ -76,9 +76,9 @@ class _AccountantViewState extends State<AccountantView> {
                       prefs.setString("categoryName", data[i].categoryType.toString());
 
                       String id="";
-                      id=prefs.getString("id");
+                      id=prefs.getString("id")!;
                       String categoryName="";
-                      categoryName= prefs.getString("categoryName");
+                      categoryName= prefs.getString("categoryName")!;
                       print("Category Type is "+categoryName.toString());
                       print("Id is "+id);
 

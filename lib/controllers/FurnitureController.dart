@@ -17,10 +17,10 @@ import '../model/AgricultureModel.dart';
 
 class FurnitureController {
 
-  Future<User> InsertFurniture(FurnitureModel furnitureModel,Rx<File> image) async {
+  Future<void> InsertFurniture(FurnitureModel furnitureModel,Rx<File> image) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("docId");
+    String? docId=prefs.getString("docId");
 
     // Upload Image in FireBase
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();  // with same name only one image is uploaded and time changes new images uploaded
@@ -79,7 +79,7 @@ class FurnitureController {
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while Insert Agriculture Data.");
@@ -111,7 +111,7 @@ class FurnitureController {
   Future<List<  FurnitureModel >> getFurnitureById(String docId) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("id");
+    String? docId=prefs.getString("id");
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('furniture').doc(docId).get();
     if (documentSnapshot.exists) {
       // Document exists, you can access the data using documentSnapshot.data()

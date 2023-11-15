@@ -20,9 +20,9 @@ class VehicleModel{
   String categoryName="";
   String userId="";
 
-  VehicleModel({this.userId,this.buyerDocId,this.vehicleType,this.condition,this.auctionType,this.vehicleName,this.model,
-    this.registerArea,this.registerYear,this.enginePower,this.setBidPrice,this.setBidEndTime,this.cityName,
-    this.completeAddress,this.description,this.status,this.imagePath,this.categoryName
+  VehicleModel({required this.userId,required this.buyerDocId,required this.vehicleType,required this.condition,required this.auctionType,required this.vehicleName,required this.model,
+    required this.registerArea,required this.registerYear,required this.enginePower,required this.setBidPrice,required this.setBidEndTime,required this.cityName,
+    required this.completeAddress,required this.description,required this.status,required this.imagePath,required this.categoryName
   });
 
   factory  VehicleModel.fromFirestore(Map<String, dynamic> data) {

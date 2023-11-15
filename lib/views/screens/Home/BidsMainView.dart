@@ -42,7 +42,7 @@ class _BidsMainViewState extends State<BidsMainView> {
   String completeAddress="";
   String condtion="";
   String enginePower="";
-  String model;
+  String? model;
   String registerYear="";
   String registerArea="";
   String vehicleType="";
@@ -69,7 +69,7 @@ class _BidsMainViewState extends State<BidsMainView> {
 
 //------------Agriculture-------//
 
-  String id;
+  String? id;
   String _typesCropsA="";
   String _workTypeA="";
   String _areaTypeA="";
@@ -102,7 +102,7 @@ class _BidsMainViewState extends State<BidsMainView> {
 
 //-----------------------------------------//
   HomePageController homePageController=HomePageController();
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   String _storedValue = "";
   String _categoryName="";
   String _auctionType="";
@@ -112,15 +112,15 @@ class _BidsMainViewState extends State<BidsMainView> {
 
 
 
-  Future<String> _loadStoredValue() async {
+  Future<void> _loadStoredValue() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
-      _storedValue = _prefs.getString('id'); //productID
+      _storedValue = _prefs!.getString('id')!; //productID
 
       _isLoading = true;
-      _auctionType=_prefs.getString("auctionType");
+      _auctionType=_prefs!.getString("auctionType")!;
 
-      _categoryName= _prefs.getString("categoryName");
+      _categoryName= _prefs!.getString("categoryName")!;
       print("Categoriiiiiiiiiiiies name +"+ _categoryName.toString()+_storedValue);
       if(_categoryName=="RealState"){
         realStateController.getRealEstateById(_storedValue ).then((value) {
@@ -217,7 +217,7 @@ class _BidsMainViewState extends State<BidsMainView> {
 
 
 
-      return _categoryName;
+
 
 
     });
@@ -358,7 +358,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                  Padding(
                   padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                   child:  Text(
-                   model,
+                   model!,
                    style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12.sp,
@@ -599,7 +599,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                                      onPressed: () async{
 
                                                                                          final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                                                         String userId=prefs.getString("docId"); //user id
+                                                                                         String? userId=prefs.getString("docId"); //user id
 
                                                                                       try{
                                                                                         homePageController.InsertOffer(_storedValue, "Vehicle", price, offer.text);
@@ -1027,7 +1027,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                     onPressed: () async{
 
                                                                       final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                                      String userId=prefs.getString("docId"); //user id
+                                                                      String? userId=prefs.getString("docId"); //user id
 
                                                                       try{
                                                                         homePageController.InsertOffer(_storedValue, "Furniture", _pricef, offer.text);
@@ -1462,7 +1462,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                   onPressed: () async{
 
                                                                     final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                                    String userId=prefs.getString("docId"); //user id
+                                                                    String? userId=prefs.getString("docId"); //user id
 
                                                                     try{
                                                                       homePageController.InsertOffer(_storedValue, "Agriculture", _priceA, offer.text);
@@ -1970,7 +1970,7 @@ class _BidsMainViewState extends State<BidsMainView> {
                                                                         onPressed: () async{
 
                                                                           final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                                          String userId=prefs.getString("docId"); //user id
+                                                                          String? userId=prefs.getString("docId"); //user id
 
                                                                           try{
                                                                             homePageController.InsertOffer(_storedValue, "RealState", _priceR, offer.text);

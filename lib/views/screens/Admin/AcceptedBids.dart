@@ -74,9 +74,9 @@ class _AcceptedBidsViewState extends State<AcceptedBidsView> {
                       prefs.setString("categoryName", data[i].categoryType.toString());
 
                       String id="";
-                      id=prefs.getString("id");
+                      id=prefs.getString("id")!;
                       String categoryName="";
-                      categoryName= prefs.getString("categoryName");
+                      categoryName= prefs.getString("categoryName")!;
                       print("Category Type is "+data[i].auctionType.toString());
 
                       if(id!=null){

@@ -19,8 +19,8 @@ class RealStateModel{
   String categoryName="";
   String userId="";
 
-  RealStateModel({this.userId,this.id,this.buyerDocId,this.selectType,this.areaType,this.range,this.noFloors,this.noBedrooms,this.noBathrooms,
-  this.auctionType,this.setBidPrice,this.setBidEndTime,this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.categoryName});
+  RealStateModel({required this.userId,required this.id,required this.buyerDocId,required this.selectType,required this.areaType,required this.range,required this.noFloors,required this.noBedrooms,required this.noBathrooms,
+  required this.auctionType,required this.setBidPrice,required this.setBidEndTime,required this.cityName,required this.completeAddress,required this.description,required this.status,required this.imagePath,required this.categoryName});
 
   factory  RealStateModel.fromFirestore(Map<String, dynamic> data) {
     return  RealStateModel(

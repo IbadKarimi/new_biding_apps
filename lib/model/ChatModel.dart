@@ -6,7 +6,7 @@ class ChatModel{
   String message;
   String senderName;
 
-  ChatModel({this.senderId,this.recieverId,this.message,this.senderName});
+  ChatModel({required this.senderId,required this.recieverId,required this.message,required this.senderName});
 
   factory  ChatModel.fromFirestore(Map<String, dynamic> data) {
     return ChatModel(

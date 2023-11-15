@@ -2,11 +2,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefresnces {
-  SharedPreferences prefs;
+  SharedPreferences ?prefs;
 
   void setFullName(String fullName) async {
     prefs = await SharedPreferences.getInstance();
-    prefs.setString("fullName", fullName);
+    prefs!.setString("fullName", fullName);
   }
 
   Future<String> getFullName() async {

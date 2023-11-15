@@ -9,7 +9,7 @@ class UserModel {
   String feedBack;
   String role;
 
-  UserModel({ this.email,this.password,this.fullName,this.phoneNo, this.imagePath,this.feedBack,this.role});
+  UserModel({ required this.email,required this.password,required this.fullName,required this.phoneNo, required this.imagePath,required this.feedBack,required this.role});
 
 
   factory UserModel.fromFirestore(Map<String, dynamic> data) {
@@ -19,7 +19,7 @@ class UserModel {
       imagePath: data['imagePath'] ?? '',
       feedBack: data['feedBack'] ?? '',
       email: data['email'] ?? '',
-      role: data['role'] ?? '',
+      role: data['role'] ?? '', password: '', phoneNo: '',
     );
   }
 

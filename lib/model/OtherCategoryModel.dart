@@ -14,8 +14,8 @@ class OtherCategoryModel{
   String status="";
 
 
-  OtherCategoryModel({this.buyerDocId,this.categoryName,this.condition,this.selectType,this.auctionType,this.setBidPrice,this.setBidEndTime,
-    this.cityName,this.completeAddress,this.description,this.status});
+  OtherCategoryModel({required this.buyerDocId,required this.categoryName,required this.condition,required this.selectType,required this.auctionType,required this.setBidPrice,required this.setBidEndTime,
+    required this.cityName,required this.completeAddress,required this.description,required this.status});
 
   factory  OtherCategoryModel.fromFirestore(Map<String, dynamic> data) {
     return OtherCategoryModel(
@@ -31,6 +31,7 @@ class OtherCategoryModel{
       completeAddress:data['completeAddress']??"",
       description:data['description']??"",
       status:data['status']??"",
+      categoryName: '',
 
 
     );

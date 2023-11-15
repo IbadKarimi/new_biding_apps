@@ -40,7 +40,7 @@ class LoginFormWidget extends StatefulWidget{
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
       await _authController.signIn(email, password);
-      Get.offAll(()=>ChatListScreen());
+      Get.offAll(()=>HomePageView());
       // Handle successful login here, e.g., navigate to the next screen
     } catch (e) {
       // Handle login error, e.g., show error message in SnackBar

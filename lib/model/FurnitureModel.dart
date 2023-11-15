@@ -17,8 +17,8 @@ class FurnitureModel{
   String categoryName="";
   String userId="";
 
-  FurnitureModel({this.userId,this.buyerDocId,this.makingMaterial,this.condition,this.selectType,this.auctionType,this.setBidPrice,this.setBidEndTime,
-  this.cityName,this.completeAddress,this.description,this.status,this.imagePath,this.remainingTime,this.categoryName});
+  FurnitureModel({required this.userId,required this.buyerDocId,required this.makingMaterial,required this.condition,required this.selectType,required this.auctionType,required this.setBidPrice,required this.setBidEndTime,
+  required this.cityName,required this.completeAddress,required this.description,required this.status,required this.imagePath,required this.remainingTime,required this.categoryName});
 
   factory  FurnitureModel.fromFirestore(Map<String, dynamic> data) {
     return FurnitureModel(

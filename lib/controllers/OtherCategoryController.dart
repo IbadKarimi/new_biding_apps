@@ -11,9 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class OtherCategoryController{
 
-  Future<User> InsertOtherCategory(OtherCategoryModel otherCategoryModel,Rx<File> image) async {
+  Future<void> InsertOtherCategory(OtherCategoryModel otherCategoryModel,Rx<File> image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId = prefs.getString("docId");
+    String? docId = prefs.getString("docId");
 
     // Upload Image in FireBase
     String fileName = DateTime
@@ -46,7 +46,7 @@ class OtherCategoryController{
       // return userCredential.user;
 
     } on FirebaseAuthException catch (e) {
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
       return Future.error("An error occurred while Insert Agriculture Data.");
     }

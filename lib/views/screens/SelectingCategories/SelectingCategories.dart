@@ -34,7 +34,7 @@ import '../Widgets/Drawer.dart';
 
 
 
-PlatformFile _getImageFile;
+PlatformFile? _getImageFile;
 var picked;
 
 class SelectCateogoryView extends StatefulWidget{
@@ -43,15 +43,15 @@ class SelectCateogoryView extends StatefulWidget{
 }
 
 class _SelectCateogoryViewState extends State<SelectCateogoryView> {
-  DateTime selectedDate;
+  DateTime? selectedDate;
   String formattedSelectedDate = '';
 
-  DateTime selectedDateTime;
+  DateTime? selectedDateTime;
   String formattedSelectedDateTime = '';
   String remainingTime = '';
 
   Future<void> _pickDate() async {
-    DateTime pickedDate = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
@@ -59,7 +59,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     );
 
     if (pickedDate != null) {
-      TimeOfDay pickedTime = await showTimePicker(
+      TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
       );
@@ -275,7 +275,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
   Future getImage()async{
 
     final pickImage=await ImagePicker().pickImage(source: ImageSource.gallery);
-    final imageTemp=File(pickImage.path);
+    final imageTemp=File(pickImage!.path);
     image.value=imageTemp;
     print(imageTemp.path.toString());
     if(image.value!=""){
@@ -285,7 +285,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
 
 //-------------------------------Handlers-----------------------//
   bool _isLoading = false;
-  void _handlevehicle(BuildContext context) async {
+  Future<void> _handlevehicle(BuildContext context) async {
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -311,9 +311,11 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         completeAddress: completeAddress.text,
         description: description.text,
         status: "Pending",
+        userId: '',
+        imagePath: '',
+        categoryName: '',
       );
-
-      User firebaseUser = await vehicleController.InsertVehicle(vehicleModel, image);
+       await vehicleController.InsertVehicle(vehicleModel, image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));
@@ -353,10 +355,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
-        status: "Pending",
+        status: "Pending", userId: '', id: '', imagePath: '', categoryName: '',
       );
 
-      User firebaseUser = await agricultureController.InsertAgriculture(agricultureModel , image);
+       await agricultureController.InsertAgriculture(agricultureModel , image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));
@@ -376,7 +378,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
   }
   void _handleFurniture(BuildContext context) async {
 
-    String remainingTime=calculateRemainingTime(selectedDateTime);
+    String remainingTime=calculateRemainingTime(selectedDateTime!);
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -398,10 +400,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         completeAddress: completeAddress.text,
         description: description.text,
         status: "Pending",
-        remainingTime:  remainingTime,
+        remainingTime:  remainingTime, userId: '', imagePath: '', categoryName: '',
       );
 
-      User firebaseUser = await furnitureController.InsertFurniture(furnitureModel , image);
+       await furnitureController.InsertFurniture(furnitureModel , image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));
@@ -420,7 +422,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleRealStateResidential(BuildContext context) async {
-    String remainingTime=calculateRemainingTime(selectedDateTime);
+    String remainingTime=calculateRemainingTime(selectedDateTime!);
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
     });
@@ -443,10 +445,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
-        status: "Pending",
+        status: "Pending", userId: '', id: '', imagePath: '', categoryName: '',
       );
       RealStateController realStateController=RealStateController();
-      User firebaseUser = await realStateController.InsertRealState(realStateModel , image);
+     await realStateController.InsertRealState(realStateModel , image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));
@@ -465,7 +467,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleRealStateCommercial(BuildContext context) async {
-    String remainingTime=calculateRemainingTime(selectedDateTime);
+    String remainingTime=calculateRemainingTime(selectedDateTime!);
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -489,10 +491,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
-        status: "Pending",
+        status: "Pending", userId: '', id: '', imagePath: '', categoryName: '',
       );
       RealStateController realStateController=RealStateController();
-      User firebaseUser = await realStateController.InsertRealState(realStateModel , image);
+      await realStateController.InsertRealState(realStateModel , image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));
@@ -511,7 +513,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     }
   }
   void _handleOtherCategory(BuildContext context) async {
-    String remainingTime=calculateRemainingTime(selectedDateTime);
+    String remainingTime=calculateRemainingTime(selectedDateTime!);
 
     setState(() {
       _isLoading = true; // Set loading state to true when login starts
@@ -531,10 +533,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
         cityName: cityName.text,
         completeAddress: completeAddress.text,
         description: description.text,
-        status: "Pending",
+        status: "Pending", selectType: '',
       );
       OtherCategoryController otherCategoryController=OtherCategoryController();
-      User firebaseUser = await otherCategoryController.InsertOtherCategory(otherCategoryModel , image);
+    await otherCategoryController.InsertOtherCategory(otherCategoryModel , image);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Data Inserted Sucessfully'),
       ));

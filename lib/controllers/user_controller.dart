@@ -14,7 +14,7 @@ class UserController {
   // Obtain shared preferences.
 
 
-  Future<User> InsertSignUp(UserModel user) async {
+  Future<User?> InsertSignUp(UserModel user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
@@ -22,20 +22,20 @@ class UserController {
         password: user.password,
       );
 
-      FirebaseFirestore.instance.collection('userSignUp').doc(userCredential.user.uid).set({
+      FirebaseFirestore.instance.collection('userSignUp').doc(userCredential.user!.uid).set({
         'phoneNo':user.phoneNo ,
         'fullName':user.fullName,
-        'id':userCredential.user.uid,
+        'id':userCredential.user!.uid,
         'imagePath':""
         // Other user data fields
       });
 
-      await prefs.setString('docId', userCredential.user.uid.toString());
+      await prefs.setString('docId', userCredential.user!.uid.toString());
       return userCredential.user;
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while signing in.");
@@ -45,7 +45,7 @@ class UserController {
 
   Future InsertImage(Rx<File> image)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String docId = prefs.getString('docId');
+    final String ?docId = prefs.getString('docId');
 
 
 
@@ -56,7 +56,7 @@ class UserController {
     print("--------------------------------------------------"+downloadUrl.toString());
 
 
-   updatePicture(docId, downloadUrl);
+   updatePicture(docId!, downloadUrl);
 
   }
 
@@ -75,7 +75,7 @@ class UserController {
   }
 
 
-  Future<User> signIn(String email, String password) async {
+  Future<User?> signIn(String email, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
@@ -83,12 +83,12 @@ class UserController {
         email: email,
         password: password,
       );
-      await prefs.setString('docId', userCredential.user.uid.toString());
+      await prefs.setString('docId', userCredential.user!.uid.toString());
       return userCredential.user;
 
     } on FirebaseAuthException catch (e) {
       // Handle specific FirebaseAuthException errors
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
       // Handle other errors
       return Future.error("An error occurred while signing in.");
@@ -100,7 +100,7 @@ class UserController {
 
   Future<List<UserModel>> getUserSignUp() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String docId=prefs.getString("docId");
+    String? docId=prefs.getString("docId");
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('userSignUp').get();
     List<UserModel> data = [];
     querySnapshot.docs.forEach((doc) {
@@ -117,7 +117,7 @@ class UserController {
 
   Future<List<UserModel>> getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String docId = prefs.getString('docId');
+    final String? docId = prefs.getString('docId');
 
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('userSignUp').doc(docId).get();
     if (documentSnapshot.exists) {
@@ -156,7 +156,7 @@ class UserController {
 
     }  on FirebaseAuthException catch (e) {
 
-      return Future.error(e.message);
+      return Future.error(e.message.toString());
     } catch (e) {
 
       return Future.error("An error occurred while signing in.");
@@ -184,7 +184,7 @@ class UserController {
   Future<void> updateName(String name) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String docId = prefs.getString('docId');//userID
+    final String? docId = prefs.getString('docId');//userID
     FirebaseFirestore.instance
         .collection('your_collection_name') // Replace 'your_collection_name' with your actual collection name
         .doc(docId) // Specify the document ID you want to update
@@ -201,7 +201,7 @@ class UserController {
   }
 
   Future<void> updateEmail(String newEmail) async {
-    User user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
         await user.updateEmail(newEmail);
@@ -222,7 +222,7 @@ class UserController {
   Future<List<UserModel>> getUserNameById() async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String _docId=prefs.getString("id");
+    String? _docId=prefs.getString("id");
 
     print("ID in Function"+_docId.toString());
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('userSignUp').doc(_docId).get();
