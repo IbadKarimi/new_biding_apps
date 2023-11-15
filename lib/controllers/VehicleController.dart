@@ -105,8 +105,8 @@ class VehicleController {
   Future<List<VehicleModel>> getVehicleById(String docId) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? docId=prefs.getString("id");
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('vehicle').doc(docId).get();
+
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('vehicle').doc(prefs.getString("id")).get();
     if (documentSnapshot.exists) {
       // Document exists, you can access the data using documentSnapshot.data()
       Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;

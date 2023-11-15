@@ -36,18 +36,20 @@ class AcceptRejectBidView extends StatefulWidget{
 }
 
 class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
+
+  String offerAmount="";
   //---------Vehicle-------//
 
   String _docId="";
   String vehicleName="";
   String cityName="";
-  String ?imagePath;
+  String? imagePath;
   String description="";
   String price="";
   String completeAddress="";
   String condtion="";
   String enginePower="";
-  String? model;
+  String model="";
   String registerYear="";
   String registerArea="";
   String vehicleType="";
@@ -119,8 +121,9 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
       _storedValue = _prefs!.getString('id')!;
       _isLoading = true;
       _auctionType=_prefs!.getString("auctionType")!;
-
       _categoryName= _prefs!.getString("categoryName")!;
+
+
       print("Categoriiiiiiiiiiiies name +"+ _categoryName.toString()+_storedValue);
       if(_categoryName=="RealState"){
         realStateController.getRealEstateById(_storedValue ).then((value) {
@@ -144,7 +147,15 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
             _cityNameR=dataRealState[0].cityName.toString();
             _completeAddressR=dataRealState[0].completeAddress.toString();
             _descriptionR=dataRealState[0].description.toString();
+
             _isLoading = true;
+
+            homePageController.getoffersById().then((value){
+              offers.addAll(value);
+              offer=offers[0].offer.toString();
+
+
+            });
 
           });
         });
@@ -168,7 +179,14 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
             enginePower = data[0].enginePower.toString();
             completeAddress = data[0].completeAddress.toString();
             if(imagePath==null)
-            _isLoading = true;
+              _isLoading = true;
+
+          });
+          homePageController.getoffersById().then((value){
+            offers.addAll(value);
+            offer=offers[0].offer.toString();
+
+
           });
         });
       }
@@ -192,6 +210,12 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
             _isLoading = true;
 
           });
+          homePageController.getoffersById().then((value){
+            offers.addAll(value);
+            offer=offers[0].offer.toString();
+
+
+          });
         });
       }
       if(_categoryName=="Agriculture"){
@@ -212,6 +236,12 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
 
           });
+          homePageController.getoffersById().then((value){
+            offers.addAll(value);
+            offer=offers[0].offer.toString();
+
+
+          });
         });
       }
 
@@ -222,7 +252,7 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
     });
   }
-String? offer;
+String offer="";
   VehicleController vehicleController=VehicleController();
   FurnitureController furnitureController=FurnitureController();
   AgricultureController agricultureController=AgricultureController();
@@ -240,21 +270,8 @@ String? offer;
     super.initState();
     _loadStoredValue() ;
 
-    homePageController.getOffers().then((value) {
-      setState(() {
-        offers.addAll(value);
-        for(int i=0;i<offers.length;i++){
-          if(offers[i].docId==_storedValue){
-            setState(() {
-              offer=offers[i].offer ;
-            });
 
-          }
 
-        }
-
-      });
-    });
 
 
   }
@@ -265,14 +282,14 @@ String? offer;
 
   @override
   Widget build(BuildContext context) {
-
+    print("Offer is "+offer.toString());
     print("Category Name is "+ _categoryName.toString());
-    print("image path is "+_auctionType.toString());
+    print("image path is "+imagePath.toString());
     return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(),
       drawer: CustomDrawer(),
-      body:_imagePathR==null&&imagePath==null&&_imagePathA==null&&_imagePathf==null ?
+      body:_imagePathR==null && imagePath==null && _imagePathA==null && _imagePathf==null ?
       Center(child: Padding(
         padding: const EdgeInsets.only(top:30),
         child: CircularProgressIndicator(),
@@ -374,7 +391,7 @@ String? offer;
                     Padding(
                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                       child:  Text(
-                        model!,
+                        model,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 12.sp,
@@ -494,7 +511,7 @@ String? offer;
                         ),
                       ],
                     ),
-                    Row(
+                   /* Row(
                       children: [
                         Padding(
                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
@@ -509,7 +526,7 @@ String? offer;
                         Padding(
                           padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                           child:  Text(
-                            offer!,
+                            offer,
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 14.sp,
@@ -518,7 +535,7 @@ String? offer;
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
 
                     //first button
                     Row(

@@ -39,13 +39,7 @@ class _HomePageViewState extends State<HomePageView> {
 
 
   @override
-
-
-
-
-
   String onTapAuctionType="Biding";
-
   @override
   FurnitureController  furnitureController=FurnitureController();
   AgricultureController  agricultureController=AgricultureController();
@@ -75,60 +69,32 @@ class _HomePageViewState extends State<HomePageView> {
 
 
 
-void sortingData(){
 
-  bidingData = data.where((item) =>
-  item.auctionType.contains("Biding")).toList();
-  fixedAuctionData = data.where((item) => item.auctionType.contains("Fixed Auction")).toList();
-
-
-
-
-  for(int i=0;i<bidingData.length;i++){
-    print("Auction Type is "+i.toString() +":"+bidingData[i].auctionType.toString());
-  }
-
-  for(int i=0;i< fixedAuctionData .length;i++){
-    print("Auction Type is "+i.toString() +":"+ fixedAuctionData [i].auctionType.toString());
-  }
-
-}
 
   void initState() {
+
+
+
+      homePageController.getBiddingData().then((value) {
+        setState(() {
+          bidingData.addAll(value);
+
+
+        });
+      });
+
+
+
+      homePageController.geFixedAuctionData().then((value) {
+        setState(() {
+          fixedAuctionData.addAll(value);
+
+
+        });
+      });
+
     super.initState();
 
-
-    homePageController.getCategoriesData().then((value) {
-      setState(() {
-        data.addAll(value);
-        sortingData();
-
-      });
-    });
-
-    furnitureController.getFurniture().then((value) {
-      setState(() {
-        furniture.addAll(value);
-      });
-    });
-
-    realStateController.getrealState().then((value) {
-      setState(() {
-        realState.addAll(value);
-      });
-    });
-
-    vehicleController.getVehicle().then((value) {
-      setState(() {
-        vehicle.addAll(value);
-      });
-    });
-
-    agricultureController.getAgriculture().then((value) {
-      setState(() {
-        agriculture.addAll(value);
-      });
-    });
   }
 
 

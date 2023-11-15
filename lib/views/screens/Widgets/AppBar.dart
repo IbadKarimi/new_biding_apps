@@ -16,11 +16,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.black,
       title: Text('Bidding Sale System'),
       actions: [
-        IconButton(onPressed: (){}, icon: Icon(Icons.search,color: Colors.amber,)),
+      /*  IconButton(onPressed: (){}, icon: Icon(Icons.search,color: Colors.amber,)),
 
         IconButton(onPressed: (){}, icon: Icon(Icons.filter_alt_sharp,color: Colors.amber,)),
 
-        IconButton(onPressed: (){}, icon: Icon(Icons.person,color: Colors.amber,)),
+        IconButton(onPressed: (){}, icon: Icon(Icons.person,color: Colors.amber,)),*/
 
 
         PopupMenuButton<int>(

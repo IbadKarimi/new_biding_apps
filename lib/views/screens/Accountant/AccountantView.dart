@@ -75,14 +75,10 @@ class _AccountantViewState extends State<AccountantView> {
                       prefs.setString("auctionType", data[i].auctionType);
                       prefs.setString("categoryName", data[i].categoryType.toString());
 
-                      String id="";
-                      id=prefs.getString("id")!;
-                      String categoryName="";
-                      categoryName= prefs.getString("categoryName")!;
-                      print("Category Type is "+categoryName.toString());
-                      print("Id is "+id);
 
-                      if(id!=null){
+
+
+                      if(prefs.getString("id")!=null){
                         Get.to(()=>AcceptRejectBidView());
                       }
                     },

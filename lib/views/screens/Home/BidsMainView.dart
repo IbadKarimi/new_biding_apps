@@ -2113,9 +2113,7 @@ class _BidsMainViewState extends State<BidsMainView> {
 
                     ),
 
-              IconButton(onPressed: (){
-                Get.to(()=>ChatScreen(recieverId: _recieverId.toString()));
-              }, icon:Icon(Icons.chat))
+
             ],
           ),
 
