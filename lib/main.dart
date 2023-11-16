@@ -6,6 +6,7 @@ import 'package:biding_app/views/screens/Accountant/AccountantView.dart';
 import 'package:biding_app/views/screens/Admin/AdminViewFeedBack.dart';
 
 import 'package:biding_app/views/screens/Home/HomePageView.dart';
+import 'package:biding_app/views/screens/Notification/Notification.dart';
 import 'package:biding_app/views/screens/SelectingCategories/SelectingCategories.dart';
 import 'package:biding_app/views/screens/authentication_repository/login.dart';
 import 'package:biding_app/views/screens/authentication_repository/sign_up.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: AccountantView()
+      child: NotificationView()
     );
   }
 }

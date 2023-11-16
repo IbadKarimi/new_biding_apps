@@ -249,7 +249,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
     'Real State',
     'Agriculture',
     'Furniture',
-    'Other',
+
   ];
   String _selectedValue = "Vehicle";
 

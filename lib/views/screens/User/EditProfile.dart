@@ -2,6 +2,7 @@ import 'package:biding_app/views/screens/Widgets/AppBar.dart';
 import 'package:biding_app/views/screens/Widgets/BottomNavigationBar.dart';
 import 'package:biding_app/views/screens/Widgets/Drawer.dart';
 import 'package:biding_app/views/screens/categories/categories.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controllers/user_controller.dart';
@@ -84,20 +85,21 @@ class _EditProfileViewState extends State<EditProfileView > {
                       width: 100.w,
                       child: ElevatedButton(onPressed:
                           () async {
-                        Get.offAll(()=>Category());
+
                         if (_formKey.currentState!.validate()) {
 
                           try{
-                            userController.updateName(fullName.text);
+                            userController.updateUserName(FirebaseAuth.instance.currentUser!.uid,fullName.text);
+                            fullName.clear();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Name updated successfully!',style:TextStyle(color: Colors.black),),
+                                content: Text('Name updated successfully!',style:TextStyle(color: Colors.white),),
                               ),
                             );
                           }catch(e){
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(e.toString(),style: TextStyle(color: Colors.black),),
+                                content: Text(e.toString(),style: TextStyle(color: Colors.white),),
                               ),
                             );
 
@@ -154,14 +156,16 @@ class _EditProfileViewState extends State<EditProfileView > {
                         if (_formKey.currentState!.validate()) {
 
 
+
                       try {
                         userController.updateEmail(email.text);
+
                         SnackBar(
-                          content: Text('Email updated successfully!',style:TextStyle(color: Colors.black),),
+                          content: Text('Email updated successfully!',style:TextStyle(color: Colors.white),),
                         );
                       }catch(e){
                         SnackBar(
-                          content: Text(e.toString(),style:TextStyle(color: Colors.black),),
+                          content: Text(e.toString(),style:TextStyle(color: Colors.white),),
                         );
                       }
 

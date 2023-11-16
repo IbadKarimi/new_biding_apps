@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 import '../FeedBack/Feedback.dart';
 import '../Home/HomePageView.dart';
+import '../Notification/Notification.dart';
 import '../SelectingCategories/SelectingCategories.dart';
 import '../categories/categories.dart';
 
@@ -39,7 +40,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             Get.to(()=>MyBidsView());
           }
           if(index==1){
-            Get.to(()=>FeedBackView());
+            Get.to(()=>NotificationView());
           }
           if(index==2){
             Get.to(()=>SelectCateogoryView());

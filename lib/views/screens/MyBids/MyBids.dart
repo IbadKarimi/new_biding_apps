@@ -73,6 +73,7 @@ class _MyBidsViewState extends State<MyBidsView> {
                       prefs.setString("id", offers[i].productId.toString());
                       prefs.setString("auctionType", "Biding");
                       prefs.setString("categoryName", offers[i].categoryName.toString());
+                      prefs.setString("offer",offers[i].offer);
 
                       String? id="";
                       id=prefs.getString("id");

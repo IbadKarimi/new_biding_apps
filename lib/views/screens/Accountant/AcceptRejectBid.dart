@@ -150,12 +150,6 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
             _isLoading = true;
 
-            homePageController.getoffersById().then((value){
-              offers.addAll(value);
-              offer=offers[0].offer.toString();
-
-
-            });
 
           });
         });
@@ -182,12 +176,7 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
               _isLoading = true;
 
           });
-          homePageController.getoffersById().then((value){
-            offers.addAll(value);
-            offer=offers[0].offer.toString();
 
-
-          });
         });
       }
       if(_categoryName=="Furniture"){
@@ -210,12 +199,7 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
             _isLoading = true;
 
           });
-          homePageController.getoffersById().then((value){
-            offers.addAll(value);
-            offer=offers[0].offer.toString();
 
-
-          });
         });
       }
       if(_categoryName=="Agriculture"){
@@ -236,12 +220,7 @@ class _AcceptRejectBidViewState extends State<AcceptRejectBidView> {
 
 
           });
-          homePageController.getoffersById().then((value){
-            offers.addAll(value);
-            offer=offers[0].offer.toString();
 
-
-          });
         });
       }
 

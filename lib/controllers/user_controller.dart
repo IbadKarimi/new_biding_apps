@@ -200,23 +200,7 @@ class UserController {
     });
   }
 
-  Future<void> updateEmail(String newEmail) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      try {
-        await user.updateEmail(newEmail);
 
-        await user.sendEmailVerification();
-        print('Email updated successfully to $newEmail');
-      } catch (e) {
-        print('Failed to update email: $e');
-        throw e;
-      }
-    } else {
-      print('User not authenticated.');
-      // Handle this scenario (e.g., redirect to sign-in page)
-    }
-  }
 
 
   Future<List<UserModel>> getUserNameById() async {
@@ -313,6 +297,36 @@ class UserController {
       print('Error getting user data: $e');
     }
     return userName;
+  }
+
+  Future<void> updateUserName(String userId, String newName) async {
+    try {
+      await FirebaseFirestore.instance.collection('userSignUp').doc(userId).update({
+        'fullName': newName,
+      });
+      print('User name updated successfully!');
+    } catch (error) {
+      print('Error updating user name: $error');
+    }
+  }
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Update the email address
+        await user.updateEmail(newEmail);
+
+        print('Email updated successfully to: $newEmail');
+      } else {
+        print('No user is currently signed in.');
+        // Handle the case where no user is signed in
+      }
+    } catch (error) {
+      print('Error updating email: $error');
+      // Handle the error, such as displaying a message to the user
+    }
   }
 
 }

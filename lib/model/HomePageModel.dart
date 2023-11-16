@@ -20,11 +20,14 @@ String setBidEndTime;
  String startPrice;
  String productId;
 String categoryType;
- HomePageModel({required this.setBidEndTime,required this.categoryType,required this.productId,required this.docId,required this.name,required this.city,required this.price,required this.description,required this.imagePath,required this.categoryName,required this.status,required this.auctionType,required this.offer,required this.startPrice});
+String userId;
+String id;
+ HomePageModel({required this.id,required this.userId,required this.setBidEndTime,required this.categoryType,required this.productId,required this.docId,required this.name,required this.city,required this.price,required this.description,required this.imagePath,required this.categoryName,required this.status,required this.auctionType,required this.offer,required this.startPrice});
 
   factory   HomePageModel.fromFirestore(Map<String, dynamic> data) {
     return   HomePageModel(
-
+      id: data['id'] ??"",
+      userId: data['userId'] ??"",
       docId: data['id'] ??"",
       name: data['name'] ??"",
       city:data['city']??"",

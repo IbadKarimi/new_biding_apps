@@ -25,6 +25,8 @@ class HomePageController{
 
     return data;
 
+
+
   }
 
 
@@ -138,30 +140,42 @@ return "";
 
   }
 
-  Future<List<HomePageModel>> getoffersById() async {
+  Future<String> getOffersById(String _docId) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? _docId=prefs.getString("id");
+      DocumentSnapshot documentSnapshot =
+      await FirebaseFirestore.instance.collection('offers').doc(_docId).get();
 
-    print("ID in Function"+_docId.toString());
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('realState').doc(_docId).get();
-    if (documentSnapshot.exists) {
-      // Document exists, you can access the data using documentSnapshot.data()
-      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-      HomePageModel realStateModel = HomePageModel.fromFirestore(data);
-      return [realStateModel];
-      //List<UserModel> users=[user];
+      if (documentSnapshot.exists) {
+        // Document exists, you can access the data using documentSnapshot.data()
+        Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
 
-      //print("User on 0 index"+users[0].fullName);
+        if (data != null) {
+          HomePageModel homePageModel = HomePageModel.fromFirestore(data);
 
-    } else {
-      // Document does not exist
-      return [];
+          if (homePageModel.offer != null) {
+            print("Offer Amount is ${homePageModel.offer}");
+            return homePageModel.offer.toString();
+          } else {
+            // Handle the case where offer is null
+            return "Offer not available";
+          }
+        } else {
+          // Handle the case where data is null
+          return "Data not available";
+        }
+      } else {
+        // Document does not exist
+        return "";
+      }
+    } catch (e) {
+      // Handle any exceptions that might occur
+      print("Error: $e");
+      return "Error fetching offer";
     }
-
-
-
   }
+
 
 
 // Function to get vehicle data of a specific type

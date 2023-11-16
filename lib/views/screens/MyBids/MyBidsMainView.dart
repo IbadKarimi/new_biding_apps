@@ -174,7 +174,7 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
   String _categoryName="";
   String _auctionType="";
   bool _isLoading = false;
-
+  String offerAmount="";
 
 
 
@@ -182,6 +182,7 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
   Future<void> _loadStoredValue() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
+      offerAmount=_prefs!.getString('offer')!;
       _storedValue = _prefs!.getString('id')!;
       _isLoading = true;
       _auctionType=_prefs!.getString("auctionType")!;
@@ -224,6 +225,8 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
             vehicleName = data[0].vehicleName.toString();
             vehicleType = data[0].vehicleType.toString();
             condtion = data[0].condition.toString();
+
+
             model = data[0].model.toString();
             registerYear = data[0].registerYear.toString();
             registerArea = data[0].registerArea.toString();
@@ -544,6 +547,31 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              "My Offer :",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                          child:  Text(
+                            offerAmount,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
                     //first button
                     Padding(
@@ -708,6 +736,31 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
                           padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                           child:  Text(
                             _pricef,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              "My Offer :",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                          child:  Text(
+                            offerAmount,
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 14.sp,
@@ -899,6 +952,31 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              "My Offer :",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                          child:  Text(
+                            offerAmount,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                       child:  Text(
@@ -1015,6 +1093,31 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                              child:  Text(
+                                "My Offer :",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              offerAmount,
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       if(_selectTypeR=="Residential Plot")
                         Column(
@@ -1147,6 +1250,31 @@ class _MyBidsMainViewState extends State<MyBidsMainView> {
                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                             child:  Text(
                               _priceR,
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                              child:  Text(
+                                "My Offer :",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                            child:  Text(
+                              offerAmount,
                               style: TextStyle(
                                 color: Colors.green,
                                 fontSize: 14.sp,
