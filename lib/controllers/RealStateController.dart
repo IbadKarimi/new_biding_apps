@@ -169,7 +169,7 @@ class RealStateController {
   }
 
 
-  Future<List<RealStateModel>> getrealState()async{
+  Future<List<RealStateModel>> getRealState()async{
 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('realState').get();
 

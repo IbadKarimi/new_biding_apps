@@ -1,4 +1,5 @@
 
+import 'package:biding_app/views/Filter/SearchFilter.dart';
 import 'package:biding_app/views/screens/%20Chat/ChatList.dart';
 import 'package:biding_app/views/screens/%20Chat/ChatView.dart';
 import 'package:biding_app/views/screens/Accountant/AcceptRejectBid.dart';
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: LoginFormWidget()
+      child: SearchFilterView()
     );
   }
 }

@@ -3,11 +3,13 @@
 import 'dart:async';
 
 import 'package:biding_app/model/HomePageModel.dart';
+import 'package:biding_app/views/Filter/SearchFilter.dart';
 import 'package:biding_app/views/screens/Admin/AddAgriculture.dart';
 import 'package:biding_app/views/screens/Aggriculture/AggricultureView.dart';
 import 'package:biding_app/views/screens/Furniture/FurnitureView.dart';
 import 'package:biding_app/views/screens/Home/BidsMainView.dart';
 import 'package:biding_app/views/screens/RealState/RealStateView.dart';
+import 'package:biding_app/views/screens/SelectingCategories/SelectingCategories.dart';
 import 'package:biding_app/views/screens/Vehicle/VehiclesView.dart';
 import 'package:biding_app/views/screens/Widgets/AppBar.dart';
 import 'package:biding_app/views/screens/Widgets/BottomNavigationBar.dart';
@@ -29,6 +31,19 @@ import '../../../model/AgricultureModel.dart';
 import '../../../model/FurnitureModel.dart';
 import '../../../model/RealStateModel.dart';
 import '../../../model/VehicleModel.dart';
+import '../User/EditProfile.dart';
+import '../User/ResetPassword.dart';
+
+void _handleClick(int item) {
+  switch (item) {
+    case 0:  Get.to(()=>EditProfileView());
+
+    break;
+    case 1: case 0:  Get.to(()=>ResetPasswordView());
+  break;
+  }
+}
+
 
 class HomePageView extends StatefulWidget{
   @override
@@ -40,7 +55,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   String onTapAuctionType="Biding";
-  @override
+  String _query="";
   FurnitureController  furnitureController=FurnitureController();
   AgricultureController  agricultureController=AgricultureController();
   RealStateController realStateController=RealStateController();
@@ -50,6 +65,8 @@ class _HomePageViewState extends State<HomePageView> {
 
 
   List<HomePageModel> data=[];
+
+  List<HomePageModel> filteredItems=[];
 
   List<HomePageModel> bidingData=[];
 
@@ -69,6 +86,21 @@ class _HomePageViewState extends State<HomePageView> {
 
 
 
+  void _filterItems(String query) {
+    setState(() {
+      filteredItems = bidingData.where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  int getAuctionDataLength() {
+    if (onTapAuctionType == "Biding" && bidingData != null) {
+      return bidingData.length;
+    } else if (onTapAuctionType == "Fixed Auction" && fixedAuctionData != null) {
+      return fixedAuctionData.length;
+    }
+    return 0; // Return 0 or handle appropriately if data is not available
+  }
 
 
   void initState() {
@@ -78,12 +110,11 @@ class _HomePageViewState extends State<HomePageView> {
       homePageController.getBiddingData().then((value) {
         setState(() {
           bidingData.addAll(value);
+          filteredItems.addAll(bidingData);
 
 
         });
       });
-
-
 
       homePageController.geFixedAuctionData().then((value) {
         setState(() {
@@ -101,24 +132,273 @@ class _HomePageViewState extends State<HomePageView> {
 
 
 
+
   TextEditingController offer=TextEditingController();
   TextEditingController search=TextEditingController();
 
+  TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  AppBar _buildRegularAppBar() {
+    return AppBar(
+      backgroundColor: Colors.black,
+      title: Text('Bidding Sale System'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _isSearching = true;
+            });
+          },
+          icon: Icon(Icons.search, color: Colors.amber),
+        ),
+        IconButton(
+          onPressed: () {
+            Get.to(()=>SearchFilterView());
+          },
+          icon: Icon(Icons.filter_alt_sharp, color: Colors.amber),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.person, color: Colors.amber),
+        ),
+        PopupMenuButton<int>(
+          onSelected: (item) => _handleClick(item),
+          itemBuilder: (context) => [
+            PopupMenuItem<int>(
+              value: 0,
+              child: Text('Edit Profile', style: TextStyle(color: Colors.black)),
+            ),
+            PopupMenuItem<int>(
+              value: 1,
+              child: Text('Reset password', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  AppBar _buildSearchAppBar() {
+    return AppBar(
+      backgroundColor: Colors.black,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.amber),
+        onPressed: () {
+          setState(() {
+            _isSearching = false;
+            _query="";
+          });
+        },
+      ),
+      title: TextField(
+        style: TextStyle(color: Colors.black),
+        onChanged: (query) {
+          _filterItems(query);
+          _query=query;
+
+        },
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          hintStyle: TextStyle(color: Colors.amber.withOpacity(0.7)),
+
+          fillColor: Colors.white, // Set the background color to white
+          filled: true,
+          labelText: 'Search Category Name',
+
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(40.0)),
+          ),
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            // Implement your search logic here using _searchController.text
+            print('Searching for: ${_searchController.text}');
+          },
+          icon: Icon(Icons.search, color: Colors.amber),
+        ),
+      ],
+    );
+  }
 
 
   Widget build(BuildContext context) {
+
    return Scaffold(
-     appBar: CustomAppBar(),
+     appBar:  _isSearching ? _buildSearchAppBar() : _buildRegularAppBar(),
+
+
      bottomNavigationBar: CustomBottomNavigationBar(),
      drawer: CustomDrawer(),
-     body:   Padding(
+     body: Padding(
          padding: const EdgeInsets.only(top: 10),
          child:   CustomScrollView(
              scrollDirection: Axis.vertical,
              slivers: [
                SliverList(
                  delegate: SliverChildListDelegate([
+
                    //------------Buttons Fixed Price ----------//
+                   if(_query!="")
+                   Column(
+                     children: [
+                       for(int index=0;index<filteredItems.length;index++)
+
+                         GestureDetector(
+                           onTap:()async{
+                             final SharedPreferences prefs = await SharedPreferences.getInstance();
+                             prefs.setString("id", filteredItems[index].docId.toString());
+                             prefs.setString("categoryName", filteredItems[index].categoryType.toString());
+                             prefs.setString("auctionType", filteredItems[index].auctionType);
+
+                             String? id="";
+                             id=prefs.getString("id");
+                             String categoryName="";
+                             categoryName= prefs.getString("categoryName")!;
+                             print("Category Type is "+categoryName.toString());
+
+                             if(id!=null){
+                               Get.to(()=>BidsMainView());
+                             }
+                           },
+                           child: Container(
+                             margin: EdgeInsets.only(top:10.h,left:10.w,right: 10.w,bottom: 10.h),
+                             width:320.w,
+
+                             decoration: BoxDecoration(
+                                 color: Colors.white,
+                                 borderRadius: BorderRadius.circular(0.r),
+                                 border: Border.all(color: Colors.black,width: 1)
+                             ),
+
+                             child:Column(
+                               mainAxisAlignment:MainAxisAlignment.start,
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+
+
+                                 Container(
+                                   margin: EdgeInsets.only(left:0.w,top:0.h),
+
+                                   width:320.w,
+                                   height: 180.h,
+
+                                   decoration: BoxDecoration(
+
+                                       image: DecorationImage(image: NetworkImage(filteredItems[index].imagePath,),fit:BoxFit.cover),
+
+                                       border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
+                                   ),
+
+                                 ),
+                                 Center(
+                                   child: Container(
+                                     margin: EdgeInsets.only(top:5.h),
+                                     width: 100.w,
+                                     height: 15.h,
+                                     child:MyCountdownWidget(
+                                       bidEndTime: filteredItems[index].setBidEndTime.toString(),
+                                       index: index,
+                                       onTimerEnd: (int index) {
+                                         setState(() {
+                                           filteredItems.removeAt(index);
+                                           filteredItems.sort(); // Sort the list based on bidding end times
+                                         });
+                                       },
+                                     ),),
+                                 ),
+                                 Padding(
+                                   padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                   child:  Text(
+                                     filteredItems[index].name,
+                                     style: TextStyle(
+                                       color: Colors.black,
+                                       fontSize: 12.sp,
+                                       fontWeight: FontWeight.w600,
+                                     ),
+                                   ),
+                                 ),
+                                 Row(
+                                   children: [
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                       child: Icon(Icons.location_pin,color: Colors.red,),),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                       child:  Text(
+                                         filteredItems[index].city,
+                                         style: TextStyle(
+                                           color: Colors.black,
+                                           fontSize: 10.sp,
+                                           fontWeight: FontWeight.w500,
+                                         ),
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                                 Padding(
+                                   padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                   child:  Text(
+                                     filteredItems[index].description,
+                                     style: TextStyle(
+                                       color: Colors.grey,
+                                       fontSize: 10.sp,
+                                       fontWeight: FontWeight.w500,
+                                     ),
+                                   ),
+                                 ),
+                                 Padding(
+                                   padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                   child:  Text(
+                                     "Price",
+                                     style: TextStyle(
+                                       color: Colors.black,
+                                       fontSize: 12.sp,
+                                       fontWeight: FontWeight.w600,
+                                     ),
+                                   ),
+                                 ),
+                                 Row(
+                                   children: [
+                                     Padding(
+                                         padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                         child:  Text(
+                                           "RS :",
+                                           style: TextStyle(
+                                             color: Colors.black,
+                                             fontSize: 12.sp,
+                                             fontWeight: FontWeight.w600,
+                                           ),
+                                         )),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                       child:  Text(
+                                         filteredItems[index].price,
+                                         style: TextStyle(
+                                           color: Colors.green,
+                                           fontSize: 12.sp,
+                                           fontWeight: FontWeight.w600,
+                                         ),
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+
+                                 //----------------------Pic Box----------------------//
+
+
+
+                               ],
+                             ),
+                           ),
+                         ),
+                     ],
+                   ),
+
+                   if(_query=="")
                    Row(
                      children: [
                        GestureDetector(
@@ -153,16 +433,18 @@ class _HomePageViewState extends State<HomePageView> {
                        ),
                )],
                    ),
-
+                   if(_query=="")
                    Padding(
                      padding:EdgeInsets.only(left:10.w,top:10.h),
                      child: Text("Latest Bidding",style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black,fontSize: 14.sp),),
                    ),
                    //---------------------------Lates Bidding Form
+                   if(_query=="")
                    SingleChildScrollView(
                      scrollDirection: Axis.horizontal,
                      child: Padding(
                        padding:  EdgeInsets.only(left:5.w),
+
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.start,
                          crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +520,7 @@ class _HomePageViewState extends State<HomePageView> {
                                      Padding(
                                        padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                                        child:  Text(
-                                         bidingData[i].categoryName,
+                                         bidingData[i].name,
                                          style: TextStyle(
                                            color: Colors.black,
                                            fontSize: 12.sp,
@@ -311,10 +593,12 @@ class _HomePageViewState extends State<HomePageView> {
                    ),
 
                    //-------------------------Categories button===========//
+                   if(_query=="")
                    Padding(
                      padding:EdgeInsets.only(left:10.w,top:0.h),
                      child: Text("Catergory",style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black,fontSize: 14.sp),),
                    ),
+                   if(_query=="")
                    Row(
                      mainAxisAlignment: MainAxisAlignment.start,
                      crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,6 +658,7 @@ class _HomePageViewState extends State<HomePageView> {
 
 
                    //--------------------------Latest Text---------------------//
+                   if(_query=="")
                    Padding(
                      padding:EdgeInsets.only(left:10.w,top:10.h,bottom: 10.h),
                      child: Text("Most Popular",style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black,fontSize: 14.sp),),
@@ -381,7 +666,8 @@ class _HomePageViewState extends State<HomePageView> {
 
                  ]),
                ),
-
+               //------------------------------//
+               if(_query=="" && onTapAuctionType=="Biding")
                SliverGrid(
                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                        crossAxisCount: 2,
@@ -397,8 +683,10 @@ class _HomePageViewState extends State<HomePageView> {
 
 
                          return
+
                            Container(
-                           child:onTapAuctionType=="Biding"?
+                           child:
+
                              GestureDetector(
                                onTap:()async{
                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -544,166 +832,213 @@ class _HomePageViewState extends State<HomePageView> {
                                    ],
                                  ),
                                ),
-                             ):
-
-                               GestureDetector(
-                                 onTap:()async{
-                                   final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                   prefs.setString("id", fixedAuctionData[index].docId.toString());
-                                   prefs.setString("categoryName", fixedAuctionData[index].categoryName.toString());
-                                   prefs.setString("auctionType", fixedAuctionData[index].auctionType);
-
-                                   String? id="";
-                                   id=prefs.getString("id");
-                                   String? categoryName="";
-                                   categoryName= prefs.getString("categoryName");
-                                   print("Category Type is "+categoryName.toString());
-
-                                   if(id!=null){
-                                     Get.to(()=>BidsMainView());
-                                   }
-
-                                 },
-                                 child: Container(
-                                   margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
-                                   width:160.w,
-                                   decoration: BoxDecoration(
-                                       color: Colors.white,
-                                       borderRadius: BorderRadius.circular(0.r),
-                                       border: Border.all(color: Colors.black,width: 1)
-                                   ),
-
-                                   child:Column(
-                                     mainAxisAlignment:MainAxisAlignment.start,
-                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                     children: [
-
-
-                                       Container(
-                                         margin: EdgeInsets.only(left:0.w,top:0.h),
-
-                                         width:200.w,
-                                         height: 80.h,
-                                         decoration: BoxDecoration(
-
-                                             image: DecorationImage(image: NetworkImage(fixedAuctionData[index].imagePath,),fit:BoxFit.cover),
-
-                                             border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
-                                         ),
-
-                                       ),
-                                       Center(
-                                         child: Container(
-                                           margin: EdgeInsets.only(top:5.h),
-                                           width: 100.w,
-                                           height: 15.h,
-                                           child:MyCountdownWidget(
-                                             bidEndTime: fixedAuctionData[index].setBidEndTime.toString(),
-                                             index: index,
-                                             onTimerEnd: (int index) {
-                                               setState(() {
-                                                 fixedAuctionData.removeAt(index);
-                                                 fixedAuctionData.sort(); // Sort the list based on bidding end times
-                                               });
-                                             },
-                                           ),),
-                                       ),
-                                       Padding(
-                                         padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                         child:  Text(
-                                           fixedAuctionData[index].name,
-                                           style: TextStyle(
-                                             color: Colors.black,
-                                             fontSize: 12.sp,
-                                             fontWeight: FontWeight.w600,
-                                           ),
-                                         ),
-                                       ),
-                                       Row(
-                                         children: [
-                                           Padding(
-                                             padding: EdgeInsets.only(top: 5.h, left: 7.w),
-                                             child: Icon(Icons.location_pin,color: Colors.red,),),
-                                           Padding(
-                                             padding: EdgeInsets.only(top: 5.h, left: 3.w),
-                                             child:  Text(
-                                               fixedAuctionData[index].city,
-                                               style: TextStyle(
-                                                 color: Colors.black,
-                                                 fontSize: 10.sp,
-                                                 fontWeight: FontWeight.w500,
-                                               ),
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-                                       Padding(
-                                         padding: EdgeInsets.only(top: 5.h, left: 10.w),
-                                         child:  Text(
-                                           fixedAuctionData[index].description,
-                                           style: TextStyle(
-                                             color: Colors.grey,
-                                             fontSize: 10.sp,
-                                             fontWeight: FontWeight.w500,
-                                           ),
-                                         ),
-                                       ),
-                                       Padding(
-                                         padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                         child:  Text(
-                                           "Price",
-                                           style: TextStyle(
-                                             color: Colors.black,
-                                             fontSize: 12.sp,
-                                             fontWeight: FontWeight.w600,
-                                           ),
-                                         ),
-                                       ),
-                                       Row(
-                                         children: [
-                                           Padding(
-                                               padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                               child:  Text(
-                                                 "RS :",
-                                                 style: TextStyle(
-                                                   color: Colors.black,
-                                                   fontSize: 12.sp,
-                                                   fontWeight: FontWeight.w600,
-                                                 ),
-                                               )),
-                                           Padding(
-                                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
-                                             child:  Text(
-                                               fixedAuctionData[index].price,
-                                               style: TextStyle(
-                                                 color: Colors.green,
-                                                 fontSize: 12.sp,
-                                                 fontWeight: FontWeight.w600,
-                                               ),
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-
-                                       //----------------------Pic Box----------------------//
+                             )
 
 
 
-                                     ],
-                                   ),
-                                 ),
-                               ),
+
 
                          );
                        },
-                       childCount:onTapAuctionType=="Biding"?bidingData.length:fixedAuctionData.length
+                       childCount:bidingData.length
                    )
                ),
+               if(_query=="" && onTapAuctionType=="Fixed Auction")
+               SliverGrid(
+                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                       crossAxisCount: 2,
+                       childAspectRatio:(3.3/5.3),
+                       crossAxisSpacing: 10.w,
+                       mainAxisSpacing: 10.h
+
+                   ),
+
+                   delegate: SliverChildBuilderDelegate(
+                           (context, index) {
+
+
+
+                         return
+
+                           Container(
+                             child:
+
+                             GestureDetector(
+                               onTap:()async{
+                                 final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                 prefs.setString("id", fixedAuctionData[index].docId.toString());
+                                 prefs.setString("categoryName", fixedAuctionData[index].categoryName.toString());
+                                 prefs.setString("auctionType", fixedAuctionData[index].auctionType);
+
+                                 String? id="";
+                                 id=prefs.getString("id");
+                                 String? categoryName="";
+                                 categoryName= prefs.getString("categoryName");
+                                 print("Category Type is "+categoryName.toString());
+
+                                 if(id!=null){
+                                   Get.to(()=>BidsMainView());
+                                 }
+
+                               },
+                               child: Container(
+                                 margin: EdgeInsets.only(top:0.h,left:10.w,right: 10.w),
+                                 width:160.w,
+                                 decoration: BoxDecoration(
+                                     color: Colors.white,
+                                     borderRadius: BorderRadius.circular(0.r),
+                                     border: Border.all(color: Colors.black,width: 1)
+                                 ),
+
+                                 child:Column(
+                                   mainAxisAlignment:MainAxisAlignment.start,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+
+
+                                     Container(
+                                       margin: EdgeInsets.only(left:0.w,top:0.h),
+
+                                       width:200.w,
+                                       height: 80.h,
+                                       decoration: BoxDecoration(
+
+                                           image: DecorationImage(image: NetworkImage(fixedAuctionData[index].imagePath,),fit:BoxFit.cover),
+
+                                           border: Border(bottom: BorderSide(color: Colors.grey,width: 1))
+                                       ),
+
+                                     ),
+                                     Center(
+                                       child: Container(
+                                         margin: EdgeInsets.only(top:5.h),
+                                         width: 100.w,
+                                         height: 15.h,
+                                         child:MyCountdownWidget(
+                                           bidEndTime: fixedAuctionData[index].setBidEndTime.toString(),
+                                           index: index,
+                                           onTimerEnd: (int index) {
+                                             setState(() {
+                                               fixedAuctionData.removeAt(index);
+                                               fixedAuctionData.sort(); // Sort the list based on bidding end times
+                                             });
+                                           },
+                                         ),),
+                                     ),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                       child:  Text(
+                                         fixedAuctionData[index].name,
+                                         style: TextStyle(
+                                           color: Colors.black,
+                                           fontSize: 12.sp,
+                                           fontWeight: FontWeight.w600,
+                                         ),
+                                       ),
+                                     ),
+                                     Row(
+                                       children: [
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 7.w),
+                                           child: Icon(Icons.location_pin,color: Colors.red,),),
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 3.w),
+                                           child:  Text(
+                                             fixedAuctionData[index].city,
+                                             style: TextStyle(
+                                               color: Colors.black,
+                                               fontSize: 10.sp,
+                                               fontWeight: FontWeight.w500,
+                                             ),
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w),
+                                       child:  Text(
+                                         fixedAuctionData[index].description,
+                                         style: TextStyle(
+                                           color: Colors.grey,
+                                           fontSize: 10.sp,
+                                           fontWeight: FontWeight.w500,
+                                         ),
+                                       ),
+                                     ),
+                                     Padding(
+                                       padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                       child:  Text(
+                                         "Price",
+                                         style: TextStyle(
+                                           color: Colors.black,
+                                           fontSize: 12.sp,
+                                           fontWeight: FontWeight.w600,
+                                         ),
+                                       ),
+                                     ),
+                                     Row(
+                                       children: [
+                                         Padding(
+                                             padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                             child:  Text(
+                                               "RS :",
+                                               style: TextStyle(
+                                                 color: Colors.black,
+                                                 fontSize: 12.sp,
+                                                 fontWeight: FontWeight.w600,
+                                               ),
+                                             )),
+                                         Padding(
+                                           padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
+                                           child:  Text(
+                                             fixedAuctionData[index].price,
+                                             style: TextStyle(
+                                               color: Colors.green,
+                                               fontSize: 12.sp,
+                                               fontWeight: FontWeight.w600,
+                                             ),
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+
+                                     //----------------------Pic Box----------------------//
+
+
+
+                                   ],
+                                 ),
+                               ),
+                             ),
+
+                           );
+                       },
+                       childCount:fixedAuctionData.length
+                   )
+               ),
+
              ])),
    );
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

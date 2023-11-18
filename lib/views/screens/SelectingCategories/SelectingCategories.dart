@@ -1761,6 +1761,10 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
             child: ElevatedButton(onPressed:
                 () async {
 
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return SelectCateogoryView();
+              }));
+
 
             }, child: Text("Reset", style: TextStyle(color: Colors
                 .white),),
