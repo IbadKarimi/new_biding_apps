@@ -73,12 +73,23 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             Get.to(()=>NotificationView());
           }
 
+          if(FirebaseAuth.instance.currentUser!.email =="accountant@gmail.com")
+            if(index==2){
+              Get.to(()=>HomePageView());
+            }
+            if(index==3){
+            Get.to(()=>ChatScreen(recieverId: '',));
+            }
+
+          if(FirebaseAuth.instance.currentUser!.email !="accountant@gmail.com")
           if(index==2 ){
             Get.to(()=>SelectCateogoryView());
           }
+          if(FirebaseAuth.instance.currentUser!.email !="accountant@gmail.com")
           if(index==3){
             Get.to(()=>HomePageView());
           }
+          if(FirebaseAuth.instance.currentUser!.email !="accountant@gmail.com")
           if(index==4){
             Get.to(()=>ChatScreen(recieverId: '',));
           }
@@ -99,7 +110,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             icon: Icon(Icons.feedback,color: Colors.black,),
             label: 'Notification',
           ),
-          if(userEmail !="accountant@gmail.com")
+          if(FirebaseAuth.instance.currentUser!.email !="accountant@gmail.com")
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle_outline,color: Colors.black,size: 30,),
             label: 'Add Product',

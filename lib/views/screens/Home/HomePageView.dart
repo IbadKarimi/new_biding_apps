@@ -86,9 +86,15 @@ class _HomePageViewState extends State<HomePageView> {
 
 
 
-  void _filterItems(String query) {
+  void _filterItemsBiding(String query) {
     setState(() {
       filteredItems = bidingData.where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+  void _filterItemsFixedAuction(String query) {
+    setState(() {
+      filteredItems = fixedAuctionData.where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -119,6 +125,7 @@ class _HomePageViewState extends State<HomePageView> {
       homePageController.geFixedAuctionData().then((value) {
         setState(() {
           fixedAuctionData.addAll(value);
+          filteredItems.addAll(fixedAuctionData);
 
 
         });
@@ -158,10 +165,7 @@ class _HomePageViewState extends State<HomePageView> {
           },
           icon: Icon(Icons.filter_alt_sharp, color: Colors.amber),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.person, color: Colors.amber),
-        ),
+
         PopupMenuButton<int>(
           onSelected: (item) => _handleClick(item),
           itemBuilder: (context) => [
@@ -194,8 +198,18 @@ class _HomePageViewState extends State<HomePageView> {
       title: TextField(
         style: TextStyle(color: Colors.black),
         onChanged: (query) {
-          _filterItems(query);
-          _query=query;
+
+          if(onTapAuctionType=="Biding"){
+            _filterItemsBiding(query);
+            _query=query;
+
+          }else{
+            _filterItemsFixedAuction(query);
+            _query=query;
+
+          }
+
+
 
         },
         decoration: InputDecoration(
@@ -909,22 +923,7 @@ class _HomePageViewState extends State<HomePageView> {
                                        ),
 
                                      ),
-                                     Center(
-                                       child: Container(
-                                         margin: EdgeInsets.only(top:5.h),
-                                         width: 100.w,
-                                         height: 15.h,
-                                         child:MyCountdownWidget(
-                                           bidEndTime: fixedAuctionData[index].setBidEndTime.toString(),
-                                           index: index,
-                                           onTimerEnd: (int index) {
-                                             setState(() {
-                                               fixedAuctionData.removeAt(index);
-                                               fixedAuctionData.sort(); // Sort the list based on bidding end times
-                                             });
-                                           },
-                                         ),),
-                                     ),
+
                                      Padding(
                                        padding: EdgeInsets.only(top: 5.h, left: 10.w, bottom: 0.h),
                                        child:  Text(

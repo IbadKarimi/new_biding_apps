@@ -1623,6 +1623,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
 
           ),),
       ),
+      if(_selectedValueAuctionType=="Biding")
       Padding(
           padding: EdgeInsets.only(top: 5.h, left: 30.w, bottom: 5.h),
           child:  Text(
@@ -1633,6 +1634,7 @@ class _SelectCateogoryViewState extends State<SelectCateogoryView> {
               fontWeight: FontWeight.w600,
             ),
           )),
+      if(_selectedValueAuctionType=="Biding")
       GestureDetector(
         onTap: (){
           _pickDate();

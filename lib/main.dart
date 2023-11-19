@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: SearchFilterView()
+      child: WelcomeScreen()
     );
   }
 }

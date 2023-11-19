@@ -236,7 +236,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
 
 
-       // if(user=="accountant@gmail.com")
+       if(user=="accountant@gmail.com")
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
@@ -270,7 +270,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           },
         ),
 
-        if(user.toString()=="accountant@gmail.com")
+
         ListTile(
           leading: GestureDetector(onTap:(){
             Get.to(()=>AccountantView());
